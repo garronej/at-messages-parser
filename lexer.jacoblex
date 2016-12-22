@@ -4,13 +4,12 @@ notCr= [^\r]
 
 %%
 
-<>^AT{notCr}*\r { 
+<>AT{notCr}*\r { 
 
         this.jjval= {
                 "raw": this.jjtext,
                 "id": "ECHO"
         };
-
 
         return "MESSAGE"; 
 
@@ -82,15 +81,6 @@ notCr= [^\r]
         
 }
 
-<>\r\n{notCr}+\r\n {
-        
-        this.jjval= {
-                "raw": this.jjtext,
-                "id": "OTHER"
-        }
-
-        return "MESSAGE";
-}
 
 <>\r\nERROR{notCr}+\r\n {
 
@@ -102,4 +92,15 @@ notCr= [^\r]
 
         return "MESSAGE";
 }
+
+<>\r\n{notCr}+\r\n {
+        
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "OTHER"
+        }
+
+        return "MESSAGE";
+}
+
 
