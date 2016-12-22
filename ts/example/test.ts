@@ -18,12 +18,11 @@ let input=[
 
 console.log("input", JSON.stringify(input));
 
-let concatRaw: string;
 let atMessages: AtMessage[];
 
 try{
 
-        [concatRaw, atMessages]= atOutputParser(input);
+        atMessages= atOutputParser(input);
 
 }catch(error){
 
@@ -31,8 +30,6 @@ try{
         process.exit(1);
 
 }
-
-console.log("concat raw: ", concatRaw);
 
 for( let atMessage of atMessages){
 
