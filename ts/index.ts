@@ -23,7 +23,7 @@ export interface AtMessage {
         hasError?: boolean;
 }
 
-export default function parse(input: string): AtMessage[] {
+export default function parse(input: string): [string,AtMessage[]] {
 
         lexer.setInput(input);
 
@@ -40,12 +40,16 @@ export default function parse(input: string): AtMessage[] {
 
         }
 
+        let concatRaw= "";
+
         for(let atMessage of output.res ){
+
+                concatRaw+= atMessage.raw;
 
                 atMessage.id= <AtMessageId>AtMessageId[<string>atMessage.id];
 
         }
 
-        return output.res;
+        return [concatRaw, output.res];
 
 }
