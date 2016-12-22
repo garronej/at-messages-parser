@@ -1,0 +1,105 @@
+%%
+
+notCr= [^\r]
+
+%%
+
+<>^AT{notCr}*\r { 
+
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "ECHO"
+        };
+
+
+        return "MESSAGE"; 
+
+}
+
+<>\r\n\^BOOT{notCr}*\r\n { 
+
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "BOOT"
+        };
+
+        return "MESSAGE";
+
+}
+
+<>\r\nOK\r\n { 
+
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "OK"
+        };
+
+        return "MESSAGE";
+}
+
+<>\r\nERROR\r\n {
+
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "ERROR"
+        };
+
+        return "MESSAGE";
+
+}
+
+<>\r\n\^RSSI{notCr}*\r\n {
+
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "RSSI"
+        };
+
+        return "MESSAGE";
+
+}
+
+<>\r\n\+CNUM{notCr}*\r\n {
+
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "CNUM"
+        };
+
+        return "MESSAGE";
+
+}
+
+<>\r\nERROR\+CNUM{notCr}*\r\n {
+
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "CNUM",
+                "hasError": true
+        };
+
+        return "MESSAGE";
+        
+}
+
+<>\r\n{notCr}+\r\n {
+        
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "OTHER"
+        }
+
+        return "MESSAGE";
+}
+
+<>\r\nERROR{notCr}+\r\n {
+
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "OTHER",
+                "hasError": true
+        };
+
+        return "MESSAGE";
+}
+

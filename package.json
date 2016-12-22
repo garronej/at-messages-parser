@@ -1,0 +1,22 @@
+{
+        "name": "at-messages-parser",
+        "version": "0.1.0",
+        "description": "A library for parsing AT output",
+        "repository": {
+                "type": "git",
+                "url": "git://github.com/garronej/at-commands-parser.git"
+        },
+        "main": "./generatedJs/index.js",
+        "types": "./generatedJs/index.d.ts",
+        "scripts": {
+                "install": "./build.sh",
+                "test": "node ./generatedJs/example/test"
+        },
+        "author": "Joseph Garrone",
+        "license": "MIT",
+        "devDependencies": {
+                "jacob": "garronej/Jacob",
+                "@types/node": "^4.0.0",
+                "typescript": "^2.1.4"
+        }
+}

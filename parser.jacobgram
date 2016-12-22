@@ -1,0 +1,23 @@
+%mode LALR
+
+Program = List function(atMessages){
+
+        this.res= atMessages;
+
+};
+
+List = List 'MESSAGE' function(atMessages, atMessage){
+
+        atMessages.push(atMessage);
+
+        return atMessages;
+
+
+} | 'MESSAGE' function(atMessage){
+
+        return [ atMessage ];
+        
+};
+
+
+

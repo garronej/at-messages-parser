@@ -1,0 +1,14 @@
+{
+        "compilerOptions": {
+                "module": "commonjs",
+                "target": "es3",
+                "lib": [
+                        "es5"
+                ],
+                "declaration": true,
+                "outDir": "../generatedJs"
+        },
+        "filesGlob": [
+                "./**/*.ts"
+        ]
+}
