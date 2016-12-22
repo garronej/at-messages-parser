@@ -14,9 +14,11 @@
         },
         "author": "Joseph Garrone",
         "license": "MIT",
-        "devDependencies": {
+        "dependencies": {
                 "jacob": "garronej/Jacob",
-                "@types/node": "^4.0.0",
                 "typescript": "^2.1.4"
+        },
+        "devDependencies": {
+                "@types/node": "^4.0.0"
         }
 }
