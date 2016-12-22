@@ -4,7 +4,7 @@
         "description": "A library for parsing AT output",
         "repository": {
                 "type": "git",
-                "url": "git://github.com/garronej/at-commands-parser.git"
+                "url": "git://github.com/garronej/at-messages-parser.git"
         },
         "main": "./generatedJs/index.js",
         "types": "./generatedJs/index.d.ts",
