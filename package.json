@@ -9,7 +9,13 @@
         "main": "./generatedJs/index.js",
         "types": "./generatedJs/index.d.ts",
         "scripts": {
-                "install": "./build.sh",
+                "postinstall": "npm run build",
+                "build": "npm run tsc && npm run jacob",
+                "tsc": "tsc -p ./ts/tsconfig.json",
+                "jacob": "npm run jacoblex && npm run jacobgram",
+                "jacoblex": "jacob -t lexer.jacoblex -l ./generatedJs/Lexer.js",
+                "jacobgram": "jacob -g parser.jacobgram -p ./generatedJs/Parser.js",
+                "clean": "rm -rf ./generatedJs",
                 "test": "node ./generatedJs/example/test"
         },
         "author": "Joseph Garrone",

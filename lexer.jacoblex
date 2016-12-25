@@ -69,7 +69,7 @@ notCr= [^\r]
 
 }
 
-<>\r\nERROR\+CNUM{notCr}*\r\n {
+<>\r\nERROR\+CNUM{notCr}*\r\n\r\n {
 
         this.jjval= {
                 "raw": this.jjtext,
@@ -82,8 +82,8 @@ notCr= [^\r]
 }
 
 
-<>\r\nERROR{notCr}+\r\n {
-
+<>\r\nERROR{notCr}+\r\n\r\n {
+        
         this.jjval= {
                 "raw": this.jjtext,
                 "id": "OTHER",
