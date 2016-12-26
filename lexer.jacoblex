@@ -69,6 +69,8 @@ notCr= [^\r]
 
 }
 
+
+
 <>\r\nERROR\+CNUM{notCr}*\r\n\r\n {
 
         this.jjval= {
@@ -79,6 +81,18 @@ notCr= [^\r]
 
         return "MESSAGE";
         
+}
+
+
+<>\r\n\+CMTI{notCr}*\r\n {
+
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "CMTI"
+        };
+
+        return "MESSAGE";
+
 }
 
 

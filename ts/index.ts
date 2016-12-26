@@ -13,6 +13,7 @@ export enum AtMessageId {
         BOOT,
         RSSI,
         CNUM,
+        CMTI,
         OTHER
 }
 
