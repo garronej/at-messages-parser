@@ -1,11 +1,16 @@
 %%
 
 notCr= [^\r]
+hex= [a-fA-F0-9]
+
 
 %%
 
+
+
 <>AT{notCr}*\r { 
 
+        console.log("1");
         this.jjval= {
                 "raw": this.jjtext,
                 "id": "ECHO"
@@ -15,19 +20,10 @@ notCr= [^\r]
 
 }
 
-<>\r\n\^BOOT{notCr}*\r\n { 
-
-        this.jjval= {
-                "raw": this.jjtext,
-                "id": "BOOT"
-        };
-
-        return "MESSAGE";
-
-}
 
 <>\r\nOK\r\n { 
 
+        console.log("3");
         this.jjval= {
                 "raw": this.jjtext,
                 "id": "OK"
@@ -38,6 +34,7 @@ notCr= [^\r]
 
 <>\r\nERROR\r\n {
 
+        console.log("4");
         this.jjval= {
                 "raw": this.jjtext,
                 "id": "ERROR"
@@ -47,7 +44,22 @@ notCr= [^\r]
 
 }
 
+
+<>\r\n\^BOOT{notCr}*\r\n { 
+
+        console.log("2");
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "BOOT"
+        };
+
+        return "MESSAGE";
+
+}
+
 <>\r\n\^RSSI{notCr}*\r\n {
+
+        console.log("5");
 
         this.jjval= {
                 "raw": this.jjtext,
@@ -59,6 +71,8 @@ notCr= [^\r]
 }
 
 <>\r\n\+CNUM{notCr}*\r\n {
+
+        console.log("6");
 
         this.jjval= {
                 "raw": this.jjtext,
@@ -73,6 +87,8 @@ notCr= [^\r]
 
 <>\r\nERROR\+CNUM{notCr}*\r\n\r\n {
 
+        console.log("7");
+
         this.jjval= {
                 "raw": this.jjtext,
                 "id": "CNUM",
@@ -86,6 +102,8 @@ notCr= [^\r]
 
 <>\r\n\+CMTI{notCr}*\r\n {
 
+        console.log("8");
+
         this.jjval= {
                 "raw": this.jjtext,
                 "id": "CMTI"
@@ -96,7 +114,24 @@ notCr= [^\r]
 }
 
 
+<>\r\n\+CMGR{notCr}*\r\n{hex}*\r\n  {
+                
+        console.log("0");
+
+        this.jjval= {
+                "raw": this.jjtext,
+                "id": "CMGR",
+                "pdu": this.jjtext.split("\r\n")[2]
+        };
+
+        return "MESSAGE";
+
+}
+
+
 <>\r\nERROR{notCr}+\r\n\r\n {
+
+        console.log("9");
         
         this.jjval= {
                 "raw": this.jjtext,
@@ -108,6 +143,8 @@ notCr= [^\r]
 }
 
 <>\r\n{notCr}+\r\n {
+
+        console.log("10");
         
         this.jjval= {
                 "raw": this.jjtext,
@@ -116,5 +153,3 @@ notCr= [^\r]
 
         return "MESSAGE";
 }
-
-

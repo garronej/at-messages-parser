@@ -14,6 +14,7 @@ export enum AtMessageId {
         RSSI,
         CNUM,
         CMTI,
+        CMGR,
         OTHER
 }
 
@@ -22,6 +23,7 @@ export interface AtMessage {
         raw: string;
         id: AtMessageId;
         hasError?: boolean;
+        pdu?: string;
 }
 
 export default function parse(input: string): AtMessage[] {
