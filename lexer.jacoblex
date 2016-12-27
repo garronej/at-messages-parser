@@ -7,12 +7,11 @@ hex= [a-fA-F0-9]
 %%
 
 
-
 <>AT{notCr}*\r { 
 
         this.jjval= {
                 "raw": this.jjtext,
-                "id": "ECHO"
+                "id": "COMMAND_ECHO"
         };
 
         return "MESSAGE"; 
@@ -55,7 +54,6 @@ hex= [a-fA-F0-9]
 
 <>\r\n\^RSSI{notCr}*\r\n {
 
-
         this.jjval= {
                 "raw": this.jjtext,
                 "id": "RSSI"
@@ -67,10 +65,22 @@ hex= [a-fA-F0-9]
 
 <>\r\n\+CNUM{notCr}*\r\n {
 
+        //\r\n+CNUM: "CC","+8613987654321",129\r\n
+
+        var match= this.jjtext.match(/^\r\n\+CNUM:\ ?"([a-zA-Z]*)","(\+?[0-9]*)",([0-9]*)\r\n$/);
+        
+        var isNational= undefined;
+
+        if( match[3] === "129" ) isNational= true
+        else if( match[3] === "145" ) isNational= false;
 
         this.jjval= {
                 "raw": this.jjtext,
-                "id": "CNUM"
+                "id": "CNUM",
+                "alpha": match[1],
+                "number": match[2],
+                "isNational": isNational,
+                "hasError": false
         };
 
         return "MESSAGE";
@@ -79,12 +89,24 @@ hex= [a-fA-F0-9]
 
 
 
+
 <>\r\nERROR\+CNUM{notCr}*\r\n\r\n {
 
+        //\r\nERROR+CNUM: "","+393701307294",145\r\n\r\n
+
+        var match= this.jjtext.match(/^\r\nERROR\+CNUM:\ ?"([a-zA-Z]*)","(\+?[0-9]*)",([0-9]*)\r\n\r\n$/);
+        
+        var isNational= undefined;
+
+        if( match[3] === "129" ) isNational= true
+        else if( match[3] === "145" ) isNational= false;
 
         this.jjval= {
                 "raw": this.jjtext,
                 "id": "CNUM",
+                "alpha": match[1],
+                "number": match[2],
+                "isNational": isNational,
                 "hasError": true
         };
 
@@ -95,10 +117,15 @@ hex= [a-fA-F0-9]
 
 <>\r\n\+CMTI{notCr}*\r\n {
 
+        //\r\n+CMTI: "SM",29\r\n
+        
+        var match= this.jjtext.match(/^\r\n\+CMTI:\ ?"([A-Z]{2})",([0-9]+)\r\n$/);
 
         this.jjval= {
                 "raw": this.jjtext,
-                "id": "CMTI"
+                "id": "CMTI",
+                "mem": match[1],
+                "index": parseInt(match[2])
         };
 
         return "MESSAGE";
@@ -108,36 +135,27 @@ hex= [a-fA-F0-9]
 
 <>\r\n\+CMGR{notCr}*\r\n{hex}*\r\n  {
                 
+        //\r\n+CMGR: 0,,26\r\n07913306092069F0040B913336766883F5000061216232414440084EF289EC26BBC9\r\n\r\nOK\r\n
 
+        var match= this.jjtext.match(/^\r\n\+CMGR:\ ?([0-9]+),[0-9]*,([0-9]+)\r\n([a-fA-F0-9]+)\r\n$/);
+        
         this.jjval= {
                 "raw": this.jjtext,
                 "id": "CMGR",
-                "pdu": this.jjtext.split("\r\n")[2]
+                "stat": parseInt(match[1]),
+                "length": parseInt(match[2]),
+                "pdu": match[3]
         };
 
         return "MESSAGE";
 
 }
 
-
-<>\r\nERROR{notCr}+\r\n\r\n {
-
-        
-        this.jjval= {
-                "raw": this.jjtext,
-                "id": "OTHER",
-                "hasError": true
-        };
-
-        return "MESSAGE";
-}
 
 <>\r\n{notCr}+\r\n {
 
-        
         this.jjval= {
-                "raw": this.jjtext,
-                "id": "OTHER"
+                "raw": this.jjtext
         }
 
         return "MESSAGE";
