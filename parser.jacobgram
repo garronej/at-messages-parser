@@ -1,23 +1,163 @@
 %mode LALR
 
-Program = List function(atMessages){
+Program= 'ECHO' List function(echo, list){
 
-        this.res= atMessages;
+        this.echo= echo;
+        this.atMessageDescriptors= list;
+
+
+}| List function(list){
+
+        this.atMessageDescriptors= list;
 
 };
 
-List = List 'MESSAGE' function(atMessages, atMessage){
+List= List Message function(list, message){
 
-        atMessages.push(atMessage);
+        list.push(message);
 
-        return atMessages;
+        return list;
+
+} | Message function(message){
+
+        return [ message ];
+
+};
+
+Message= 'SEP' Error Payload 'SEP' 'SEP' function(_, error, payload){
+
+        payload.raw= "\r\n" + error.raw + payload.raw + "\r\n\r\n";
+
+        payload.hasError= true;
+
+        if( error.hasOwnProperty("code") ){
+                payload.errorCode= error.code;
+        }
 
 
-} | 'MESSAGE' function(atMessage){
+        return payload;
 
-        return [ atMessage ];
+} | 'SEP' Payload 'SEP' function(_, payload){
+
+        payload.raw= "\r\n" + payload.raw + "\r\n";
         
+        return payload;
+
+} | 'SEP' Payload 'SEP' 'PDU' 'SEP' function(_, payload, _, pdu){
+
+        payload.raw= "\r\n" + payload.raw + "\r\n" + pdu + "\r\n";
+
+        payload.pdu= pdu;
+        
+        return payload;
+
+
+} |'SEP' 'ERROR' 'SEP' function(){
+
+        return {
+                "raw": "\r\nERROR\r\n",
+                "id": "ERROR"
+
+        };
+
+} | 'SEP' 'OK' 'SEP' function(){
+
+        return {
+                "raw": "\r\nOK\r\n",
+                "id": "OK"
+        };
+
+};
+
+Error= 'ERROR' function(){
+
+        return {
+                "raw": "ERROR"
+        }
+
+} | 'CME_ERROR' function(code){
+
+        return {
+                "raw": "+CME ERROR: " + code.toString(),
+                "code": code
+        };
+
 };
 
 
+Payload= Rest function(rest){
 
+        return { "raw": rest };
+
+} | 'CNUM' Rest function(_, rest){
+
+        //\r\n+CNUM: "CC","+8613987654321",129\r\n
+
+        var match= rest.match(/^:\ ?"([a-zA-Z]*)","(\+?[0-9]*)",([0-9]*)$/);
+        
+        var isNational= undefined;
+
+        if( match[3] === "129" ) isNational= true
+        else if( match[3] === "145" ) isNational= false
+
+        return {
+                "raw": "+CNUM" + rest,
+                "id": "CNUM",
+                "alpha": match[1],
+                "number": match[2],
+                "isNational": isNational
+        };
+
+} | 'CMGR' Rest function(_, rest){
+
+        //\r\n+CMGR: 0,,26\r\n07913306092069F0040B913336766883F5000061216232414440084EF289EC26BBC9\r\n
+
+        var match= rest.match(/^:\ ?([0-9]+),[0-9]*,([0-9]+)$/);
+
+        return {
+                "id": "CMGR",
+                "raw": "+CMGR"+rest,
+                "stat": parseInt(match[1]),
+                "length": parseInt(match[2])
+        };
+
+} | 'CMTI' Rest function(_, rest){
+
+        //\r\n+CMTI: "SM",29\r\n
+        
+        var match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
+
+        return {
+                "id": "CMTI",
+                "raw": "+CMTI"+rest,
+                "mem": match[1],
+                "index": parseInt(match[2])
+        };
+
+} | 'BOOT' Rest function(_, rest){
+
+        return {
+                "id": "BOOT",
+                "raw": "^BOOT" + rest
+        };
+
+} | 'RSSI' Rest function(_, rest){
+
+        return {
+                "id": "RSSI",
+                "raw": "^RSSI" + rest
+        };
+
+};
+
+Rest= Rest 'CHAR' function(rest, char){
+
+        rest+= char;
+
+        return rest;
+
+} | 'CHAR' function(char){
+
+        return char;
+
+};

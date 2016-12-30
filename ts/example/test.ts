@@ -1,24 +1,21 @@
-
-import atOutputParser from "../index";
+import parser from "../index";
 import { AtMessageId } from "../index";
 import { MemStorage } from "../index";
 import { AtMessage } from "../index";
-import { AtMessageCMGR } from "../index";
-import { AtMessageCMTI } from "../index";
-import { AtMessageCNUM } from "../index";
+import { AtMessageImplementations } from "../index";
 
 let input = [
-        'AT\r',
         'AT+CNUM=3,"SM"\r',
         '\r\n+CMTI: "SM",26\r\n',
-        '\r\n+CMGR: 0,,26\r\n07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01\r\n\r\nOK\r\n',
         '\r\n^RSSI:99\r\n',
         '\r\n^BOOT:20952548,0,0,0,72\r\n',
+        '\r\n+CME ERROR: 25+CNUM: "","+33671651906",145\r\n\r\n',
+        '\r\nERROR+CNUM: "","+33671651907",145\r\n\r\n',
         '\r\n+CNUM: "CC","+8613987654321",129\r\n',
-        '\r\nERROR+CNUM: "","0636786385",129\r\n\r\n',
-        '\r\n+WTF:ié"réflmmfe:eza&*\r\n',
-        '\r\nERROR\r\n',
-        '\r\nOK\r\n'
+        '\r\n+CMGR: 0,,26\r\n07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01\r\n',
+        '\r\n+WTF: iam not a known message\r\n',
+        '\r\nOK\r\n',
+        '\r\nERROR\r\n'
 ].join("");
 
 
@@ -27,7 +24,14 @@ let atMessages: AtMessage[];
 
 try {
 
-        atMessages = atOutputParser(input);
+        let output = parser(input);
+
+        atMessages= output[0];
+        let echo= output[1];
+
+        if( echo ){
+                console.log("Echo AT command: ", echo);
+        }
 
 } catch (error) {
 
@@ -36,30 +40,28 @@ try {
 
 }
 
-for (let atMessage of atMessages) {
 
-        console.log(AtMessageId[atMessage.id]);
+for (let atMessage of atMessages) {
 
         switch (atMessage.id) {
                 case AtMessageId.CMGR:
-                        let atMessageCMGR = <AtMessageCMGR>atMessage;
+                        let atMessageCMGR = <AtMessageImplementations.CMGR>atMessage;
                         console.log(atMessageCMGR);
                         break;
                 case AtMessageId.CMTI:
-                        let atMessageCMTI = <AtMessageCMTI>atMessage;
+                        let atMessageCMTI = <AtMessageImplementations.CMTI>atMessage;
                         console.log(atMessageCMTI);
-                        console.log("Mem: ", MemStorage[atMessageCMTI.mem]);
                         break;
                 case AtMessageId.CNUM:
-                        let atMessageCNUM = <AtMessageCNUM>atMessage;
+                        let atMessageCNUM = <AtMessageImplementations.CNUM>atMessage;
                         console.log(atMessageCNUM);
                         break;
-                default:
-                        console.log(atMessage);
+                default: console.log(atMessage);
         }
 
 
 }
+
 
 
 
