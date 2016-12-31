@@ -1,5 +1,6 @@
 # at-messages-parser
 
+
 Parse AT message sent by a modem
 
 Note: Alfa release, only the at messages present in the example are currently supported,
@@ -7,17 +8,21 @@ Non recognized message will not be parsed
 
 Support only *AT+CMEE=0* and *AT+CMEE=1* mode, not *AT+CMEE=2* with debug info on modem error.
 
+#Install 
+
+npm install garronej/at-messages-parser
+
 #Usage
 
 ./example/test.ts
 
 ```` JavaScript
 
-import parser from "../index";
-import { AtMessageId } from "../index";
-import { MemStorage } from "../index";
-import { AtMessage } from "../index";
-import { AtMessageImplementations } from "../index";
+import parser from "at-messages-parser";
+import { AtMessageId } from "at-messages-parser";
+import { MemStorage } from "at-messages-parser";
+import { AtMessage } from "at-messages-parser";
+import { AtMessageImplementations } from "at-messages-parser";
 
 let input = [
         'AT+CNUM=3,"SM"\r',
