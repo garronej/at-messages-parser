@@ -37,14 +37,7 @@ let atMessages: AtMessage[];
 
 try {
 
-        let output = parser(input);
-
-        atMessages= output[0];
-        let echo= output[1];
-
-        if( echo ){
-                console.log("Echo AT command: ", echo);
-        }
+        atMessages = parser(input);
 
 } catch (error) {
 
@@ -82,25 +75,26 @@ Outputs:
 ````shell
 > node ./generatedJs/example/test
 
-Echo AT command:  AT+CNUM=3,"SM"
+AtMessage { id: 0, raw: 'AT+CNUM=3,"SM"\r', idName: 'AT_COMMAND' }
 CMTI {
-  id: 5,
-  raw: '\r\n+CMTI: "SM",26\r\n',  idName: 'CMTI',
+  id: 6,
+  raw: '\r\n+CMTI: "SM",26\r\n',
+  idName: 'CMTI',
   mem: 0,
   index: 26,
   memName: 'SM' }
 AtMessage {
-  id: 3,
+  id: 4,
   raw: '\r\n^RSSI:99\r\n',
   idName: 'RSSI',
   isUnsolicited: true }
 AtMessage {
-  id: 2,
+  id: 3,
   raw: '\r\n^BOOT:20952548,0,0,0,72\r\n',
   idName: 'BOOT',
   isUnsolicited: true }
 CNUM {
-  id: 4,
+  id: 5,
   raw: '\r\n+CME ERROR: 25+CNUM: "","+33671651906",145\r\n\r\n',
   idName: 'CNUM',
   alpha: '',
@@ -109,7 +103,7 @@ CNUM {
   hasError: true,
   errorCode: 25 }
 CNUM {
-  id: 4,
+  id: 5,
   raw: '\r\nERROR+CNUM: "","+33671651907",145\r\n\r\n',
   idName: 'CNUM',
   alpha: '',
@@ -117,21 +111,21 @@ CNUM {
   isNational: false,
   hasError: true }
 CNUM {
-  id: 4,
+  id: 5,
   raw: '\r\n+CNUM: "CC","+8613987654321",129\r\n',
   idName: 'CNUM',
   alpha: 'CC',
   number: '+8613987654321',
   isNational: true }
 CMGR {
-  id: 6,
+  id: 7,
   raw: '\r\n+CMGR: 0,,26\r\n07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01\r\n',
   idName: 'CMGR',
   stat: 0,
   length: 26,
   pdu: '07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01' }
 AtMessage { id: undefined, raw: '\r\n+WTF: iam not a known message\r\n' }
-AtMessage { id: 0, raw: '\r\nOK\r\n', idName: 'OK' }
-AtMessage { id: 1, raw: '\r\nERROR\r\n', idName: 'ERROR' }
+AtMessage { id: 1, raw: '\r\nOK\r\n', idName: 'OK' }
+AtMessage { id: 2, raw: '\r\nERROR\r\n', idName: 'ERROR' }
 
 ````

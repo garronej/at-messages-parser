@@ -5,23 +5,20 @@ let parser = new Parser();
 let lexer = new Lexer();
 
 export enum AtMessageId {
+        AT_COMMAND,
         OK,
         ERROR,
         BOOT,
         RSSI,
         CNUM,
         CMTI,
-        CMGR,
-        OTHER
+        CMGR
 }
 
 export let atMessageUnsolicited: AtMessageId[] = [
         AtMessageId.BOOT,
         AtMessageId.RSSI
 ];
-
-
-
 
 export class AtMessage {
 
@@ -34,54 +31,43 @@ export class AtMessage {
                 public readonly raw: string
         ) {
 
-                if( id !== undefined ) this.idName = AtMessageId[id];
+                if (id !== undefined) this.idName = AtMessageId[id];
 
                 if (atMessageUnsolicited.indexOf(id) > -1)
                         this.isUnsolicited = true;
 
         }
 
-        private setError(errorCode?: number){
+        private setError(errorCode?: number) {
 
-                this.hasError= true;
+                this.hasError = true;
 
-                if( errorCode !== undefined){
-                        this.errorCode= errorCode;
+                if (errorCode !== undefined) {
+                        this.errorCode = errorCode;
                 }
 
         }
 
 }
 
-export enum MemStorage {
-        SM,
-        ME,
-        ON,
-        EN,
-        FD
-}
+export enum MemStorage { SM, ME, ON, EN, FD }
 
 export namespace AtMessageImplementations {
 
         // \r\n+CMGR: 0,,26\r\n07913306092069F0040B913336766883F5000061216232414440084EF289EC26BBC9\r\n\r\nOK\r\n
-
         export class CMGR extends AtMessage {
 
                 constructor(raw: string,
                         public readonly stat: number,
                         public readonly length: number,
-                        public readonly pdu: string,) {
+                        public readonly pdu: string, ) {
 
                         super(AtMessageId.CMGR, raw);
-
-
-
                 }
 
         }
 
         //\r\n+CMTI: "SM",29\r\n'
-
         export class CMTI extends AtMessage {
 
                 public readonly memName: string;
@@ -93,21 +79,18 @@ export namespace AtMessageImplementations {
                         super(AtMessageId.CMTI, raw);
 
                         this.memName = MemStorage[mem];
-
                 }
 
         }
 
-
         //'\r\nERROR+CNUM: "","+393701307294",145\r\n\r\n',
         //'\r\n+CNUM: "CC","+8613987654321",129\r\n',
-
         export class CNUM extends AtMessage {
 
                 constructor(raw: string,
                         public readonly alpha: string,
                         public readonly number: string,
-                        public readonly isNational: boolean ) {
+                        public readonly isNational: boolean) {
 
                         super(AtMessageId.CNUM, raw);
                 }
@@ -116,7 +99,7 @@ export namespace AtMessageImplementations {
 }
 
 
-export default function parse(input: string): [ AtMessage[], string ] {
+export default function parse(input: string): AtMessage[] {
 
         lexer.setInput(input);
 
@@ -132,10 +115,15 @@ export default function parse(input: string): [ AtMessage[], string ] {
 
         }
 
-        let echo: string = output.echo || "";
-        let atMessageDescriptors: any[] = output.atMessageDescriptors;
-
         let atMessages: AtMessage[] = [];
+
+        if (output.echo !== undefined) {
+
+                atMessages.push(new AtMessage(AtMessageId.AT_COMMAND, <string>output.echo));
+
+        }
+
+        let atMessageDescriptors: any[] = output.atMessageDescriptors;
 
         for (let atMessageDescriptor of atMessageDescriptors) {
 
@@ -148,33 +136,33 @@ export default function parse(input: string): [ AtMessage[], string ] {
                                 let stat: number = atMessageDescriptor.stat;
                                 let length: number = atMessageDescriptor.length;
                                 let pdu: string = atMessageDescriptor.pdu;
-                                atMessage= new AtMessageImplementations.CMGR(raw, stat, length, pdu);
+                                atMessage = new AtMessageImplementations.CMGR(raw, stat, length, pdu);
                                 break;
                         case AtMessageId.CMTI:
                                 let mem = <MemStorage>MemStorage[<string>atMessageDescriptor.mem];
                                 let index: number = atMessageDescriptor.index;
-                                atMessage= new AtMessageImplementations.CMTI(raw, mem, index);
+                                atMessage = new AtMessageImplementations.CMTI(raw, mem, index);
                                 break;
                         case AtMessageId.CNUM:
                                 let alpha: string = atMessageDescriptor.alpha;
                                 let number: string = atMessageDescriptor.number;
                                 let isNational: boolean = atMessageDescriptor.isNational;
                                 let hasError: boolean = atMessageDescriptor.hasError;
-                                atMessage= new AtMessageImplementations.CNUM(raw, alpha, number, isNational);
+                                atMessage = new AtMessageImplementations.CNUM(raw, alpha, number, isNational);
                                 break;
-                        default: atMessage= new AtMessage(id, raw);
+                        default: atMessage = new AtMessage(id, raw);
                 }
 
-                if( atMessageDescriptor.hasError ){
+                if (atMessageDescriptor.hasError) {
 
                         (<any>atMessage).setError(atMessageDescriptor.errorCode);
-                        
+
                 }
 
                 atMessages.push(atMessage);
 
         }
 
-        return [ atMessages, echo ];
+        return atMessages;
 
 }

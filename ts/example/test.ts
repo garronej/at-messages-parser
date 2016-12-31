@@ -24,14 +24,7 @@ let atMessages: AtMessage[];
 
 try {
 
-        let output = parser(input);
-
-        atMessages= output[0];
-        let echo= output[1];
-
-        if( echo ){
-                console.log("Echo AT command: ", echo);
-        }
+        atMessages= parser(input);
 
 } catch (error) {
 
@@ -61,7 +54,3 @@ for (let atMessage of atMessages) {
 
 
 }
-
-
-
-
