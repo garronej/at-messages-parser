@@ -5,6 +5,8 @@ Parse AT message sent by a modem
 Note: Alfa release, only the at messages present in the example are currently supported,
 Non recognized message will not be parsed
 
+Support only *AT+CMEE=0* and *AT+CMEE=1* mode, not *AT+CMEE=2* with debug info on modem error.
+
 #Usage
 
 ./example/test.ts
