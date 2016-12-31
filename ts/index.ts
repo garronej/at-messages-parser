@@ -96,6 +96,21 @@ export namespace AtMessageImplementations {
                 }
         }
 
+        //\r\nERROR\r\n
+        //\r\n+CME ERROR: 3\r\n
+        export class ERROR extends AtMessage {
+
+                public readonly code?: number;
+
+                constructor(raw: string,
+                code?: number){
+                        super(AtMessageId.ERROR, raw);
+                        if(code !== undefined ){
+                                this.code= code;
+                        }
+                }
+        }
+
 }
 
 
@@ -149,6 +164,10 @@ export default function parse(input: string): AtMessage[] {
                                 let isNational: boolean = atMessageDescriptor.isNational;
                                 let hasError: boolean = atMessageDescriptor.hasError;
                                 atMessage = new AtMessageImplementations.CNUM(raw, alpha, number, isNational);
+                                break;
+                        case AtMessageId.ERROR:
+                                let code: number= atMessageDescriptor.code;
+                                atMessage= new AtMessageImplementations.ERROR(raw, code);
                                 break;
                         default: atMessage = new AtMessage(id, raw);
                 }

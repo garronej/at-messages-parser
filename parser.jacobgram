@@ -39,7 +39,6 @@ Message= 'SEP' Error Payload 'SEP' 'SEP' function(_, error, payload){
                 payload.errorCode= error.code;
         }
 
-
         return payload;
 
 } | 'SEP' Payload 'SEP' function(_, payload){
@@ -57,13 +56,13 @@ Message= 'SEP' Error Payload 'SEP' 'SEP' function(_, error, payload){
         return payload;
 
 
-} |'SEP' 'ERROR' 'SEP' function(){
+} |'SEP' Error 'SEP' function(_, error){
 
-        return {
-                "raw": "\r\nERROR\r\n",
-                "id": "ERROR"
+        error.raw= "\r\n" + error.raw + "\r\n";
+        error.id= "ERROR";
 
-        };
+        return error;
+
 
 } | 'SEP' 'OK' 'SEP' function(){
 

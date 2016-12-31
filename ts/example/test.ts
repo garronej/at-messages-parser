@@ -14,6 +14,7 @@ let input = [
         '\r\n+CNUM: "CC","+8613987654321",129\r\n',
         '\r\n+CMGR: 0,,26\r\n07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01\r\n',
         '\r\n+WTF: iam not a known message\r\n',
+        '\r\n+CME ERROR: 3\r\n',
         '\r\nOK\r\n',
         '\r\nERROR\r\n'
 ].join("");
@@ -48,6 +49,10 @@ for (let atMessage of atMessages) {
                 case AtMessageId.CNUM:
                         let atMessageCNUM = <AtMessageImplementations.CNUM>atMessage;
                         console.log(atMessageCNUM);
+                        break;
+                case AtMessageId.ERROR:
+                        let atMessageERROR= <AtMessageImplementations.ERROR>atMessage;
+                        console.log(atMessageERROR);
                         break;
                 default: console.log(atMessage);
         }
