@@ -10,6 +10,11 @@ Program= 'ECHO' List function(echo, list){
 
         this.atMessageDescriptors= list;
 
+}| 'ECHO' function(echo){
+
+        this.echo= echo;
+        this.atMessageDescriptors= [];
+
 };
 
 List= List Message function(list, message){
