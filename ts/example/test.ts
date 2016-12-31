@@ -15,6 +15,8 @@ let input = [
         '\r\n+CMGR: 0,,26\r\n07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01\r\n',
         '\r\n+WTF: iam not a known message\r\n',
         '\r\n+CME ERROR: 3\r\n',
+        '\r\n+CPIN: SIM PIN\r\n',
+        '\r\n+CPIN: READY\r\n',
         '\r\nOK\r\n',
         '\r\nERROR\r\n'
 ].join("");

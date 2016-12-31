@@ -1,6 +1,6 @@
 %%
 
-knownMessages= \+CNUM|\+CMGR|\+CMTI|\^BOOT|\^RSSI
+knownMessages= \+CNUM|\+CMGR|\+CMTI|\^BOOT|\^RSSI|\+CPIN
 
 %%
 

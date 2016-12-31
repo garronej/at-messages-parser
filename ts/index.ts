@@ -12,7 +12,8 @@ export enum AtMessageId {
         RSSI,
         CNUM,
         CMTI,
-        CMGR
+        CMGR,
+        CPIN
 }
 
 export let atMessageUnsolicited: AtMessageId[] = [
@@ -52,7 +53,24 @@ export class AtMessage {
 
 export enum MemStorage { SM, ME, ON, EN, FD }
 
+export enum PinState { READY, SIM_PIN, SIM_PUK, SIM_PIN2, SIM_PUK2 }
+
 export namespace AtMessageImplementations {
+
+        //\r\nERROR\r\n
+        //\r\n+CME ERROR: 3\r\n
+        export class ERROR extends AtMessage {
+
+                public readonly code?: number;
+
+                constructor(raw: string,
+                code?: number){
+                        super(AtMessageId.ERROR, raw);
+                        if(code !== undefined ){
+                                this.code= code;
+                        }
+                }
+        }
 
         // \r\n+CMGR: 0,,26\r\n07913306092069F0040B913336766883F5000061216232414440084EF289EC26BBC9\r\n\r\nOK\r\n
         export class CMGR extends AtMessage {
@@ -83,8 +101,8 @@ export namespace AtMessageImplementations {
 
         }
 
-        //'\r\nERROR+CNUM: "","+393701307294",145\r\n\r\n',
-        //'\r\n+CNUM: "CC","+8613987654321",129\r\n',
+        //\r\nERROR+CNUM: "","+393701307294",145\r\n\r\n
+        //\r\n+CNUM: "CC","+8613987654321",129\r\n
         export class CNUM extends AtMessage {
 
                 constructor(raw: string,
@@ -96,20 +114,21 @@ export namespace AtMessageImplementations {
                 }
         }
 
-        //\r\nERROR\r\n
-        //\r\n+CME ERROR: 3\r\n
-        export class ERROR extends AtMessage {
+        //\r\n+CPIN: SIM PIN\r\n
+        //\r\n+CPIN: READY\r\n
+        export class CPIN extends AtMessage {
 
-                public readonly code?: number;
+                public readonly pinStateName: string;
 
                 constructor(raw: string,
-                code?: number){
-                        super(AtMessageId.ERROR, raw);
-                        if(code !== undefined ){
-                                this.code= code;
-                        }
+                        public readonly pinState: PinState) {
+
+                        super(AtMessageId.CPIN, raw);
+                        this.pinStateName = PinState[pinState];
+
                 }
         }
+
 
 }
 
@@ -147,6 +166,10 @@ export default function parse(input: string): AtMessage[] {
                 let atMessage: AtMessage;
 
                 switch (id) {
+                        case AtMessageId.ERROR:
+                                let code: number = atMessageDescriptor.code;
+                                atMessage = new AtMessageImplementations.ERROR(raw, code);
+                                break;
                         case AtMessageId.CMGR:
                                 let stat: number = atMessageDescriptor.stat;
                                 let length: number = atMessageDescriptor.length;
@@ -165,9 +188,9 @@ export default function parse(input: string): AtMessage[] {
                                 let hasError: boolean = atMessageDescriptor.hasError;
                                 atMessage = new AtMessageImplementations.CNUM(raw, alpha, number, isNational);
                                 break;
-                        case AtMessageId.ERROR:
-                                let code: number= atMessageDescriptor.code;
-                                atMessage= new AtMessageImplementations.ERROR(raw, code);
+                        case AtMessageId.CPIN:
+                                let pinState = <PinState>PinState[<string>atMessageDescriptor.pinState];
+                                atMessage= new AtMessageImplementations.CPIN(raw, pinState);
                                 break;
                         default: atMessage = new AtMessage(id, raw);
                 }

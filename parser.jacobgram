@@ -152,6 +152,14 @@ Payload= Rest function(rest){
                 "raw": "^RSSI" + rest
         };
 
+} | 'CPIN' Rest function(_, rest ){
+
+        return {
+                "id": "CPIN",
+                "raw": "+CPIN" + rest,
+                "pinState": rest.match(/^:\ ?([\ A-Z]+)$/)[1].replace(/\ /g, "_")
+        }
+
 };
 
 Rest= Rest 'CHAR' function(rest, char){
