@@ -133,7 +133,7 @@ export namespace AtMessageImplementations {
 }
 
 
-export default function parse(input: string): AtMessage[] {
+export function atMessagesParser(input: string): AtMessage[] {
 
         lexer.setInput(input);
 
