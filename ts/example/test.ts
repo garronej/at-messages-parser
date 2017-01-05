@@ -18,7 +18,19 @@ let input = [
         '\r\n+CPIN: SIM PIN\r\n',
         '\r\n+CPIN: READY\r\n',
         '\r\nOK\r\n',
-        '\r\nERROR\r\n'
+        '\r\nERROR\r\n',
+        '\r\n+CMS ERROR: 301\r\n',
+        '\r\n^SIMST: 255,1\r\n',
+        '\r\n^SIMST: 1\r\n',
+        '\r\nCONNECT\r\n', 
+        '\r\nRING\r\n', 
+        '\r\nNO CARRIER\r\n', 
+        '\r\nNO DIALTONE\r\n', 
+        '\r\nBUSY\r\n', 
+        '\r\nNO ANSWER\r\n', 
+        '\r\nCOMMAND NOT SUPPORT\r\n', 
+        '\r\nTOO MANY PARAMETERS\r\n',
+        '\r\n^SRVST: 0\r\n'
 ].join("");
 
 
@@ -56,8 +68,22 @@ for (let atMessage of atMessages) {
                         let atMessageERROR= <AtMessageImplementations.ERROR>atMessage;
                         console.log(atMessageERROR);
                         break;
-                default: console.log(atMessage);
+                case AtMessageId.CME_ERROR:
+                        let atMessageCME_ERROR= <AtMessageImplementations.CME_ERROR>atMessage;
+                        console.log(atMessageCME_ERROR);
+                        break;
+                case AtMessageId.CMS_ERROR:
+                        let atMessageCMS_ERROR= <AtMessageImplementations.CMS_ERROR>atMessage;
+                        console.log(atMessageCMS_ERROR);
+                        break;
+                case AtMessageId.SIMST:
+                        let atMessageSIMST= <AtMessageImplementations.SIMST>atMessage;
+                        console.log(atMessageSIMST);
+                        break;
+                case AtMessageId.SRVST:
+                        let atMessageSRVST= <AtMessageImplementations.SRVST>atMessage;
+                        console.log(atMessageSRVST);
+                default: console.log("generic", atMessage);
         }
-
 
 }

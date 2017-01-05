@@ -1,3 +1,5 @@
+import { readFileSync } from "fs";
+
 let Lexer = require("./Lexer");
 let Parser = require("./Parser");
 
@@ -6,27 +8,96 @@ let lexer = new Lexer();
 
 export enum AtMessageId {
         AT_COMMAND,
-        OK,
-        ERROR,
-        BOOT,
-        RSSI,
-        CNUM,
-        CMTI,
-        CMGR,
-        CPIN
+        OK, CONNECT, RING, NO_CARRIER, NO_DIALTONE, BUSY, NO_ANSWER, COMMAND_NOT_SUPPORT, TOO_MANY_PARAMETERS,
+        ERROR, CME_ERROR, CMS_ERROR,
+        BOOT, RSSI,
+        CNUM, CMTI, CMGR, CPIN, SIMST, SRVST
 }
 
-export let atMessageUnsolicited: AtMessageId[] = [
+let atMessageUnsolicited: AtMessageId[] = [
         AtMessageId.BOOT,
-        AtMessageId.RSSI
+        AtMessageId.RSSI,
+        AtMessageId.SIMST,
+        AtMessageId.SRVST
 ];
+
+
+let atMessageFinal: AtMessageId[] = [
+        AtMessageId.OK, 
+        AtMessageId.CONNECT, 
+        AtMessageId.RING, 
+        AtMessageId.NO_CARRIER, 
+        AtMessageId.NO_DIALTONE, 
+        AtMessageId.BUSY, 
+        AtMessageId.NO_ANSWER, 
+        AtMessageId.COMMAND_NOT_SUPPORT,
+        AtMessageId.TOO_MANY_PARAMETERS,
+        AtMessageId.ERROR,
+        AtMessageId.CME_ERROR,
+        AtMessageId.CMS_ERROR
+];
+
+let atMessageError: AtMessageId[]= [
+        AtMessageId.NO_CARRIER, 
+        AtMessageId.NO_DIALTONE, 
+        AtMessageId.BUSY, 
+        AtMessageId.NO_ANSWER, 
+        AtMessageId.COMMAND_NOT_SUPPORT,
+        AtMessageId.TOO_MANY_PARAMETERS,
+        AtMessageId.ERROR,
+        AtMessageId.CME_ERROR,
+        AtMessageId.CMS_ERROR
+
+];
+
+
+
+let getCmeErrorVerbose: (errorNo: number) => string = (() => {
+
+        let cmeErrorDictionary = JSON.parse(readFileSync(__dirname + "/../cmeErrorDictionary.json", {
+                "encoding": "utf8"
+        }));
+
+        return function getCmeErrorVerbose(errorNo: number): string {
+
+                return cmeErrorDictionary[errorNo];
+
+        };
+
+})();
+
+
+let getCmsErrorVerbose: (errorNo: number) => string = (() => {
+
+        let cmsErrorDictionary = JSON.parse(readFileSync(__dirname + "/../cmsErrorDictionary.json", {
+                "encoding": "utf8"
+        }));
+
+        return function getCmsErrorVerbose(errorNo: number): string {
+
+                if (0 <= errorNo && errorNo <= 127) return cmsErrorDictionary["0-127"];
+                if (128 <= errorNo && errorNo <= 255) return cmsErrorDictionary["128-255"];
+                if (512 >= errorNo) return cmsErrorDictionary["512.."];
+
+                let out: string = undefined;
+
+                out = cmsErrorDictionary[errorNo];
+
+                if (out === undefined) return "reserved"
+                else return out
+
+        };
+
+})();
+
 
 export class AtMessage {
 
-        public hasError?: boolean;
-        public errorCode?: number;
         public isUnsolicited?: boolean;
+        public isFinal?: boolean;
         public readonly idName?: string;
+        public error?: AtMessageImplementations.ERROR | AtMessageImplementations.CME_ERROR | AtMessageImplementations.CMS_ERROR;
+        public isError?: boolean;
 
         constructor(public readonly id: AtMessageId,
                 public readonly raw: string
@@ -37,15 +108,11 @@ export class AtMessage {
                 if (atMessageUnsolicited.indexOf(id) > -1)
                         this.isUnsolicited = true;
 
-        }
+                if (atMessageFinal.indexOf(id) > -1)
+                        this.isFinal = true;
 
-        private setError(errorCode?: number) {
-
-                this.hasError = true;
-
-                if (errorCode !== undefined) {
-                        this.errorCode = errorCode;
-                }
+                if (atMessageError.indexOf(id) > -1)
+                        this.isError = true;
 
         }
 
@@ -55,20 +122,89 @@ export enum MemStorage { SM, ME, ON, EN, FD }
 
 export enum PinState { READY, SIM_PIN, SIM_PUK, SIM_PIN2, SIM_PUK2 }
 
+export enum SimState {
+        INVALID_SIM = 0,
+        VALID_SIM = 1,
+        INVALID_SIM_CS = 2,
+        INVALID_SIM_PS = 3,
+        INVALID_SIM_PS_CS = 4,
+        ROM_SIM = 240,
+        NO_SIM = 255
+}
+
+export enum ServiceStatus {
+        NO_SERVICES = 0,
+        RESTRICTED_SERVICES = 1,
+        VALID_SERVICES = 2,
+        RESTRICTED_REGIONAL_SERVICES = 3,
+        POWER_SAVING_OR_HIBERNATE_STATE = 4
+}
+
 export namespace AtMessageImplementations {
 
-        //\r\nERROR\r\n
-        //\r\n+CME ERROR: 3\r\n
-        export class ERROR extends AtMessage {
 
-                public readonly code?: number;
+        //\r\n^SIMST: <sim_state>[,<lock_state>]\r\n
+        export class SIMST extends AtMessage {
+
+                public readonly simStateName: string;
+                public readonly lock?: boolean;
 
                 constructor(raw: string,
-                code?: number){
+                        public readonly simState: SimState,
+                        lock: boolean) {
+
+                        super(AtMessageId.SIMST, raw);
+
+                        this.simStateName = SimState[simState];
+
+                        if (typeof (lock) === "boolean") this.lock = lock;
+
+                }
+
+
+        }
+
+        //\r\n^SRVST: 0\r\n
+        export class SRVST extends AtMessage {
+                public readonly serviceStatusName: string;
+                constructor(raw: string,
+                        public readonly serviceStatus: ServiceStatus) {
+                        super(AtMessageId.SRVST, raw);
+                        this.serviceStatusName = ServiceStatus[serviceStatus];
+                }
+        }
+
+        //\r\nERROR\r\n
+        export class ERROR extends AtMessage {
+                constructor(raw) {
                         super(AtMessageId.ERROR, raw);
-                        if(code !== undefined ){
-                                this.code= code;
-                        }
+                }
+        }
+
+
+        //\r\n+CME ERROR: 3\r\n
+        export class CME_ERROR extends AtMessage {
+                public readonly code: number;
+                public readonly verbose: string;
+
+                constructor(raw: string,
+                        code?: number) {
+                        super(AtMessageId.CME_ERROR, raw);
+                        this.code = code;
+                        this.verbose = getCmeErrorVerbose(code);
+                }
+        }
+
+        //\r\n+CMS ERROR: 301\r\n
+        export class CMS_ERROR extends AtMessage {
+                public readonly code: number;
+                public readonly verbose: string;
+
+                constructor(raw: string,
+                        code?: number) {
+                        super(AtMessageId.CMS_ERROR, raw);
+                        this.code = code;
+                        this.verbose = getCmsErrorVerbose(code);
                 }
         }
 
@@ -167,8 +303,15 @@ export function atMessagesParser(input: string): AtMessage[] {
 
                 switch (id) {
                         case AtMessageId.ERROR:
-                                let code: number = atMessageDescriptor.code;
-                                atMessage = new AtMessageImplementations.ERROR(raw, code);
+                                atMessage = new AtMessageImplementations.ERROR(raw);
+                                break;
+                        case AtMessageId.CME_ERROR:
+                                let cmeErrorCode: number = atMessageDescriptor.code;
+                                atMessage = new AtMessageImplementations.CME_ERROR(raw, cmeErrorCode);
+                                break;
+                        case AtMessageId.CMS_ERROR:
+                                let cmsErrorCode: number = atMessageDescriptor.code;
+                                atMessage = new AtMessageImplementations.CMS_ERROR(raw, cmsErrorCode);
                                 break;
                         case AtMessageId.CMGR:
                                 let stat: number = atMessageDescriptor.stat;
@@ -190,14 +333,42 @@ export function atMessagesParser(input: string): AtMessage[] {
                                 break;
                         case AtMessageId.CPIN:
                                 let pinState = <PinState>PinState[<string>atMessageDescriptor.pinState];
-                                atMessage= new AtMessageImplementations.CPIN(raw, pinState);
+                                atMessage = new AtMessageImplementations.CPIN(raw, pinState);
+                                break;
+                        case AtMessageId.SIMST:
+                                let simState = <SimState>atMessageDescriptor.simState;
+                                let lock = <boolean>atMessageDescriptor.lock;
+                                atMessage = new AtMessageImplementations.SIMST(raw, simState, lock);
+                                break;
+                        case AtMessageId.SRVST:
+                                let serviceStatus= <ServiceStatus>atMessageDescriptor.serviceStatus;
+                                atMessage= new AtMessageImplementations.SRVST(raw,serviceStatus);
                                 break;
                         default: atMessage = new AtMessage(id, raw);
                 }
 
-                if (atMessageDescriptor.hasError) {
 
-                        (<any>atMessage).setError(atMessageDescriptor.errorCode);
+                if (atMessageDescriptor.error) {
+
+                        let raw = atMessageDescriptor.error.raw;
+                        let id = <AtMessageId>AtMessageId[<string>atMessageDescriptor.error.id];
+
+                        switch (id) {
+                                case AtMessageId.ERROR:
+                                        atMessage.error = new AtMessageImplementations.ERROR(raw);
+                                        break;
+                                case AtMessageId.CME_ERROR:
+                                        let cmeErrorCode: number = atMessageDescriptor.error.code;
+                                        atMessage.error = new AtMessageImplementations.CME_ERROR(raw, cmeErrorCode);
+                                        break;
+                                case AtMessageId.CMS_ERROR:
+                                        let cmsErrorCode: number = atMessageDescriptor.error.code;
+                                        atMessage.error = new AtMessageImplementations.CMS_ERROR(raw, cmsErrorCode);
+                                        break;
+                                default:
+                        }
+
+                        delete atMessage.error.isFinal;
 
                 }
 

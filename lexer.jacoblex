@@ -1,6 +1,7 @@
 %%
 
-knownMessages= \+CNUM|\+CMGR|\+CMTI|\^BOOT|\^RSSI|\+CPIN
+knownMessages= \+CNUM|\+CMGR|\+CMTI|\^BOOT|\^RSSI|\+CPIN|\^SIMST|\^SRVST
+finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAND\sNOT\sSUPPORT|TOO\sMANY\sPARAMETERS 
 
 %%
 
@@ -67,14 +68,25 @@ knownMessages= \+CNUM|\+CMGR|\+CMTI|\^BOOT|\^RSSI|\+CPIN
 }
 
 
+<RUN>\+CMS\sERROR:\s[0-9]+ {
+
+        this.jjval= parseInt(this.jjtext.match(/^\+CMS\ ERROR:\ ([0-9]+)$/)[1]);
+                
+        return "CMS_ERROR";
+}
+
+
 <RUN>ERROR {
                 
         return "ERROR";
+
 }
 
-<RUN>OK {
+<RUN>{finalResultCode} {
 
-        return "OK";
+        this.jjval= this.jjtext;
+
+        return "FINAL_RESULT_CODE";
 }
 
 <RUN>[^\r] {
@@ -84,5 +96,3 @@ knownMessages= \+CNUM|\+CMGR|\+CMTI|\^BOOT|\^RSSI|\+CPIN
         return "CHAR";
 
 }
-
-

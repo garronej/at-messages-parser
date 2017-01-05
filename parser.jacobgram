@@ -33,11 +33,7 @@ Message= 'SEP' Error Payload 'SEP' 'SEP' function(_, error, payload){
 
         payload.raw= "\r\n" + error.raw + payload.raw + "\r\n\r\n";
 
-        payload.hasError= true;
-
-        if( error.hasOwnProperty("code") ){
-                payload.errorCode= error.code;
-        }
+        payload.error= error;
 
         return payload;
 
@@ -55,20 +51,19 @@ Message= 'SEP' Error Payload 'SEP' 'SEP' function(_, error, payload){
         
         return payload;
 
+} | 'SEP' FinalResultCode 'SEP' function(_, finalResultCode){
 
-} |'SEP' Error 'SEP' function(_, error){
+        finalResultCode.raw= "\r\n" + finalResultCode.raw + "\r\n";
 
-        error.raw= "\r\n" + error.raw + "\r\n";
-        error.id= "ERROR";
+        return finalResultCode;
 
-        return error;
+};
 
-
-} | 'SEP' 'OK' 'SEP' function(){
+FinalResultCode= Error | 'FINAL_RESULT_CODE' function(rawFinalResultCode){
 
         return {
-                "raw": "\r\nOK\r\n",
-                "id": "OK"
+                "raw": rawFinalResultCode,
+                "id": rawFinalResultCode.replace(/\ /g, "_")
         };
 
 };
@@ -76,13 +71,23 @@ Message= 'SEP' Error Payload 'SEP' 'SEP' function(_, error, payload){
 Error= 'ERROR' function(){
 
         return {
+                "id": "ERROR",
                 "raw": "ERROR"
         }
 
 } | 'CME_ERROR' function(code){
 
         return {
+                "id": "CME_ERROR",
                 "raw": "+CME ERROR: " + code.toString(),
+                "code": code
+        };
+
+} | 'CMS_ERROR' function(code){
+
+        return {
+                "id": "CMS_ERROR",
+                "raw": "+CMS ERROR: " + code.toString(),
                 "code": code
         };
 
@@ -160,6 +165,29 @@ Payload= Rest function(rest){
                 "pinState": rest.match(/^:\ ?([\ A-Z]+)$/)[1].replace(/\ /g, "_")
         }
 
+} | 'SIMST' Rest function(_, rest){
+
+        var match= rest.match(/^:\ ?([0-9]+)(?:,([01]))?$/);
+
+        var lock= undefined;
+
+        if( match[2] !== undefined ) lock= (match[2] === "1")
+
+        return {
+                "id": "SIMST",
+                "raw": "^SIMST" + rest,
+                "simState": parseInt(match[1]),
+                "lock": lock
+        };
+
+
+} | 'SRVST' Rest function(_, rest){
+
+        return {
+                "id": "SRVST",
+                "raw": "^SRVST" + rest,
+                "serviceStatus": parseInt(rest.match(/^:\ ?([0-9]+)$/)[1])
+        };
 };
 
 Rest= Rest 'CHAR' function(rest, char){
