@@ -1,4 +1,4 @@
-import parser from "../index";
+import { atMessagesParser } from "../index";
 import { AtMessageId } from "../index";
 import { MemStorage } from "../index";
 import { AtMessage } from "../index";
@@ -27,7 +27,7 @@ let atMessages: AtMessage[];
 
 try {
 
-        atMessages= parser(input);
+        atMessages= atMessagesParser(input);
 
 } catch (error) {
 
