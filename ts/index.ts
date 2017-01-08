@@ -11,7 +11,7 @@ export enum AtMessageId {
         OK, CONNECT, RING, NO_CARRIER, NO_DIALTONE, BUSY, NO_ANSWER, COMMAND_NOT_SUPPORT, TOO_MANY_PARAMETERS,
         ERROR, CME_ERROR, CMS_ERROR,
         BOOT, RSSI,
-        CNUM, CMTI, CMGR, CPIN, SIMST, SRVST
+        CNUM, CMTI, CMGR, CPIN, SIMST, SRVST, CMEE
 }
 
 let atMessageUnsolicited: AtMessageId[] = [
@@ -140,8 +140,24 @@ export enum ServiceStatus {
         POWER_SAVING_OR_HIBERNATE_STATE = 4
 }
 
+export enum ReportMode {
+        NO_DEBUG_INFO= 0,
+        DEBUG_INFO_CODE= 1,
+        DEBUG_INFO_VERBOSE= 2
+}
+
 export namespace AtMessageImplementations {
 
+        //\r\n+CMEE: 2\r\n
+        export class CMEE extends AtMessage {
+                public readonly reportModeName: string;
+                constructor(raw: string,
+                        public readonly reportMode: ReportMode) {
+                        super(AtMessageId.CMEE, raw);
+
+                        this.reportModeName = ReportMode[reportMode];
+                }
+        }
 
         //\r\n^SIMST: <sim_state>[,<lock_state>]\r\n
         export class SIMST extends AtMessage {
@@ -341,8 +357,12 @@ export function atMessagesParser(input: string): AtMessage[] {
                                 atMessage = new AtMessageImplementations.SIMST(raw, simState, lock);
                                 break;
                         case AtMessageId.SRVST:
-                                let serviceStatus= <ServiceStatus>atMessageDescriptor.serviceStatus;
-                                atMessage= new AtMessageImplementations.SRVST(raw,serviceStatus);
+                                let serviceStatus = <ServiceStatus>atMessageDescriptor.serviceStatus;
+                                atMessage = new AtMessageImplementations.SRVST(raw, serviceStatus);
+                                break;
+                        case AtMessageId.CMEE:
+                                let reportMode= <ReportMode>atMessageDescriptor.reportMode;
+                                atMessage= new AtMessageImplementations.CMEE(raw, reportMode);
                                 break;
                         default: atMessage = new AtMessage(id, raw);
                 }

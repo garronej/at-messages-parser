@@ -30,7 +30,8 @@ let input = [
         '\r\nNO ANSWER\r\n', 
         '\r\nCOMMAND NOT SUPPORT\r\n', 
         '\r\nTOO MANY PARAMETERS\r\n',
-        '\r\n^SRVST: 0\r\n'
+        '\r\n^SRVST: 0\r\n',
+        '\r\n+CMEE: 1\r\n'
 ].join("");
 
 
@@ -83,6 +84,11 @@ for (let atMessage of atMessages) {
                 case AtMessageId.SRVST:
                         let atMessageSRVST= <AtMessageImplementations.SRVST>atMessage;
                         console.log(atMessageSRVST);
+                        break;
+                case AtMessageId.CMEE:
+                        let atMessageCMEE= <AtMessageImplementations.CMEE>atMessage;
+                        console.log(atMessageCMEE);
+                        break;
                 default: console.log("generic", atMessage);
         }
 

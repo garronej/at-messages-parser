@@ -188,6 +188,14 @@ Payload= Rest function(rest){
                 "raw": "^SRVST" + rest,
                 "serviceStatus": parseInt(rest.match(/^:\ ?([0-9]+)$/)[1])
         };
+} | 'CMEE' Rest function(_, rest){
+
+        return {
+                "id": "CMEE",
+                "raw": "+CMEE" + rest,
+                "reportMode": parseInt(rest.match(/^:\ ?([0-9]+)$/)[1])
+        };
+
 };
 
 Rest= Rest 'CHAR' function(rest, char){
