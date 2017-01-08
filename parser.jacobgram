@@ -216,6 +216,22 @@ Payload= Rest function(rest){
                 "pin2Times": parseInt(match[6])
         };
 
+} | 'HUAWEI_SYSINFO' Rest function(_, rest){
+
+        //\r\n^SYSINFO:2,3,0,5,1,,4\r\n
+        
+        var match= rest.match(/^:\ ?([0-9]+),([0-9]+),([01]),([0-9]+),([0-9]+).*$/);
+
+        return{
+                "id": "HUAWEI_SYSINFO",
+                "raw": "^SYSINFO" + rest,
+                "serviceStatus": parseInt(match[1]),
+                "serviceDomain": parseInt(match[2]),
+                "isRoaming": match[3] === "1",
+                "sysMode": parseInt(match[4]),
+                "simState": parseInt(match[5])
+        };
+
 };
 
 Rest= Rest 'CHAR' function(rest, char){

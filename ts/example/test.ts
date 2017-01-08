@@ -33,7 +33,8 @@ let input = [
         '\r\n^SRVST: 0\r\n',
         '\r\n+CMEE: 1\r\n',
         '\r\n^CPIN: SIM PIN,3,10,3,10,3\r\n',
-        '\r\n^CPIN: READY,,10,3,10,3\r\n'
+        '\r\n^CPIN: READY,,10,3,10,3\r\n',
+        '\r\n^SYSINFO:2,3,0,5,1,,4\r\n'
 ].join("");
 
 
@@ -94,6 +95,10 @@ for (let atMessage of atMessages) {
                 case AtMessageId.HUAWEI_CPIN:
                         let atMessageHuaweiCPIN= <AtMessageImplementations.HUAWEI_CPIN>atMessage;
                         console.log(atMessageHuaweiCPIN);
+                        break;
+                case AtMessageId.HUAWEI_SYSINFO:
+                        let atMessageHuaweiSYSINFO= <AtMessageImplementations.HUAWEI_SYSINFO>atMessage;
+                        console.log(atMessageHuaweiSYSINFO);
                         break;
                 default: console.log("generic", atMessage);
         }

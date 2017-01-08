@@ -11,8 +11,9 @@ export enum AtMessageId {
         OK, CONNECT, RING, NO_CARRIER, NO_DIALTONE, BUSY, NO_ANSWER, COMMAND_NOT_SUPPORT, TOO_MANY_PARAMETERS,
         ERROR, CME_ERROR, CMS_ERROR,
         CNUM, CMGR, CMTI, CPIN, CMEE,
-        HUAWEI_BOOT, HUAWEI_RSSI, HUAWEI_SIMST, HUAWEI_SRVST, HUAWEI_CPIN
+        HUAWEI_BOOT, HUAWEI_RSSI, HUAWEI_SIMST, HUAWEI_SRVST, HUAWEI_CPIN, HUAWEI_SYSINFO
 }
+
 
 let atMessageUnsolicited: AtMessageId[] = [
         AtMessageId.HUAWEI_BOOT,
@@ -126,6 +127,34 @@ export enum MemStorage { SM, ME, ON, EN, FD }
 
 export enum PinState { READY, SIM_PIN, SIM_PUK, SIM_PIN2, SIM_PUK2 }
 
+
+export enum ServiceStatus {
+        NO_SERVICES = 0,
+        RESTRICTED_SERVICES = 1,
+        VALID_SERVICES = 2,
+        RESTRICTED_REGIONAL_SERVICES = 3,
+        POWER_SAVING_OR_HIBERNATE_STATE = 4
+}
+
+export enum ServiceDomain {
+        NO_SERVICES= 0,
+        ONLY_CS_SERVICES= 1,
+        ONLY_PS_SERVICES= 2,
+        PS_AND_CS_SERVICES= 3,
+        CS_AND_PS_NOT_REGISTERED_SEARCHING= 4
+}
+
+export enum SysMode {
+        NO_SERVICES= 0,
+        AMPS=1,
+        CDMA=2,
+        GSM_GPRS= 3,
+        HDR= 4,
+        WCDMA= 5,
+        GPS= 6
+}
+
+
 export enum SimState {
         INVALID_SIM = 0,
         VALID_SIM = 1,
@@ -136,13 +165,9 @@ export enum SimState {
         NO_SIM = 255
 }
 
-export enum ServiceStatus {
-        NO_SERVICES = 0,
-        RESTRICTED_SERVICES = 1,
-        VALID_SERVICES = 2,
-        RESTRICTED_REGIONAL_SERVICES = 3,
-        POWER_SAVING_OR_HIBERNATE_STATE = 4
-}
+
+
+
 
 export enum ReportMode {
         NO_DEBUG_INFO= 0,
@@ -327,6 +352,27 @@ export namespace AtMessageImplementations {
 
         }
 
+        export class HUAWEI_SYSINFO extends AtMessage{
+                public readonly serviceStatusName: string;
+                public readonly serviceDomainName: string;
+                public readonly sysModeName: string;
+                public readonly simStateName: string;
+                constructor(raw: string,
+                public readonly serviceStatus: ServiceStatus,
+                public readonly serviceDomain: ServiceDomain,
+                public readonly isRoaming: boolean,
+                public readonly sysMode: SysMode,
+                public readonly simState: SimState){
+                        super(AtMessageId.HUAWEI_SYSINFO, raw);
+
+                        this.serviceStatusName= ServiceStatus[serviceStatus];
+                        this.serviceDomainName= ServiceDomain[serviceDomain];
+                        this.sysModeName= SysMode[sysMode];
+                        this.simStateName= SimState[simState];
+
+                }
+        }
+
 
 }
 
@@ -407,17 +453,24 @@ export function atMessagesParser(input: string): AtMessage[] {
                                 atMessage = new AtMessageImplementations.HUAWEI_SRVST(raw, serviceStatus);
                                 break;
                         case AtMessageId.CMEE:
-                                let reportMode = <ReportMode>atMessageDescriptor.reportMode;
-                                atMessage = new AtMessageImplementations.CMEE(raw, reportMode);
+                                let reportMode = <ReportMode>atMessageDescriptor.reportMode; atMessage = new AtMessageImplementations.CMEE(raw, reportMode);
                                 break;
                         case AtMessageId.HUAWEI_CPIN:
-                                let hPinState = <PinState>PinState[<string>atMessageDescriptor.pinState];
+                                pinState = <PinState>PinState[<string>atMessageDescriptor.pinState];
                                 let times= <number>atMessageDescriptor.times;
                                 let pukTimes= <number>atMessageDescriptor.pukTimes;
                                 let pinTimes= <number>atMessageDescriptor.pinTimes;
                                 let puk2Times= <number>atMessageDescriptor.puk2Times;
                                 let pin2Times= <number>atMessageDescriptor.pin2Times;
-                                atMessage= new AtMessageImplementations.HUAWEI_CPIN(raw,hPinState, times, pukTimes, pinTimes, puk2Times, pin2Times);
+                                atMessage= new AtMessageImplementations.HUAWEI_CPIN(raw,pinState, times, pukTimes, pinTimes, puk2Times, pin2Times);
+                                break;
+                        case AtMessageId.HUAWEI_SYSINFO:
+                                serviceStatus= <ServiceStatus>atMessageDescriptor.serviceStatus;
+                                let serviceDomain= <ServiceDomain>atMessageDescriptor.serviceDomain;
+                                let isRoaming= <boolean>atMessageDescriptor.isRoaming;
+                                let sysMode= <SysMode>atMessageDescriptor.sysMode;
+                                simState= <SimState>atMessageDescriptor.simState;
+                                atMessage= new AtMessageImplementations.HUAWEI_SYSINFO(raw, serviceStatus, serviceDomain, isRoaming, sysMode, simState);
                                 break;
                         default: atMessage = new AtMessage(id, raw);
                 }
