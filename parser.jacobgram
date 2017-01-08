@@ -73,7 +73,7 @@ Error= 'ERROR' function(){
         return {
                 "id": "ERROR",
                 "raw": "ERROR"
-        }
+        };
 
 } | 'CME_ERROR' function(code){
 
@@ -119,7 +119,7 @@ Payload= Rest function(rest){
 
 } | 'CMGR' Rest function(_, rest){
 
-        //\r\n+CMGR: 0,,26\r\n07913306092069F0040B913336766883F5000061216232414440084EF289EC26BBC9\r\n
+        //\r\n+CMGR: 0,,26\r\n
 
         var match= rest.match(/^:\ ?([0-9]+),[0-9]*,([0-9]+)$/);
 
@@ -143,17 +143,17 @@ Payload= Rest function(rest){
                 "index": parseInt(match[2])
         };
 
-} | 'BOOT' Rest function(_, rest){
+} | 'HUAWEI_BOOT' Rest function(_, rest){
 
         return {
-                "id": "BOOT",
+                "id": "HUAWEI_BOOT",
                 "raw": "^BOOT" + rest
         };
 
-} | 'RSSI' Rest function(_, rest){
+} | 'HUAWEI_RSSI' Rest function(_, rest){
 
         return {
-                "id": "RSSI",
+                "id": "HUAWEI_RSSI",
                 "raw": "^RSSI" + rest
         };
 
@@ -163,9 +163,9 @@ Payload= Rest function(rest){
                 "id": "CPIN",
                 "raw": "+CPIN" + rest,
                 "pinState": rest.match(/^:\ ?([\ A-Z]+)$/)[1].replace(/\ /g, "_")
-        }
+        };
 
-} | 'SIMST' Rest function(_, rest){
+} | 'HUAWEI_SIMST' Rest function(_, rest){
 
         var match= rest.match(/^:\ ?([0-9]+)(?:,([01]))?$/);
 
@@ -174,26 +174,46 @@ Payload= Rest function(rest){
         if( match[2] !== undefined ) lock= (match[2] === "1")
 
         return {
-                "id": "SIMST",
+                "id": "HUAWEI_SIMST",
                 "raw": "^SIMST" + rest,
                 "simState": parseInt(match[1]),
                 "lock": lock
         };
 
 
-} | 'SRVST' Rest function(_, rest){
+} | 'HUAWEI_SRVST' Rest function(_, rest){
 
         return {
-                "id": "SRVST",
+                "id": "HUAWEI_SRVST",
                 "raw": "^SRVST" + rest,
                 "serviceStatus": parseInt(rest.match(/^:\ ?([0-9]+)$/)[1])
         };
+
 } | 'CMEE' Rest function(_, rest){
 
         return {
                 "id": "CMEE",
                 "raw": "+CMEE" + rest,
                 "reportMode": parseInt(rest.match(/^:\ ?([0-9]+)$/)[1])
+        };
+
+} | 'HUAWEI_CPIN' Rest function(_, rest){
+
+        var match= rest.match(/^:\ ?([\ A-Z]+),((?:[0-9]+)?),([0-9]+),([0-9]+),([0-9]+),([0-9]+)$/);
+
+        var times= undefined;
+
+        if( match[2] !== "" ) times= parseInt(match[2]);
+        
+        return {
+                "id": "HUAWEI_CPIN",
+                "raw": "^CPIN" + rest,
+                "pinState": match[1].replace(/\ /g, "_"),
+                "times": times,
+                "pukTimes": parseInt(match[3]),
+                "pinTimes": parseInt(match[4]),
+                "puk2Times": parseInt(match[5]),
+                "pin2Times": parseInt(match[6])
         };
 
 };

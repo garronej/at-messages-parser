@@ -1,6 +1,7 @@
 %%
 
-knownMessages= \+CNUM|\+CMGR|\+CMTI|\^BOOT|\^RSSI|\+CPIN|\^SIMST|\^SRVST|\+CMEE
+knownMessagesStandard= \+(CNUM|CMGR|CMTI|CPIN|CMEE)
+knownMessagesHuawei= \^(BOOT|RSSI|SIMST|SRVST|CPIN)
 finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAND\sNOT\sSUPPORT|TOO\sMANY\sPARAMETERS 
 
 %%
@@ -50,13 +51,18 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 }
 
 
-<RUN>{knownMessages} {
+<RUN>{knownMessagesStandard} {
 
-        this.jjval= this.jjtext.substring(1,this.jjtext.length);
+        var token= this.jjtext.substring(1,this.jjtext.length);
 
-        if( this.jjval === "CMGR" ) this.expectPdu= true;
+        if( token === "CMGR" ) this.expectPdu= true;
 
-        return this.jjval;
+        return token;
+}
+
+<RUN>{knownMessagesHuawei} {
+
+        return "HUAWEI_" + this.jjtext.substring(1, this.jjtext.length);
 }
 
 

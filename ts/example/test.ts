@@ -31,7 +31,9 @@ let input = [
         '\r\nCOMMAND NOT SUPPORT\r\n', 
         '\r\nTOO MANY PARAMETERS\r\n',
         '\r\n^SRVST: 0\r\n',
-        '\r\n+CMEE: 1\r\n'
+        '\r\n+CMEE: 1\r\n',
+        '\r\n^CPIN: SIM PIN,3,10,3,10,3\r\n',
+        '\r\n^CPIN: READY,,10,3,10,3\r\n'
 ].join("");
 
 
@@ -77,17 +79,21 @@ for (let atMessage of atMessages) {
                         let atMessageCMS_ERROR= <AtMessageImplementations.CMS_ERROR>atMessage;
                         console.log(atMessageCMS_ERROR);
                         break;
-                case AtMessageId.SIMST:
-                        let atMessageSIMST= <AtMessageImplementations.SIMST>atMessage;
-                        console.log(atMessageSIMST);
+                case AtMessageId.HUAWEI_SIMST:
+                        let atMessageHuaweiSIMST= <AtMessageImplementations.HUAWEI_SIMST>atMessage;
+                        console.log(atMessageHuaweiSIMST);
                         break;
-                case AtMessageId.SRVST:
-                        let atMessageSRVST= <AtMessageImplementations.SRVST>atMessage;
-                        console.log(atMessageSRVST);
+                case AtMessageId.HUAWEI_SRVST:
+                        let atMessageHuaweiSRVST= <AtMessageImplementations.HUAWEI_SRVST>atMessage;
+                        console.log(atMessageHuaweiSRVST);
                         break;
                 case AtMessageId.CMEE:
                         let atMessageCMEE= <AtMessageImplementations.CMEE>atMessage;
                         console.log(atMessageCMEE);
+                        break;
+                case AtMessageId.HUAWEI_CPIN:
+                        let atMessageHuaweiCPIN= <AtMessageImplementations.HUAWEI_CPIN>atMessage;
+                        console.log(atMessageHuaweiCPIN);
                         break;
                 default: console.log("generic", atMessage);
         }

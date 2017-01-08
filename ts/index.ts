@@ -10,17 +10,16 @@ export enum AtMessageId {
         AT_COMMAND,
         OK, CONNECT, RING, NO_CARRIER, NO_DIALTONE, BUSY, NO_ANSWER, COMMAND_NOT_SUPPORT, TOO_MANY_PARAMETERS,
         ERROR, CME_ERROR, CMS_ERROR,
-        BOOT, RSSI,
-        CNUM, CMTI, CMGR, CPIN, SIMST, SRVST, CMEE
+        CNUM, CMGR, CMTI, CPIN, CMEE,
+        HUAWEI_BOOT, HUAWEI_RSSI, HUAWEI_SIMST, HUAWEI_SRVST, HUAWEI_CPIN
 }
 
 let atMessageUnsolicited: AtMessageId[] = [
-        AtMessageId.BOOT,
-        AtMessageId.RSSI,
-        AtMessageId.SIMST,
-        AtMessageId.SRVST
+        AtMessageId.HUAWEI_BOOT,
+        AtMessageId.HUAWEI_RSSI,
+        AtMessageId.HUAWEI_SIMST,
+        AtMessageId.HUAWEI_SRVST
 ];
-
 
 let atMessageFinal: AtMessageId[] = [
         AtMessageId.OK, 
@@ -47,7 +46,6 @@ let atMessageError: AtMessageId[]= [
         AtMessageId.ERROR,
         AtMessageId.CME_ERROR,
         AtMessageId.CMS_ERROR
-
 ];
 
 
@@ -99,19 +97,25 @@ export class AtMessage {
         public error?: AtMessageImplementations.ERROR | AtMessageImplementations.CME_ERROR | AtMessageImplementations.CMS_ERROR;
         public isError?: boolean;
 
-        constructor(public readonly id: AtMessageId,
+        public get id(): AtMessageId{
+                return this.__id__;
+        }
+
+        constructor(private readonly __id__: AtMessageId,
                 public readonly raw: string
         ) {
 
-                if (id !== undefined) this.idName = AtMessageId[id];
+                Object.defineProperty(this, "__id__", { "enumerable": false });
 
-                if (atMessageUnsolicited.indexOf(id) > -1)
+                if (this.id !== undefined) this.idName = AtMessageId[this.id];
+
+                if (atMessageUnsolicited.indexOf(this.id) > -1)
                         this.isUnsolicited = true;
 
-                if (atMessageFinal.indexOf(id) > -1)
+                if (atMessageFinal.indexOf(this.id) > -1)
                         this.isFinal = true;
 
-                if (atMessageError.indexOf(id) > -1)
+                if (atMessageError.indexOf(this.id) > -1)
                         this.isError = true;
 
         }
@@ -148,7 +152,7 @@ export enum ReportMode {
 
 export namespace AtMessageImplementations {
 
-        //\r\n+CMEE: 2\r\n
+        //+CMEE: 2
         export class CMEE extends AtMessage {
                 public readonly reportModeName: string;
                 constructor(raw: string,
@@ -159,8 +163,8 @@ export namespace AtMessageImplementations {
                 }
         }
 
-        //\r\n^SIMST: <sim_state>[,<lock_state>]\r\n
-        export class SIMST extends AtMessage {
+        //^SIMST: <sim_state>[,<lock_state>]
+        export class HUAWEI_SIMST extends AtMessage {
 
                 public readonly simStateName: string;
                 public readonly lock?: boolean;
@@ -169,7 +173,7 @@ export namespace AtMessageImplementations {
                         public readonly simState: SimState,
                         lock: boolean) {
 
-                        super(AtMessageId.SIMST, raw);
+                        super(AtMessageId.HUAWEI_SIMST, raw);
 
                         this.simStateName = SimState[simState];
 
@@ -180,17 +184,17 @@ export namespace AtMessageImplementations {
 
         }
 
-        //\r\n^SRVST: 0\r\n
-        export class SRVST extends AtMessage {
+        //^SRVST: 0
+        export class HUAWEI_SRVST extends AtMessage {
                 public readonly serviceStatusName: string;
                 constructor(raw: string,
                         public readonly serviceStatus: ServiceStatus) {
-                        super(AtMessageId.SRVST, raw);
+                        super(AtMessageId.HUAWEI_SRVST, raw);
                         this.serviceStatusName = ServiceStatus[serviceStatus];
                 }
         }
 
-        //\r\nERROR\r\n
+        //ERROR
         export class ERROR extends AtMessage {
                 constructor(raw) {
                         super(AtMessageId.ERROR, raw);
@@ -198,7 +202,7 @@ export namespace AtMessageImplementations {
         }
 
 
-        //\r\n+CME ERROR: 3\r\n
+        //+CME ERROR: 3
         export class CME_ERROR extends AtMessage {
                 public readonly code: number;
                 public readonly verbose: string;
@@ -211,7 +215,7 @@ export namespace AtMessageImplementations {
                 }
         }
 
-        //\r\n+CMS ERROR: 301\r\n
+        //+CMS ERROR: 301
         export class CMS_ERROR extends AtMessage {
                 public readonly code: number;
                 public readonly verbose: string;
@@ -224,7 +228,7 @@ export namespace AtMessageImplementations {
                 }
         }
 
-        // \r\n+CMGR: 0,,26\r\n07913306092069F0040B913336766883F5000061216232414440084EF289EC26BBC9\r\n\r\nOK\r\n
+        //+CMGR: 0,,26\r\n07913306092069F0040B913336766883F5000061216232414440084EF289EC26BBC9\r\n
         export class CMGR extends AtMessage {
 
                 constructor(raw: string,
@@ -237,18 +241,24 @@ export namespace AtMessageImplementations {
 
         }
 
-        //\r\n+CMTI: "SM",29\r\n'
+        //+CMTI: "SM",29
         export class CMTI extends AtMessage {
 
                 public readonly memName: string;
 
+                public get mem(): MemStorage{
+                        return this.__mem__;
+                }
+
                 constructor(raw: string,
-                        public readonly mem: MemStorage,
+                        private readonly __mem__: MemStorage,
                         public readonly index: number) {
 
                         super(AtMessageId.CMTI, raw);
 
-                        this.memName = MemStorage[mem];
+                        Object.defineProperty(this, "__mem__", { "enumerable": false });
+
+                        this.memName = MemStorage[this.mem];
                 }
 
         }
@@ -272,13 +282,49 @@ export namespace AtMessageImplementations {
 
                 public readonly pinStateName: string;
 
+                public get pinState(): PinState{
+                        return this.__pinState__;
+                }
+
                 constructor(raw: string,
-                        public readonly pinState: PinState) {
+                        private readonly __pinState__: PinState) {
 
                         super(AtMessageId.CPIN, raw);
-                        this.pinStateName = PinState[pinState];
+
+                        Object.defineProperty(this, "__pinState__" , { "enumerable": false });
+
+                        this.pinStateName = PinState[this.pinState];
 
                 }
+        }
+
+        // \r\n^CPIN: SIM PIN,3,10,3,10,3\r\n
+        // \r\n^CPIN: READY,,10,3,10,3\r\n
+        export class HUAWEI_CPIN extends AtMessage {
+
+
+                public readonly pinStateName: string;
+
+                public get pinState(): PinState {
+                        return this.__pinState__;
+                }
+
+                //<code>,[<times>],<puk_times>,<pin_times>,<puk2_times>,<pin2_ti mes><
+                constructor(raw: string,
+                        private readonly __pinState__: PinState,
+                        public readonly times: number,
+                        public readonly pukTimes: number,
+                        public readonly pinTimes: number,
+                        public readonly puk2Times: number,
+                        public readonly pin2Times: number) {
+
+                        super(AtMessageId.HUAWEI_CPIN, raw);
+
+                        Object.defineProperty(this, "__pinState__", { "enumerable": false });
+
+                        this.pinStateName = PinState[this.pinState];
+                }
+
         }
 
 
@@ -351,18 +397,27 @@ export function atMessagesParser(input: string): AtMessage[] {
                                 let pinState = <PinState>PinState[<string>atMessageDescriptor.pinState];
                                 atMessage = new AtMessageImplementations.CPIN(raw, pinState);
                                 break;
-                        case AtMessageId.SIMST:
+                        case AtMessageId.HUAWEI_SIMST:
                                 let simState = <SimState>atMessageDescriptor.simState;
                                 let lock = <boolean>atMessageDescriptor.lock;
-                                atMessage = new AtMessageImplementations.SIMST(raw, simState, lock);
+                                atMessage = new AtMessageImplementations.HUAWEI_SIMST(raw, simState, lock);
                                 break;
-                        case AtMessageId.SRVST:
+                        case AtMessageId.HUAWEI_SRVST:
                                 let serviceStatus = <ServiceStatus>atMessageDescriptor.serviceStatus;
-                                atMessage = new AtMessageImplementations.SRVST(raw, serviceStatus);
+                                atMessage = new AtMessageImplementations.HUAWEI_SRVST(raw, serviceStatus);
                                 break;
                         case AtMessageId.CMEE:
-                                let reportMode= <ReportMode>atMessageDescriptor.reportMode;
-                                atMessage= new AtMessageImplementations.CMEE(raw, reportMode);
+                                let reportMode = <ReportMode>atMessageDescriptor.reportMode;
+                                atMessage = new AtMessageImplementations.CMEE(raw, reportMode);
+                                break;
+                        case AtMessageId.HUAWEI_CPIN:
+                                let hPinState = <PinState>PinState[<string>atMessageDescriptor.pinState];
+                                let times= <number>atMessageDescriptor.times;
+                                let pukTimes= <number>atMessageDescriptor.pukTimes;
+                                let pinTimes= <number>atMessageDescriptor.pinTimes;
+                                let puk2Times= <number>atMessageDescriptor.puk2Times;
+                                let pin2Times= <number>atMessageDescriptor.pin2Times;
+                                atMessage= new AtMessageImplementations.HUAWEI_CPIN(raw,hPinState, times, pukTimes, pinTimes, puk2Times, pin2Times);
                                 break;
                         default: atMessage = new AtMessage(id, raw);
                 }
