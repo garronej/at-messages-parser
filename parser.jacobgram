@@ -1,14 +1,13 @@
 %mode LALR
 
-Program= 'ECHO' List function(echo, list){
+Program= 'ECHO' Instructions function(echo, instructions){
 
         this.echo= echo;
-        this.atMessageDescriptors= list;
+        this.atMessageDescriptors= instructions;
 
+}| Instructions function(instructions){
 
-}| List function(list){
-
-        this.atMessageDescriptors= list;
+        this.atMessageDescriptors= instructions;
 
 }| 'ECHO' function(echo){
 
@@ -17,53 +16,80 @@ Program= 'ECHO' List function(echo, list){
 
 };
 
-List= List Message function(list, message){
+Instructions= Instructions Instruction function(instructions, instruction){
 
-        list.push(message);
+        instructions.push(instruction);
+        return instructions;
 
-        return list;
+} | Instruction function(instruction){
 
-} | Message function(message){
-
-        return [ message ];
-
-};
-
-Message= 'SEP' Error Payload 'SEP' 'SEP' function(_, error, payload){
-
-        payload.raw= "\r\n" + error.raw + payload.raw + "\r\n\r\n";
-
-        payload.error= error;
-
-        return payload;
-
-} | 'SEP' Payload 'SEP' function(_, payload){
-
-        payload.raw= "\r\n" + payload.raw + "\r\n";
-        
-        return payload;
-
-} | 'SEP' Payload 'SEP' 'PDU' 'SEP' function(_, payload, _, pdu){
-
-        payload.raw= "\r\n" + payload.raw + "\r\n" + pdu + "\r\n";
-
-        payload.pdu= pdu;
-        
-        return payload;
-
-} | 'SEP' FinalResultCode 'SEP' function(_, finalResultCode){
-
-        finalResultCode.raw= "\r\n" + finalResultCode.raw + "\r\n";
-
-        return finalResultCode;
+        return [ instruction ];
 
 };
 
-FinalResultCode= Error | 'FINAL_RESULT_CODE' function(rawFinalResultCode){
+Instruction= 'SEP' FinalResultCode 'SEP' function(_, message){
+
+        message.raw= "\r\n" + message.raw + "\r\n";
+
+        return message;
+
+} | 'SEP' ListMessageWrapMultiline 'SEP' function(_, messages){
+
+        var raw= "\r\n";
+
+        messages.forEach(function(message){
+                raw+= message.raw;
+        });
+
+        raw+= "\r\n";
 
         return {
-                "raw": rawFinalResultCode,
-                "id": rawFinalResultCode.replace(/\ /g, "_")
+                "id": "AT_LIST",
+                "raw": raw,
+                "atMessageDescriptors": messages
+        };
+
+
+} | 'SEP' MessageWrap 'SEP' function(_, message){
+
+        message.raw= "\r\n" + message.raw + "\r\n";
+
+        return message;
+
+};
+
+ListMessageWrapMultiline=  ListMessageWrapMultiline MessageWrapMultiline function(messages, message){
+
+        messages.push(message);
+        return messages;
+
+} | MessageWrapMultiline function(message){
+        return [ message ];
+};
+
+MessageWrap= Message function(message){ return message; }
+| Error Message function(error, message){
+        message.error= error;
+        return message;
+};
+
+MessageWrapMultiline= KnownMessageMultiLine function(message){ return message; } 
+| Error KnownMessageMultiLine function(error, message){
+        message.error= error;
+        return message;
+};
+
+ 
+Message= KnownMessage function(message){ return message; }
+| KnownMessagePdu function(message){ return message; }
+| UnknownMessage function(message){ return message; };
+
+
+FinalResultCode= Error | 'FINAL_RESULT_CODE' function(finalResultCode){
+
+        return {
+                "raw": finalResultCode,
+                "id": finalResultCode.replace(/\ /g, "_")
         };
 
 };
@@ -93,155 +119,137 @@ Error= 'ERROR' function(){
 
 };
 
-
-Payload= Rest function(rest){
-
+UnknownMessage= 'REST' function(rest){
         return { "raw": rest };
+};
 
-} | 'CNUM' Rest function(_, rest){
+KnownMessageMultiLine= 'ID_MULTILINE' 'REST' 'SEP' function(id, rest){
 
-        //\r\n+CNUM: "CC","+8613987654321",129\r\n
-
-        var match= rest.match(/^:\ ?"([a-zA-Z]*)","(\+?[0-9]*)",([0-9]*)$/);
-        
-        var isNational= undefined;
-
-        if( match[3] === "129" ) isNational= true
-        else if( match[3] === "145" ) isNational= false
-
-        return {
-                "raw": "+CNUM" + rest,
-                "id": "CNUM",
-                "alpha": match[1],
-                "number": match[2],
-                "isNational": isNational
+        var atMessageDescriptor= {
+                "id": "",
+                "raw": id.prefix + id.name + rest + "\r\n"
         };
 
-} | 'CMGR' Rest function(_, rest){
+        if( id.prefix === "^" ) atMessageDescriptor.id+="HUAWEI_";
 
-        //\r\n+CMGR: 0,,26\r\n
+        atMessageDescriptor.id+= id.name;
 
-        var match= rest.match(/^:\ ?([0-9]+),[0-9]*,([0-9]+)$/);
+        switch(atMessageDescriptor.id){
+                case "CNUM":
+                        var match= rest.match(/^:\ ?"([^"]*)","([^"]*)",([0-9]+).*$/);
+                        var isNational= undefined;
+                        if( match[3] === "129" ) isNational= true
+                        else if( match[3] === "145" ) isNational= false
+                        Object.assign( atMessageDescriptor, {
+                                "alpha": match[1],
+                                "number": match[2],
+                                "isNational": isNational
+                        });
+                        break;
+                default:
+        }
 
-        return {
-                "id": "CMGR",
-                "raw": "+CMGR"+rest,
-                "stat": parseInt(match[1]),
-                "length": parseInt(match[2])
-        };
-
-} | 'CMTI' Rest function(_, rest){
-
-        //\r\n+CMTI: "SM",29\r\n
-        
-        var match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
-
-        return {
-                "id": "CMTI",
-                "raw": "+CMTI"+rest,
-                "mem": match[1],
-                "index": parseInt(match[2])
-        };
-
-} | 'HUAWEI_BOOT' Rest function(_, rest){
-
-        return {
-                "id": "HUAWEI_BOOT",
-                "raw": "^BOOT" + rest
-        };
-
-} | 'HUAWEI_RSSI' Rest function(_, rest){
-
-        return {
-                "id": "HUAWEI_RSSI",
-                "raw": "^RSSI" + rest
-        };
-
-} | 'CPIN' Rest function(_, rest ){
-
-        return {
-                "id": "CPIN",
-                "raw": "+CPIN" + rest,
-                "pinState": rest.match(/^:\ ?([\ A-Z]+)$/)[1].replace(/\ /g, "_")
-        };
-
-} | 'HUAWEI_SIMST' Rest function(_, rest){
-
-        var match= rest.match(/^:\ ?([0-9]+)(?:,([01]))?$/);
-
-        var lock= undefined;
-
-        if( match[2] !== undefined ) lock= (match[2] === "1")
-
-        return {
-                "id": "HUAWEI_SIMST",
-                "raw": "^SIMST" + rest,
-                "simState": parseInt(match[1]),
-                "lock": lock
-        };
-
-
-} | 'HUAWEI_SRVST' Rest function(_, rest){
-
-        return {
-                "id": "HUAWEI_SRVST",
-                "raw": "^SRVST" + rest,
-                "serviceStatus": parseInt(rest.match(/^:\ ?([0-9]+)$/)[1])
-        };
-
-} | 'CMEE' Rest function(_, rest){
-
-        return {
-                "id": "CMEE",
-                "raw": "+CMEE" + rest,
-                "reportMode": parseInt(rest.match(/^:\ ?([0-9]+)$/)[1])
-        };
-
-} | 'HUAWEI_CPIN' Rest function(_, rest){
-
-        var match= rest.match(/^:\ ?([\ A-Z]+),((?:[0-9]+)?),([0-9]+),([0-9]+),([0-9]+),([0-9]+)$/);
-
-        var times= undefined;
-
-        if( match[2] !== "" ) times= parseInt(match[2]);
-        
-        return {
-                "id": "HUAWEI_CPIN",
-                "raw": "^CPIN" + rest,
-                "pinState": match[1].replace(/\ /g, "_"),
-                "times": times,
-                "pukTimes": parseInt(match[3]),
-                "pinTimes": parseInt(match[4]),
-                "puk2Times": parseInt(match[5]),
-                "pin2Times": parseInt(match[6])
-        };
-
-} | 'HUAWEI_SYSINFO' Rest function(_, rest){
-
-        //\r\n^SYSINFO:2,3,0,5,1,,4\r\n
-        
-        var match= rest.match(/^:\ ?([0-9]+),([0-9]+),([01]),([0-9]+),([0-9]+).*$/);
-
-        return{
-                "id": "HUAWEI_SYSINFO",
-                "raw": "^SYSINFO" + rest,
-                "serviceStatus": parseInt(match[1]),
-                "serviceDomain": parseInt(match[2]),
-                "isRoaming": match[3] === "1",
-                "sysMode": parseInt(match[4]),
-                "simState": parseInt(match[5])
-        };
+        return atMessageDescriptor;
 
 };
 
-Rest= Rest 'CHAR' function(rest, char){
+KnownMessagePdu= 'ID_PDU' 'REST' 'SEP' 'PDU' function(id, rest, _, pdu){
 
-        rest+= char;
+        var atMessageDescriptor= {
+                "id": "",
+                "raw": id.prefix + id.name + rest + "\r\n" + pdu,
+                "pdu": pdu
+        };
 
-        return rest;
+        if( id.prefix === "^" ) atMessageDescriptor.id+="HUAWEI_";
 
-} | 'CHAR' function(char){
+        atMessageDescriptor.id+= id.name;
 
-        return char;
+        switch(atMessageDescriptor.id){
+                case "CMGR":
+                        var match= rest.match(/^:\ ?([0-9]+),[0-9]*,([0-9]+)$/);
+                        Object.assign( atMessageDescriptor, {
+                                "stat": parseInt(match[1]),
+                                "length": parseInt(match[2])
+                        });
+                        break;
+                default:
+        }
+
+        return atMessageDescriptor;
+
+};
+
+KnownMessage= 'ID' 'REST' function(id, rest){
+
+        var atMessageDescriptor= {
+                "id": "",
+                "raw": id.prefix + id.name + rest
+        };
+
+        if( id.prefix === "^" ) atMessageDescriptor.id+="HUAWEI_";
+
+        atMessageDescriptor.id+= id.name;
+
+
+        switch(atMessageDescriptor.id){
+                case "CMTI":
+                        var match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
+                        Object.assign( atMessageDescriptor, {
+                                "mem": match[1],
+                                "index": parseInt(match[2])
+                        });
+                        break;
+                case "CPIN":
+                        Object.assign( atMessageDescriptor, {
+                                "pinState": rest.match(/^:\ ?([\ A-Z]+)$/)[1].replace(/\ /g, "_")
+                        });
+                        break;
+                case "HUAWEI_SIMST":
+                        var match= rest.match(/^:\ ?([0-9]+)(?:,([01]))?$/);
+                        var lock= undefined;
+                        if( match[2] !== undefined ) lock= (match[2] === "1")
+                        Object.assign( atMessageDescriptor, {
+                                "simState": parseInt(match[1]),
+                                "lock": lock
+                        });
+                        break;
+                case "HUAWEI_SRVST":
+                        Object.assign( atMessageDescriptor, {
+                                "serviceStatus": parseInt(rest.match(/^:\ ?([0-9]+)$/)[1])
+                        });
+                        break;
+                case "CMEE":
+                        Object.assign( atMessageDescriptor, {
+                                "reportMode": parseInt(rest.match(/^:\ ?([0-9]+)$/)[1])
+                        });
+                        break;
+                case "HUAWEI_CPIN":
+                        var match= rest.match(/^:\ ?([\ A-Z]+),((?:[0-9]+)?),([0-9]+),([0-9]+),([0-9]+),([0-9]+)$/);
+                        var times= undefined;
+                        if( match[2] !== "" ) times= parseInt(match[2]);
+                        Object.assign( atMessageDescriptor, {
+                                "pinState": match[1].replace(/\ /g, "_"),
+                                "times": times,
+                                "pukTimes": parseInt(match[3]),
+                                "pinTimes": parseInt(match[4]),
+                                "puk2Times": parseInt(match[5]),
+                                "pin2Times": parseInt(match[6])
+                        });
+                        break;
+                case "HUAWEI_SYSINFO":
+                        var match= rest.match(/^:\ ?([0-9]+),([0-9]+),([01]),([0-9]+),([0-9]+).*$/);
+                        Object.assign( atMessageDescriptor, {
+                                "serviceStatus": parseInt(match[1]),
+                                "serviceDomain": parseInt(match[2]),
+                                "isRoaming": match[3] === "1",
+                                "sysMode": parseInt(match[4]),
+                                "simState": parseInt(match[5])
+                        });
+                        break;
+                default:
+        }
+
+        return atMessageDescriptor;
 
 };

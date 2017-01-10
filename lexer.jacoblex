@@ -1,12 +1,17 @@
 %%
 
-knownMessagesStandard= \+(CNUM|CMGR|CMTI|CPIN|CMEE)
-knownMessagesHuawei= \^(BOOT|RSSI|SIMST|SRVST|CPIN|SYSINFO)
+id= (\+|\^)(CMTI|CPIN|CMEE|BOOT|RSSI|SIMST|SRVST|SYSINFO)
+
+idMultiline= (\+|\^)(CNUM)
+idPdu= (\+|\^)(CMGR)
+
 finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAND\sNOT\sSUPPORT|TOO\sMANY\sPARAMETERS 
 
 %%
 
+
 <>[^\r]+\r {
+
 
         this.jjval= this.jjtext;
 
@@ -14,6 +19,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 }
 
 <>\r\n {
+
         
         this.pushState("RUN");
 
@@ -24,6 +30,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <PDU>\r\n {
 
+
         this.popState();
                 
         return "SEP";
@@ -32,12 +39,14 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <PDU>[a-fA-F0-9]+ {
 
+
         this.jjval= this.jjtext;
 
         return "PDU";
 }
 
 <RUN>\r\n {
+
 
         if( this.expectPdu ){
 
@@ -51,22 +60,47 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 }
 
 
-<RUN>{knownMessagesStandard} {
+<RUN>{id} {
 
-        var token= this.jjtext.substring(1,this.jjtext.length);
 
-        if( token === "CMGR" ) this.expectPdu= true;
+        this.jjval= {
+                "prefix": this.jjtext[0],
+                "name": this.jjtext.substring(1,this.jjtext.length)
+        };
 
-        return token;
+        return "ID";
+
 }
 
-<RUN>{knownMessagesHuawei} {
+<RUN>{idMultiline} {
 
-        return "HUAWEI_" + this.jjtext.substring(1, this.jjtext.length);
+
+        this.jjval= {
+                "prefix": this.jjtext[0],
+                "name": this.jjtext.substring(1,this.jjtext.length)
+        };
+
+        return "ID_MULTILINE";
+
+}
+
+<RUN>{idPdu} {
+
+
+        this.expectPdu= true;
+
+        this.jjval= {
+                "prefix": this.jjtext[0],
+                "name": this.jjtext.substring(1,this.jjtext.length)
+        };
+
+        return "ID_PDU";
+
 }
 
 
 <RUN>\+CME\sERROR:\s[0-9]+ {
+
 
         this.jjval= parseInt(this.jjtext.match(/^\+CME\ ERROR:\ ([0-9]+)$/)[1]);
                 
@@ -76,6 +110,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <RUN>\+CMS\sERROR:\s[0-9]+ {
 
+
         this.jjval= parseInt(this.jjtext.match(/^\+CMS\ ERROR:\ ([0-9]+)$/)[1]);
                 
         return "CMS_ERROR";
@@ -83,12 +118,14 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 
 <RUN>ERROR {
+
                 
         return "ERROR";
 
 }
 
 <RUN>{finalResultCode} {
+
 
         this.jjval= this.jjtext;
 
@@ -97,8 +134,19 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <RUN>[^\r] {
 
-        this.jjval= this.jjtext;
+        this.pushState("REST");
 
-        return "CHAR";
+}
+
+
+<REST>[^\r]*/\r {
+
+        var prevChar= this.input.str[this.lastValidPos-this.jjtext.length-1];
+
+        this.jjval= prevChar + this.jjtext;
+
+        this.popState();
+
+        return "REST";
 
 }
