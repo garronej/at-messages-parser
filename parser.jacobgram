@@ -1,18 +1,8 @@
 %mode LALR
 
-Program= 'ECHO' Instructions function(echo, instructions){
-
-        this.echo= echo;
-        this.atMessageDescriptors= instructions;
-
-}| Instructions function(instructions){
+Program= Instructions function(instructions){
 
         this.atMessageDescriptors= instructions;
-
-}| 'ECHO' function(echo){
-
-        this.echo= echo;
-        this.atMessageDescriptors= [];
 
 };
 
@@ -55,6 +45,13 @@ Instruction= 'SEP' FinalResultCode 'SEP' function(_, message){
         message.raw= "\r\n" + message.raw + "\r\n";
 
         return message;
+
+} | 'AT_COMMAND' function(atCommand){
+
+        return {
+                "id": "AT_COMMAND",
+                "raw": atCommand
+        };
 
 };
 

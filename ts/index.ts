@@ -401,9 +401,6 @@ export function atMessagesParser(input: string): AtMessage[] {
 
         let atMessages: AtMessage[] = [];
 
-        if (output.echo !== undefined)
-                atMessages.push(new AtMessage(AtMessageId.AT_COMMAND, <string>output.echo));
-
         for (let atMessageDescriptor of output.atMessageDescriptors)
                 atMessages.push(descriptorToInstance(atMessageDescriptor));
 

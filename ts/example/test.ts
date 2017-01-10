@@ -6,12 +6,6 @@ import { AtMessageImplementations } from "../index";
 
 let input= "";
 
-//Test AT_ECHO
-
-
-input+= [
-        'AT+CMEE=0\r'
-].join("");
 
 
 //Test Final result code
@@ -29,6 +23,14 @@ input+= [
         '\r\nNO ANSWER\r\n', 
         '\r\nCOMMAND NOT SUPPORT\r\n', 
         '\r\nTOO MANY PARAMETERS\r\n',
+].join("");
+
+//Test AT_ECHO
+
+input+= [
+        'AT+CMEE=0\r',
+        'AT+CNUM\r',
+        'AT\r'
 ].join("");
 
 //Test implemented simple

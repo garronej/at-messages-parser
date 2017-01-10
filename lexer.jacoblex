@@ -10,43 +10,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 %%
 
 
-<>[^\r]+\r {
-
-
-        this.jjval= this.jjtext;
-
-        return 'ECHO';
-}
-
 <>\r\n {
-
-        
-        this.pushState("RUN");
-
-        return "SEP";
-
-}
-
-
-<PDU>\r\n {
-
-
-        this.popState();
-                
-        return "SEP";
-
-}
-
-<PDU>[a-fA-F0-9]+ {
-
-
-        this.jjval= this.jjtext;
-
-        return "PDU";
-}
-
-<RUN>\r\n {
-
 
         if( this.expectPdu ){
 
@@ -60,7 +24,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 }
 
 
-<RUN>{id} {
+<>{id} {
 
 
         this.jjval= {
@@ -72,7 +36,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 }
 
-<RUN>{idMultiline} {
+<>{idMultiline} {
 
 
         this.jjval= {
@@ -84,7 +48,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 }
 
-<RUN>{idPdu} {
+<>{idPdu} {
 
 
         this.expectPdu= true;
@@ -99,7 +63,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 }
 
 
-<RUN>\+CME\sERROR:\s[0-9]+ {
+<>\+CME\sERROR:\s[0-9]+ {
 
 
         this.jjval= parseInt(this.jjtext.match(/^\+CME\ ERROR:\ ([0-9]+)$/)[1]);
@@ -108,36 +72,30 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 }
 
 
-<RUN>\+CMS\sERROR:\s[0-9]+ {
-
+<>\+CMS\sERROR:\s[0-9]+ {
 
         this.jjval= parseInt(this.jjtext.match(/^\+CMS\ ERROR:\ ([0-9]+)$/)[1]);
                 
         return "CMS_ERROR";
+
 }
 
 
-<RUN>ERROR {
-
-                
+<>ERROR {
         return "ERROR";
-
 }
 
-<RUN>{finalResultCode} {
-
+<>{finalResultCode} {
 
         this.jjval= this.jjtext;
 
         return "FINAL_RESULT_CODE";
 }
 
-<RUN>[^\r] {
 
-        this.pushState("REST");
+<>AT { this.pushState("AT_COMMAND"); }
 
-}
-
+<>[^\r] { this.pushState("REST"); }
 
 <REST>[^\r]*/\r {
 
@@ -148,5 +106,32 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
         this.popState();
 
         return "REST";
+
+}
+
+
+<PDU>\r\n {
+
+        this.popState();
+                
+        return "SEP";
+
+}
+
+<PDU>[a-fA-F0-9]+ {
+
+        this.jjval= this.jjtext;
+
+        return "PDU";
+}
+
+
+<AT_COMMAND> [^\r]*\r {
+
+        this.jjval= "AT" + this.jjtext;
+
+        this.popState();
+
+        return "AT_COMMAND";
 
 }
