@@ -6,8 +6,6 @@ import { AtMessageImplementations } from "../index";
 
 let input= "";
 
-
-
 //Test Final result code
 
 input+= [
@@ -86,9 +84,6 @@ input += [
 
 
 //console.log(JSON.stringify(input));
-
-
-
 
 let atMessages: AtMessage[];
 
