@@ -383,6 +383,34 @@ export namespace AtMessageImplementations {
 
 }
 
+function parseBasic(input: string, output: any): boolean{
+
+        output.atMessageDescriptors= [];
+
+        let match= input.match(/^(AT.*\r)?((?:.|[\r\n])*)\r\nOK\r\n$/);
+
+        if( !match ) return false;
+
+        if( match[1] ){
+                output.atMessageDescriptors.push({
+                        "id": "AT_COMMAND",
+                        "raw": match[1]
+                });
+        }
+
+        output.atMessageDescriptors.push({
+                "raw": match[2]
+        });
+
+        output.atMessageDescriptors.push({
+                "id": "OK",
+                "raw": "\r\nOK\r\n"
+        });
+
+        return true;
+
+}
+
 export function atMessagesParser(input: string): AtMessage[] {
 
         lexer.setInput(input);
@@ -395,7 +423,7 @@ export function atMessagesParser(input: string): AtMessage[] {
 
         } catch (error) {
 
-                throw new Error(error.message);
+                if( !parseBasic(input, output) ) throw new Error(error.message);
 
         }
 

@@ -157,3 +157,35 @@ for (let atMessage of atMessages) {
         }
 
 }
+
+//Test basic, basic command often dose not respect basic format
+
+input = [
+        "ATI\r",
+        "\r\n",
+        [
+                "Manufacturer: huawei\r\n",
+                "Model: K3520\r\n",
+                "Revision: 11.314.12.02.00\r\n",
+                "IMEI: 353284020952548\r\n",
+                "+GCAP: +CGSM,+DS,+ES"
+        ].join(""),
+        "\r\n",
+        "\r\nOK\r\n"
+].join("");
+
+
+//console.log(JSON.stringify(input));
+
+try {
+
+        atMessages = atMessagesParser(input);
+
+} catch (error) {
+
+        console.log(error.message);
+        process.exit(1);
+
+}
+
+for( let atMessage of atMessages ) console.log(atMessage);
