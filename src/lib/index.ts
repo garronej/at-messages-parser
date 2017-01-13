@@ -53,7 +53,7 @@ let atMessageError: AtMessageId[]= [
 
 let getCmeErrorVerbose: (errorNo: number) => string = (() => {
 
-        let cmeErrorDictionary = JSON.parse(readFileSync(__dirname + "/../cmeErrorDictionary.json", {
+let cmeErrorDictionary = JSON.parse(readFileSync(__dirname + "/../../res/cmeErrorDictionary.json", {
                 "encoding": "utf8"
         }));
 
@@ -68,7 +68,7 @@ let getCmeErrorVerbose: (errorNo: number) => string = (() => {
 
 let getCmsErrorVerbose: (errorNo: number) => string = (() => {
 
-        let cmsErrorDictionary = JSON.parse(readFileSync(__dirname + "/../cmsErrorDictionary.json", {
+let cmsErrorDictionary = JSON.parse(readFileSync(__dirname + "/../../res/cmsErrorDictionary.json", {
                 "encoding": "utf8"
         }));
 

@@ -1,31 +1,34 @@
-import { atMessagesParser } from "../index";
-import { AtMessageId } from "../index";
-import { AtMessage } from "../index";
-import { AtMessageList } from "../index";
-import { AtMessageImplementations } from "../index";
 
-let input= "";
+import {
+        atMessagesParser,
+        AtMessageId,
+        AtMessage,
+        AtMessageList,
+        AtMessageImplementations
+} from "../lib/index";
+
+let input = "";
 
 //Test Final result code
 
-input+= [
+input += [
         '\r\nOK\r\n',
         '\r\nERROR\r\n',
         '\r\n+CMS ERROR: 301\r\n',
         '\r\n+CME ERROR: 3\r\n',
-        '\r\nCONNECT\r\n', 
-        '\r\nRING\r\n', 
-        '\r\nNO CARRIER\r\n', 
-        '\r\nNO DIALTONE\r\n', 
-        '\r\nBUSY\r\n', 
-        '\r\nNO ANSWER\r\n', 
-        '\r\nCOMMAND NOT SUPPORT\r\n', 
+        '\r\nCONNECT\r\n',
+        '\r\nRING\r\n',
+        '\r\nNO CARRIER\r\n',
+        '\r\nNO DIALTONE\r\n',
+        '\r\nBUSY\r\n',
+        '\r\nNO ANSWER\r\n',
+        '\r\nCOMMAND NOT SUPPORT\r\n',
         '\r\nTOO MANY PARAMETERS\r\n',
 ].join("");
 
 //Test AT_ECHO
 
-input+= [
+input += [
         'AT+CMEE=0\r',
         'AT+CNUM\r',
         'AT\r'
@@ -34,7 +37,7 @@ input+= [
 //Test implemented simple
 
 
-input+= [
+input += [
         '\r\n+CMTI: "SM",26\r\n',
         '\r\n^RSSI:99\r\n',
         '\r\n^BOOT:20952548,0,0,0,72\r\n',
@@ -53,7 +56,7 @@ input+= [
 //Test message with pdu
 
 
-input+= [
+input += [
         '\r\n+CMGR: 0,,26\r\n07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01\r\n'
 ].join("");
 
@@ -61,7 +64,7 @@ input+= [
 //Test message not implemented
 
 
-input+= [
+input += [
         '\r\n+WTF: iam not a known message\r\n',
         '\r\n123456789012345\r\n'
 ].join("");
@@ -103,7 +106,7 @@ for (let atMessage of atMessages) {
 
         switch (atMessage.id) {
                 case AtMessageId.AT_LIST:
-                        let atMessageList= <AtMessageList>atMessage;
+                        let atMessageList = <AtMessageList>atMessage;
                         console.log(atMessageList);
                         break;
                 case AtMessageId.CMGR:

@@ -6,9 +6,9 @@
                        "dom","es5","scripthost"
                 ],
                 "declaration": true,
-                "outDir": "../generatedJs"
+                "outDir": "./out"
         },
         "filesGlob": [
-                "./**/*.ts"
+                "./src/**/*.ts"
         ]
 }

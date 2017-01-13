@@ -1,22 +1,21 @@
 {
         "name": "at-messages-parser",
-        "version": "0.5.3",
+        "version": "0.5.4",
         "description": "A library for parsing AT output",
         "repository": {
                 "type": "git",
                 "url": "git://github.com/garronej/at-messages-parser.git"
         },
-        "main": "./generatedJs/index.js",
-        "types": "./generatedJs/index.d.ts",
+        "main": "./out/lib/index.js",
+        "types": "./out/lib/index.d.ts",
         "scripts": {
                 "postinstall": "npm run build",
                 "build": "npm run tsc && npm run jacob",
-                "tsc": "./node_modules/.bin/tsc -p ./ts/tsconfig.json",
+                "tsc": "./node_modules/.bin/tsc -p ./tsconfig.json",
                 "jacob": "npm run jacoblex && npm run jacobgram",
-                "jacoblex": "jacob -t lexer.jacoblex -l ./generatedJs/Lexer.js",
-                "jacobgram": "jacob -g parser.jacobgram -p ./generatedJs/Parser.js",
-                "clean": "rm -rf ./generatedJs",
-                "test": "node ./generatedJs/example/test"
+                "jacoblex": "jacob -t ./src/lib/lexer.jacoblex -l ./out/lib/Lexer.js",
+                "jacobgram": "jacob -g ./src/lib/parser.jacobgram -p ./out/lib/Parser.js",
+                "test": "node ./out/test/sample"
         },
         "author": "Joseph Garrone",
         "license": "MIT",
