@@ -95,13 +95,17 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <>AT { this.pushState("AT_COMMAND"); }
 
-<>[^\r] { this.pushState("REST"); }
+<>[^\r] { 
+
+        this.prevChar= this.jjtext;
+
+        this.pushState("REST"); 
+        
+}
 
 <REST>[^\r]*/\r {
 
-        var prevChar= this.input.str[this.lastValidPos-this.jjtext.length-1];
-
-        this.jjval= prevChar + this.jjtext;
+        this.jjval= this.prevChar + this.jjtext;
 
         this.popState();
 

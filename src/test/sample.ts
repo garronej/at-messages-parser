@@ -8,6 +8,8 @@ import {
 } from "../lib/index";
 
 let input = "";
+let atMessages: AtMessage[];
+
 
 //Test Final result code
 
@@ -66,7 +68,8 @@ input += [
 
 input += [
         '\r\n+WTF: iam not a known message\r\n',
-        '\r\n123456789012345\r\n'
+        '\r\n123456789012345\r\n',
+        '\r\n+CPMS: 48,50,48,50,48,50\r\n'
 ].join("");
 
 //Test message multiline
@@ -88,7 +91,6 @@ input += [
 
 //console.log(JSON.stringify(input));
 
-let atMessages: AtMessage[];
 
 try {
 
@@ -188,4 +190,4 @@ try {
 
 }
 
-for( let atMessage of atMessages ) console.log(atMessage);
+for (let atMessage of atMessages) console.log(atMessage);
