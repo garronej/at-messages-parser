@@ -1,8 +1,6 @@
 # at-messages-parser
 
-Parse AT message sent by a modem.
-The parser implement also a series of class to represent some well known atMessage.
-
+This module compile to object raw response send by a modem to AT command.
 
 Support only *AT+CMEE=0* and *AT+CMEE=1* mode, not *AT+CMEE=2*
 
@@ -16,41 +14,49 @@ npm install garronej/at-messages-parser
 
 ```` JavaScript
 
-import { atMessagesParser } from "../index";
-import { AtMessageId } from "../index";
-import { AtMessage } from "../index";
-import { AtMessageList } from "../index";
-import { AtMessageImplementations } from "../index";
 
-let input= "";
+import {
+        atMessagesParser,
+        AtMessageId,
+        AtMessage,
+        AtMessageList,
+        AtMessageImplementations
+} from "../lib/index";
 
-//Test AT_ECHO
-
-input+= [
-        'AT+CMEE=0\r'
-].join("");
-
+let input = "";
+let atMessages: AtMessage[];
 
 //Test Final result code
 
-input+= [
+input += [
         '\r\nOK\r\n',
         '\r\nERROR\r\n',
         '\r\n+CMS ERROR: 301\r\n',
         '\r\n+CME ERROR: 3\r\n',
-        '\r\nCONNECT\r\n', 
-        '\r\nRING\r\n', 
-        '\r\nNO CARRIER\r\n', 
-        '\r\nNO DIALTONE\r\n', 
-        '\r\nBUSY\r\n', 
-        '\r\nNO ANSWER\r\n', 
-        '\r\nCOMMAND NOT SUPPORT\r\n', 
+        '\r\nCONNECT\r\n',
+        '\r\nRING\r\n',
+        '\r\nNO CARRIER\r\n',
+        '\r\nNO DIALTONE\r\n',
+        '\r\nBUSY\r\n',
+        '\r\nNO ANSWER\r\n',
+        '\r\nCOMMAND NOT SUPPORT\r\n',
         '\r\nTOO MANY PARAMETERS\r\n',
+].join("");
+
+
+//Test AT_ECHO
+
+input += [
+        'AT+CMEE=0\r',
+        'AT+CNUM\r',
+        'AT\r',
+        'A/\r',
+        'AT+CMGS=18\r0891683108608805F931000B813109731147F40000FF04F4F29C0E\u001a'
 ].join("");
 
 //Test implemented simple
 
-input+= [
+input += [
         '\r\n+CMTI: "SM",26\r\n',
         '\r\n^RSSI:99\r\n',
         '\r\n^BOOT:20952548,0,0,0,72\r\n',
@@ -68,7 +74,7 @@ input+= [
 
 //Test message with pdu
 
-input+= [
+input += [
         '\r\n+CMGR: 0,,26\r\n07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01\r\n'
 ].join("");
 
@@ -76,9 +82,10 @@ input+= [
 //Test message not implemented
 
 
-input+= [
+input += [
         '\r\n+WTF: iam not a known message\r\n',
-        '\r\n123456789012345\r\n'
+        '\r\n123456789012345\r\n',
+        '\r\n+CPMS: 48,50,48,50,48,50\r\n'
 ].join("");
 
 //Test message multiline
@@ -96,9 +103,18 @@ input += [
         ].join("")
 ].join("");
 
+
+//Special case, with pdu and multiline
+
+input += [
+        '\r\n+CMGL: 0,1,,22\r\n07913306092049F0040B913336766883F500007110811094904003CF7A1A',
+        '\r\n+CMGL: 4,0,,24\r\n07913396050046F7240B913376499120F200007110815063404005CF7AFAFD06',
+        '\r\n'
+].join("");
+
+
 //console.log(JSON.stringify(input));
 
-let atMessages: AtMessage[];
 
 try {
 
@@ -116,7 +132,7 @@ for (let atMessage of atMessages) {
 
         switch (atMessage.id) {
                 case AtMessageId.AT_LIST:
-                        let atMessageList= <AtMessageList>atMessage;
+                        let atMessageList = <AtMessageList>atMessage;
                         console.log(atMessageList);
                         break;
                 case AtMessageId.CMGR:
@@ -168,6 +184,38 @@ for (let atMessage of atMessages) {
 
 }
 
+//Test basic, basic command often dose not respect basic format
+
+input = [
+        "ATI\r",
+        "\r\n",
+        [
+                "Manufacturer: huawei\r\n",
+                "Model: K3520\r\n",
+                "Revision: 11.314.12.02.00\r\n",
+                "IMEI: 353284020952548\r\n",
+                "+GCAP: +CGSM,+DS,+ES"
+        ].join(""),
+        "\r\n",
+        "\r\nOK\r\n"
+].join("");
+
+
+//console.log(JSON.stringify(input));
+
+try {
+
+        atMessages = atMessagesParser(input);
+
+} catch (error) {
+
+        console.log(error.message);
+        process.exit(1);
+
+}
+
+for (let atMessage of atMessages) console.log(atMessage);
+
 ````
 
 Outputs:
@@ -176,7 +224,6 @@ Outputs:
 > node ./generatedJs/example/test
 
 
-AtMessage { raw: 'AT+CMEE=0\r', idName: 'AT_COMMAND' }
 AtMessage { raw: '\r\nOK\r\n', idName: 'OK', isFinal: true }
 ERROR {
   raw: '\r\nERROR\r\n',
@@ -229,6 +276,13 @@ AtMessage {
   idName: 'TOO_MANY_PARAMETERS',
   isFinal: true,
   isError: true }
+AtMessage { raw: 'AT+CMEE=0\r', idName: 'AT_COMMAND' }
+AtMessage { raw: 'AT+CNUM\r', idName: 'AT_COMMAND' }
+AtMessage { raw: 'AT\r', idName: 'AT_COMMAND' }
+AtMessage { raw: 'A/\r', idName: 'AT_COMMAND' }
+AtMessage {
+  raw: 'AT+CMGS=18\r0891683108608805F931000B813109731147F40000FF04F4F29C0E\u001a',
+  idName: 'AT_COMMAND' }
 CMTI {
   raw: '\r\n+CMTI: "SM",26\r\n',
   idName: 'CMTI',
@@ -309,9 +363,11 @@ CMGR {
   idName: 'CMGR',
   stat: 0,
   length: 26,
-  pdu: '07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01' }
+  pdu: '07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01',
+  statName: 'RECEIVED_UNREAD' }
 AtMessage { raw: '\r\n+WTF: iam not a known message\r\n' }
 AtMessage { raw: '\r\n123456789012345\r\n' }
+AtMessage { raw: '\r\n+CPMS: 48,50,48,50,48,50\r\n' }
 AtMessageList {
   raw: '\r\n+CNUM: "","+33671651906",145\r\n\r\n',
   idName: 'AT_LIST',
@@ -363,5 +419,29 @@ AtMessageList {
        alpha: 'Fax',
        number: '',
        isNational: undefined } ] }
+AtMessageList {
+  raw: '\r\n+CMGL: 0,1,,22\r\n07913306092049F0040B913336766883F500007110811094904003CF7A1A\r\n+CMGL: 4,0,,24\r\n07913396050046F7240B913376499120F200007110815063404005CF7AFAFD06\r\n',
+  idName: 'AT_LIST',
+  atMessages:
+   [ CMGL {
+       raw: '\r\n+CMGL: 0,1,,22\r\n07913306092049F0040B913336766883F500007110811094904003CF7A1A',
+       idName: 'CMGL',
+       index: 0,
+       stat: 1,
+       length: 22,
+       pdu: '07913306092049F0040B913336766883F500007110811094904003CF7A1A',
+       statName: 'RECEIVED_READ' },
+     CMGL {
+       raw: '\r\n+CMGL: 4,0,,24\r\n07913396050046F7240B913376499120F200007110815063404005CF7AFAFD06',
+       idName: 'CMGL',
+       index: 4,
+       stat: 0,
+       length: 24,
+       pdu: '07913396050046F7240B913376499120F200007110815063404005CF7AFAFD06',
+       statName: 'RECEIVED_UNREAD' } ] }
+AtMessage { raw: 'ATI\r', idName: 'AT_COMMAND' }
+AtMessage {
+  raw: '\r\nManufacturer: huawei\r\nModel: K3520\r\nRevision: 11.314.12.02.00\r\nIMEI: 353284020952548\r\n+GCAP: +CGSM,+DS,+ES\r\n' }
+AtMessage { raw: '\r\nOK\r\n', idName: 'OK', isFinal: true }
 
 ````
