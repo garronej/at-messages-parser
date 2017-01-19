@@ -93,6 +93,12 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
         return "FINAL_RESULT_CODE";
 }
 
+<> A\/\r { 
+
+        this.jjval= this.jjtext;
+
+        return "AT_COMMAND";
+}
 
 <>AT { this.pushState("AT_COMMAND"); }
 
@@ -130,6 +136,15 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
         return "PDU";
 }
 
+<AT_COMMAND> \+CMGS=\s?[0-9]+\r[a-fA-F0-9]+\x1a {
+
+        this.jjval= "AT" + this.jjtext;
+
+        this.popState();
+
+        return "AT_COMMAND";
+
+}
 
 <AT_COMMAND> [^\r]*\r {
 

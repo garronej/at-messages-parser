@@ -10,6 +10,7 @@ import {
 let input = "";
 let atMessages: AtMessage[];
 
+
 //Test Final result code
 
 input += [
@@ -27,12 +28,15 @@ input += [
         '\r\nTOO MANY PARAMETERS\r\n',
 ].join("");
 
+
 //Test AT_ECHO
 
 input += [
         'AT+CMEE=0\r',
         'AT+CNUM\r',
-        'AT\r'
+        'AT\r',
+        'A/\r',
+        'AT+CMGS=18\r0891683108608805F931000B813109731147F40000FF04F4F29C0E\u001a'
 ].join("");
 
 //Test implemented simple
@@ -92,8 +96,6 @@ input += [
         '\r\n+CMGL: 4,0,,24\r\n07913396050046F7240B913376499120F200007110815063404005CF7AFAFD06',
         '\r\n'
 ].join("");
-
-
 
 
 //console.log(JSON.stringify(input));
