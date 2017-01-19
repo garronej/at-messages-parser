@@ -3,7 +3,7 @@
 id= (\+|\^)(CMTI|CPIN|CMEE|BOOT|RSSI|SIMST|SRVST|SYSINFO)
 
 idMultiline= (\+|\^)(CNUM)
-idPdu= (\+|\^)(CMGR)
+idPdu= (\+|\^)(CMGR|CMGL)
 
 finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAND\sNOT\sSUPPORT|TOO\sMANY\sPARAMETERS 
 
@@ -50,8 +50,9 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <>{idPdu} {
 
-
         this.expectPdu= true;
+
+        if( this.jjtext === "+CMGL" ) return "CMGL";
 
         this.jjval= {
                 "prefix": this.jjtext[0],

@@ -11,7 +11,7 @@ export enum AtMessageId {
         AT_LIST,
         OK, CONNECT, RING, NO_CARRIER, NO_DIALTONE, BUSY, NO_ANSWER, COMMAND_NOT_SUPPORT, TOO_MANY_PARAMETERS,
         ERROR, CME_ERROR, CMS_ERROR,
-        CNUM, CMGR, CMTI, CPIN, CMEE,
+        CNUM, CMGR, CMTI, CPIN, CMEE, CMGL,
         HUAWEI_BOOT, HUAWEI_RSSI, HUAWEI_SIMST, HUAWEI_SRVST, HUAWEI_CPIN, HUAWEI_SYSINFO
 }
 
@@ -183,6 +183,15 @@ export enum ReportMode {
         DEBUG_INFO_VERBOSE = 2
 }
 
+
+export enum MessageStat {
+        RECEIVED_UNREAD= 0,
+        RECEIVED_READ= 1,
+        STORED_UNSENT= 2,
+        STORED_SENT= 3,
+        ALL= 4
+}
+
 export namespace AtMessageImplementations {
 
         //+CMEE: 2
@@ -213,7 +222,6 @@ export namespace AtMessageImplementations {
                         if (typeof (lock) === "boolean") this.lock = lock;
 
                 }
-
 
         }
 
@@ -265,12 +273,16 @@ export namespace AtMessageImplementations {
         //+CMGR: 0,,26\r\n07913306092069F0040B913336766883F5000061216232414440084EF289EC26BBC9\r\n
         export class CMGR extends AtMessage {
 
+                public readonly statName: string;
+
                 constructor(raw: string,
-                        public readonly stat: number,
+                        public readonly stat: MessageStat,
                         public readonly length: number,
                         public readonly pdu: string, ) {
 
                         super(AtMessageId.CMGR, raw);
+
+                        this.statName= MessageStat[stat];
                 }
 
         }
@@ -336,7 +348,6 @@ export namespace AtMessageImplementations {
         // \r\n^CPIN: READY,,10,3,10,3\r\n
         export class HUAWEI_CPIN extends AtMessage {
 
-
                 public readonly pinStateName: string;
 
                 public get pinState(): PinState { return this.__pinState__; }
@@ -377,6 +388,23 @@ export namespace AtMessageImplementations {
                         this.sysModeName = SysMode[sysMode];
                         this.simStateName = SimState[simState];
 
+                }
+        }
+
+        //\r\n+CMGL: 0,1,,22\r\n07913306092049F0040B913336766883F500007110811094904003CF7A1A
+
+        export class CMGL extends AtMessage {
+
+                public readonly statName: string;
+
+                constructor( raw: string,
+                public readonly index: number,
+                public readonly stat: MessageStat,
+                public readonly length: number,
+                public readonly pdu: string){
+                        super(AtMessageId.CMGL, raw);
+
+                        this.statName= MessageStat[stat];
                 }
         }
 
@@ -444,36 +472,36 @@ function descriptorToInstance(atMessageDescriptor: any): AtMessage {
 
         switch (id) {
                 case AtMessageId.AT_LIST:
-                        let atMessageDescriptors = atMessageDescriptor.atMessageDescriptors;
+                        let atMessageDescriptors = <any[]>atMessageDescriptor.atMessageDescriptors;
                         atMessage = new AtMessageList(raw, atMessageDescriptors);
                         break;
                 case AtMessageId.ERROR:
                         atMessage = new AtMessageImplementations.ERROR(raw);
                         break;
                 case AtMessageId.CME_ERROR:
-                        let cmeErrorCode: number = atMessageDescriptor.code;
+                        let cmeErrorCode=<number>atMessageDescriptor.code;
                         atMessage = new AtMessageImplementations.CME_ERROR(raw, cmeErrorCode);
                         break;
                 case AtMessageId.CMS_ERROR:
-                        let cmsErrorCode: number = atMessageDescriptor.code;
+                        let cmsErrorCode= <number>atMessageDescriptor.code;
                         atMessage = new AtMessageImplementations.CMS_ERROR(raw, cmsErrorCode);
                         break;
                 case AtMessageId.CMGR:
-                        let stat: number = atMessageDescriptor.stat;
-                        let length: number = atMessageDescriptor.length;
-                        let pdu: string = atMessageDescriptor.pdu;
+                        let stat= <MessageStat>atMessageDescriptor.stat;
+                        let length= <number>atMessageDescriptor.length;
+                        let pdu= <string>atMessageDescriptor.pdu;
                         atMessage = new AtMessageImplementations.CMGR(raw, stat, length, pdu);
                         break;
                 case AtMessageId.CMTI:
                         let mem = <MemStorage>MemStorage[<string>atMessageDescriptor.mem];
-                        let index: number = atMessageDescriptor.index;
+                        let index= <number>atMessageDescriptor.index;
                         atMessage = new AtMessageImplementations.CMTI(raw, mem, index);
                         break;
                 case AtMessageId.CNUM:
-                        let alpha: string = atMessageDescriptor.alpha;
-                        let number: string = atMessageDescriptor.number;
-                        let isNational: boolean = atMessageDescriptor.isNational;
-                        let hasError: boolean = atMessageDescriptor.hasError;
+                        let alpha= <string>atMessageDescriptor.alpha;
+                        let number= <string>atMessageDescriptor.number;
+                        let isNational= <boolean>atMessageDescriptor.isNational;
+                        let hasError= <boolean>atMessageDescriptor.hasError;
                         atMessage = new AtMessageImplementations.CNUM(raw, alpha, number, isNational);
                         break;
                 case AtMessageId.CPIN:
@@ -508,6 +536,13 @@ function descriptorToInstance(atMessageDescriptor: any): AtMessage {
                         let sysMode = <SysMode>atMessageDescriptor.sysMode;
                         simState = <SimState>atMessageDescriptor.simState;
                         atMessage = new AtMessageImplementations.HUAWEI_SYSINFO(raw, serviceStatus, serviceDomain, isRoaming, sysMode, simState);
+                        break;
+                case AtMessageId.CMGL:
+                        index= <number>atMessageDescriptor.index;
+                        stat= <MessageStat>atMessageDescriptor.stat;
+                        length= <number>atMessageDescriptor.length;
+                        pdu= <string>atMessageDescriptor.pdu;
+                        atMessage= new AtMessageImplementations.CMGL(raw, index, stat, length, pdu);
                         break;
                 default: atMessage = new AtMessage(id, raw);
         }

@@ -10,7 +10,6 @@ import {
 let input = "";
 let atMessages: AtMessage[];
 
-
 //Test Final result code
 
 input += [
@@ -38,7 +37,6 @@ input += [
 
 //Test implemented simple
 
-
 input += [
         '\r\n+CMTI: "SM",26\r\n',
         '\r\n^RSSI:99\r\n',
@@ -57,7 +55,6 @@ input += [
 
 //Test message with pdu
 
-
 input += [
         '\r\n+CMGR: 0,,26\r\n07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01\r\n'
 ].join("");
@@ -74,7 +71,6 @@ input += [
 
 //Test message multiline
 
-
 input += [
         '\r\n+CME ERROR: 25+CNUM: "","+33671651906",145\r\n\r\n',
         '\r\nERROR+CNUM: "","+33671651907",145\r\n\r\n',
@@ -87,6 +83,17 @@ input += [
                 '\r\n'
         ].join("")
 ].join("");
+
+
+//Special case, with pdu and multiline
+
+input += [
+        '\r\n+CMGL: 0,1,,22\r\n07913306092049F0040B913336766883F500007110811094904003CF7A1A',
+        '\r\n+CMGL: 4,0,,24\r\n07913396050046F7240B913376499120F200007110815063404005CF7AFAFD06',
+        '\r\n'
+].join("");
+
+
 
 
 //console.log(JSON.stringify(input));
