@@ -7,9 +7,10 @@ let parser = new Parser();
 let lexer = new Lexer();
 
 export enum AtMessageId {
-        AT_COMMAND, 
+        ECHO, 
         AT_LIST,
         OK, CONNECT, RING, NO_CARRIER, NO_DIALTONE, BUSY, NO_ANSWER, COMMAND_NOT_SUPPORT, TOO_MANY_PARAMETERS,
+        INVITE,
         ERROR, CME_ERROR, CMS_ERROR,
         CNUM, CMGR, CMTI, CPIN, CMEE, CMGL,
         HUAWEI_BOOT, HUAWEI_RSSI, HUAWEI_SIMST, HUAWEI_SRVST, HUAWEI_CPIN, HUAWEI_SYSINFO
@@ -34,7 +35,8 @@ let atMessageFinal: AtMessageId[] = [
         AtMessageId.TOO_MANY_PARAMETERS,
         AtMessageId.ERROR,
         AtMessageId.CME_ERROR,
-        AtMessageId.CMS_ERROR
+        AtMessageId.CMS_ERROR,
+        AtMessageId.INVITE
 ];
 
 let atMessageError: AtMessageId[]= [
@@ -421,7 +423,7 @@ function parseBasic(input: string, output: any): boolean{
 
         if( match[1] ){
                 output.atMessageDescriptors.push({
-                        "id": "AT_COMMAND",
+                        "id": "ECHO",
                         "raw": match[1]
                 });
         }

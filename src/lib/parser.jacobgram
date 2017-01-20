@@ -46,10 +46,17 @@ Instruction= 'SEP' FinalResultCode 'SEP' function(_, message){
 
         return message;
 
-} | 'AT_COMMAND' function(atCommand){
+} | 'SEP' 'INVITE' function(){
 
         return {
-                "id": "AT_COMMAND",
+                "id": "INVITE",
+                "raw": "\r\n> "
+        };
+
+} | 'ECHO' function(atCommand){
+
+        return {
+                "id": "ECHO",
                 "raw": atCommand
         };
 
@@ -68,7 +75,6 @@ Instruction= 'SEP' FinalResultCode 'SEP' function(_, message){
                 "raw": raw,
                 "atMessageDescriptors": messages
         };
-
 
 };
 

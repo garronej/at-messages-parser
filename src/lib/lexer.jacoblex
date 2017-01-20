@@ -9,7 +9,6 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 %%
 
-
 <>\r\n {
 
         if( this.expectPdu ){
@@ -23,9 +22,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
         return "SEP";
 }
 
-
 <>{id} {
-
 
         this.jjval= {
                 "prefix": this.jjtext[0],
@@ -37,7 +34,6 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 }
 
 <>{idMultiline} {
-
 
         this.jjval= {
                 "prefix": this.jjtext[0],
@@ -63,15 +59,12 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 }
 
-
 <>\+CME\sERROR:\s[0-9]+ {
-
 
         this.jjval= parseInt(this.jjtext.match(/^\+CME\ ERROR:\ ([0-9]+)$/)[1]);
                 
         return "CME_ERROR";
 }
-
 
 <>\+CMS\sERROR:\s[0-9]+ {
 
@@ -81,10 +74,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 }
 
-
-<>ERROR {
-        return "ERROR";
-}
+<>ERROR { return "ERROR"; }
 
 <>{finalResultCode} {
 
@@ -97,10 +87,21 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
         this.jjval= this.jjtext;
 
-        return "AT_COMMAND";
+        return "ECHO";
 }
 
-<>AT { this.pushState("AT_COMMAND"); }
+<>AT { this.pushState("ECHO"); }
+
+<> >\x20 { return "INVITE"; }
+
+<>[a-fA-F0-9]+(\x1a|\x1b) {
+
+        this.jjval= this.jjtext;
+
+
+        return "ECHO";
+
+}
 
 <>[^\r] { 
 
@@ -120,7 +121,6 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 }
 
-
 <PDU>\r\n {
 
         this.popState();
@@ -136,22 +136,12 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
         return "PDU";
 }
 
-<AT_COMMAND> \+CMGS=\s?[0-9]+\r[a-fA-F0-9]+\x1a {
+<ECHO> [^\r]*\r {
 
         this.jjval= "AT" + this.jjtext;
 
         this.popState();
 
-        return "AT_COMMAND";
-
-}
-
-<AT_COMMAND> [^\r]*\r {
-
-        this.jjval= "AT" + this.jjtext;
-
-        this.popState();
-
-        return "AT_COMMAND";
+        return "ECHO";
 
 }
