@@ -36,9 +36,7 @@ input += [
         'AT+CMEE=0\r',
         'AT+CNUM\r',
         'AT\r',
-        'A/\r',
-        '0891683108608805F931000B813109731147F40000FF04F4F29C0E\u001a',
-        '0891683108608805F931000B813109731147F40000FF04F4F29C0E\u001b'
+        'A/\r'
 ].join("");
 
 //Test invite 
@@ -195,6 +193,63 @@ input = [
 
 
 //console.log(JSON.stringify(input));
+
+try {
+
+        atMessages = atMessagesParser(input);
+
+} catch (error) {
+
+        console.log(error.message);
+        process.exit(1);
+
+}
+
+for (let atMessage of atMessages) console.log(atMessage);
+
+
+
+
+input = "\r\n";
+
+
+console.log("input: ", JSON.stringify(input));
+
+try {
+
+        atMessages = atMessagesParser(input);
+
+} catch (error) {
+
+        console.log(error.message);
+        process.exit(1);
+
+}
+
+for (let atMessage of atMessages) console.log(atMessage);
+
+
+input = "\r\nABCDEF12323122DDDDD";
+
+console.log("input: ", JSON.stringify(input));
+
+try {
+
+        atMessages = atMessagesParser(input);
+
+} catch (error) {
+
+        console.log(error.message);
+        process.exit(1);
+
+}
+
+for (let atMessage of atMessages) console.log(atMessage);
+
+
+input = "ABCDEF12323122DDDDD";
+
+console.log("input :", JSON.stringify(input));
 
 try {
 

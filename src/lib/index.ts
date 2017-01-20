@@ -413,31 +413,49 @@ export namespace AtMessageImplementations {
 
 }
 
-function parseBasic(input: string, output: any): boolean{
+function parseBasic(input: string, output: any): boolean {
 
-        output.atMessageDescriptors= [];
+        output.atMessageDescriptors = [];
 
-        let match= input.match(/^(AT.*\r)?((?:.|[\r\n])*)\r\nOK\r\n$/);
+        let match = input.match(/^(AT.*\r)?((?:.|[\r\n])*)\r\nOK\r\n$/);
 
-        if( !match ) return false;
+        if (match) {
 
-        if( match[1] ){
+                if (match[1]) {
+                        output.atMessageDescriptors.push({
+                                "id": "ECHO",
+                                "raw": match[1]
+                        });
+                }
+
                 output.atMessageDescriptors.push({
-                        "id": "ECHO",
-                        "raw": match[1]
+                        "raw": match[2]
                 });
+
+                output.atMessageDescriptors.push({
+                        "id": "OK",
+                        "raw": "\r\nOK\r\n"
+                });
+
+                return true;
+
         }
 
-        output.atMessageDescriptors.push({
-                "raw": match[2]
-        });
+        match = input.match(/(?:\r\n)?(?:[a-fA-F0-9]+)?$/);
 
-        output.atMessageDescriptors.push({
-                "id": "OK",
-                "raw": "\r\nOK\r\n"
-        });
+        if (input && match) {
 
-        return true;
+                output.atMessageDescriptors.push({
+                        "id": "ECHO",
+                        "raw": input
+                });
+
+                return true;
+
+        }
+
+        return false;
+
 
 }
 
@@ -453,7 +471,7 @@ export function atMessagesParser(input: string): AtMessage[] {
 
         } catch (error) {
 
-                if( !parseBasic(input, output) ) throw new Error(error.message);
+                if (!parseBasic(input, output)) throw new Error(error.message);
 
         }
 
@@ -481,29 +499,29 @@ function descriptorToInstance(atMessageDescriptor: any): AtMessage {
                         atMessage = new AtMessageImplementations.ERROR(raw);
                         break;
                 case AtMessageId.CME_ERROR:
-                        let cmeErrorCode=<number>atMessageDescriptor.code;
+                        let cmeErrorCode = <number>atMessageDescriptor.code;
                         atMessage = new AtMessageImplementations.CME_ERROR(raw, cmeErrorCode);
                         break;
                 case AtMessageId.CMS_ERROR:
-                        let cmsErrorCode= <number>atMessageDescriptor.code;
+                        let cmsErrorCode = <number>atMessageDescriptor.code;
                         atMessage = new AtMessageImplementations.CMS_ERROR(raw, cmsErrorCode);
                         break;
                 case AtMessageId.CMGR:
-                        let stat= <MessageStat>atMessageDescriptor.stat;
-                        let length= <number>atMessageDescriptor.length;
-                        let pdu= <string>atMessageDescriptor.pdu;
+                        let stat = <MessageStat>atMessageDescriptor.stat;
+                        let length = <number>atMessageDescriptor.length;
+                        let pdu = <string>atMessageDescriptor.pdu;
                         atMessage = new AtMessageImplementations.CMGR(raw, stat, length, pdu);
                         break;
                 case AtMessageId.CMTI:
                         let mem = <MemStorage>MemStorage[<string>atMessageDescriptor.mem];
-                        let index= <number>atMessageDescriptor.index;
+                        let index = <number>atMessageDescriptor.index;
                         atMessage = new AtMessageImplementations.CMTI(raw, mem, index);
                         break;
                 case AtMessageId.CNUM:
-                        let alpha= <string>atMessageDescriptor.alpha;
-                        let number= <string>atMessageDescriptor.number;
-                        let isNational= <boolean>atMessageDescriptor.isNational;
-                        let hasError= <boolean>atMessageDescriptor.hasError;
+                        let alpha = <string>atMessageDescriptor.alpha;
+                        let number = <string>atMessageDescriptor.number;
+                        let isNational = <boolean>atMessageDescriptor.isNational;
+                        let hasError = <boolean>atMessageDescriptor.hasError;
                         atMessage = new AtMessageImplementations.CNUM(raw, alpha, number, isNational);
                         break;
                 case AtMessageId.CPIN:
@@ -540,11 +558,11 @@ function descriptorToInstance(atMessageDescriptor: any): AtMessage {
                         atMessage = new AtMessageImplementations.HUAWEI_SYSINFO(raw, serviceStatus, serviceDomain, isRoaming, sysMode, simState);
                         break;
                 case AtMessageId.CMGL:
-                        index= <number>atMessageDescriptor.index;
-                        stat= <MessageStat>atMessageDescriptor.stat;
-                        length= <number>atMessageDescriptor.length;
-                        pdu= <string>atMessageDescriptor.pdu;
-                        atMessage= new AtMessageImplementations.CMGL(raw, index, stat, length, pdu);
+                        index = <number>atMessageDescriptor.index;
+                        stat = <MessageStat>atMessageDescriptor.stat;
+                        length = <number>atMessageDescriptor.length;
+                        pdu = <string>atMessageDescriptor.pdu;
+                        atMessage = new AtMessageImplementations.CMGL(raw, index, stat, length, pdu);
                         break;
                 default: atMessage = new AtMessage(id, raw);
         }

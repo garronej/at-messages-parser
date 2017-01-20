@@ -94,14 +94,6 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <> >\x20 { return "INVITE"; }
 
-<>[a-fA-F0-9]+(\x1a|\x1b) {
-
-        this.jjval= this.jjtext;
-
-
-        return "ECHO";
-
-}
 
 <>[^\r] { 
 
