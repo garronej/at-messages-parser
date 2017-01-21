@@ -10,7 +10,6 @@ import {
 let input = "";
 let atMessages: AtMessage[];
 
-
 //Test Final result code
 
 input += [
@@ -28,8 +27,6 @@ input += [
         '\r\nTOO MANY PARAMETERS\r\n',
 ].join("");
 
-
-
 //Test ECHO
 
 input += [
@@ -43,11 +40,11 @@ input += [
 
 input += "\r\n> ";
 
-
 //Test implemented simple
 
 input += [
         '\r\n+CMTI: "SM",26\r\n',
+        '\r\n+CDSI: "SM",0\r\n',
         '\r\n^RSSI:99\r\n',
         '\r\n^BOOT:20952548,0,0,0,72\r\n',
         '\r\n+CPIN: SIM PIN\r\n',
@@ -61,16 +58,15 @@ input += [
         '\r\n^SYSINFO:2,3,0,5,1,,4\r\n'
 ].join("");
 
-
 //Test message with pdu
 
 input += [
-        '\r\n+CMGR: 0,,26\r\n07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01\r\n'
+        '\r\n+CMGR: 0,,26\r\n07913306092011F0040B913336766883F5000061216212807140074A351A8D56AB01\r\n',
+        '\r\n+CDS: 26\r\n0891683108608805F906750D91683109731147F4313050913492003130509134430000\r\n',
+        '\r\n+CMT: ,24\r\n0891683108608805F9240D91683109731147F400003130505152430004F4F29C0E\r\n'
 ].join("");
 
-
 //Test message not implemented
-
 
 input += [
         '\r\n+WTF: iam not a known message\r\n',
@@ -93,7 +89,6 @@ input += [
         ].join("")
 ].join("");
 
-
 //Special case, with pdu and multiline
 
 input += [
@@ -102,10 +97,7 @@ input += [
         '\r\n'
 ].join("");
 
-
-
 //console.log(JSON.stringify(input));
-
 
 try {
 
@@ -117,7 +109,6 @@ try {
         process.exit(1);
 
 }
-
 
 for (let atMessage of atMessages) {
 
@@ -208,10 +199,7 @@ try {
 for (let atMessage of atMessages) console.log(atMessage);
 
 
-
-
 input = "\r\n";
-
 
 console.log("input: ", JSON.stringify(input));
 

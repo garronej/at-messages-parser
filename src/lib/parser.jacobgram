@@ -223,6 +223,18 @@ KnownMessagePdu= 'ID_PDU' 'REST' 'SEP' 'PDU' function(id, rest, _, pdu){
                                 "length": parseInt(match[2])
                         });
                         break;
+                case "CMT":
+                        var match= rest.match(/^:\ ?(?:.+)?,([0-9]+)$/);
+                        Object.assign( atMessageDescriptor, {
+                                "length": parseInt(match[1])
+                        });
+                        break;
+                case "CDS":
+                        var match= rest.match(/^:\ ?([0-9]+)$/);
+                        Object.assign( atMessageDescriptor, {
+                                "length": parseInt(match[1])
+                        });
+                        break;
                 default:
         }
 
@@ -244,6 +256,13 @@ KnownMessage= 'ID' 'REST' function(id, rest){
 
         switch(atMessageDescriptor.id){
                 case "CMTI":
+                        var match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
+                        Object.assign( atMessageDescriptor, {
+                                "mem": match[1],
+                                "index": parseInt(match[2])
+                        });
+                        break;
+                case "CDSI":
                         var match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
                         Object.assign( atMessageDescriptor, {
                                 "mem": match[1],

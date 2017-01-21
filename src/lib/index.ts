@@ -12,11 +12,15 @@ export enum AtMessageId {
         OK, CONNECT, RING, NO_CARRIER, NO_DIALTONE, BUSY, NO_ANSWER, COMMAND_NOT_SUPPORT, TOO_MANY_PARAMETERS,
         INVITE,
         ERROR, CME_ERROR, CMS_ERROR,
-        CNUM, CMGR, CMTI, CPIN, CMEE, CMGL,
+        CNUM, CMGR, CMTI, CPIN, CMEE, CMGL, CDSI, CDS, CMT,
         HUAWEI_BOOT, HUAWEI_RSSI, HUAWEI_SIMST, HUAWEI_SRVST, HUAWEI_CPIN, HUAWEI_SYSINFO
 }
 
 let atMessageUnsolicited: AtMessageId[] = [
+        AtMessageId.CMTI,
+        AtMessageId.CMT,
+        AtMessageId.CDSI,
+        AtMessageId.CDS,
         AtMessageId.HUAWEI_BOOT,
         AtMessageId.HUAWEI_RSSI,
         AtMessageId.HUAWEI_SIMST,
@@ -311,6 +315,50 @@ export namespace AtMessageImplementations {
 
         }
 
+
+        //+CMT: ,24\r\n0891683108608805F9240D91683109731147F400003130505152430004F4F29C0E
+        export class CMT extends AtMessage {
+                constructor(raw: string,
+                        public readonly length: number,
+                        public readonly pdu: string) {
+                        super(AtMessageId.CMT, raw);
+                }
+        }
+
+
+
+        //+CDSI: "SM",29
+        export class CDSI extends AtMessage {
+
+                public readonly memName: string;
+
+                public get mem(): MemStorage {
+                        return this.__mem__;
+                }
+
+                constructor(raw: string,
+                        private readonly __mem__: MemStorage,
+                        public readonly index: number) {
+
+                        super(AtMessageId.CDSI, raw);
+
+                        Object.defineProperty(this, "__mem__", { "enumerable": false });
+
+                        this.memName = MemStorage[this.mem];
+                }
+
+        }
+
+
+        //+CDS: 26\r\n0891683108608805F906750D91683109731147F4313050913492003130509134430000
+        export class CDS extends AtMessage {
+                constructor(raw: string,
+                        public readonly length: number,
+                        public readonly pdu: string) {
+                        super(AtMessageId.CDS, raw);
+                }
+        }
+
         //\r\nERROR+CNUM: "","+393701307294",145\r\n\r\n
         //\r\n+CNUM: "CC","+8613987654321",129\r\n
         export class CNUM extends AtMessage {
@@ -399,14 +447,14 @@ export namespace AtMessageImplementations {
 
                 public readonly statName: string;
 
-                constructor( raw: string,
-                public readonly index: number,
-                public readonly stat: MessageStat,
-                public readonly length: number,
-                public readonly pdu: string){
+                constructor(raw: string,
+                        public readonly index: number,
+                        public readonly stat: MessageStat,
+                        public readonly length: number,
+                        public readonly pdu: string) {
                         super(AtMessageId.CMGL, raw);
 
-                        this.statName= MessageStat[stat];
+                        this.statName = MessageStat[stat];
                 }
         }
 
@@ -512,10 +560,25 @@ function descriptorToInstance(atMessageDescriptor: any): AtMessage {
                         let pdu = <string>atMessageDescriptor.pdu;
                         atMessage = new AtMessageImplementations.CMGR(raw, stat, length, pdu);
                         break;
+                case AtMessageId.CMT:
+                        length = <number>atMessageDescriptor.length;
+                        pdu = <string>atMessageDescriptor.pdu;
+                        atMessage = new AtMessageImplementations.CMT(raw, length, pdu);
+                        break;
+                case AtMessageId.CDS:
+                        length = <number>atMessageDescriptor.length;
+                        pdu = <string>atMessageDescriptor.pdu;
+                        atMessage = new AtMessageImplementations.CDS(raw, length, pdu);
+                        break;
                 case AtMessageId.CMTI:
                         let mem = <MemStorage>MemStorage[<string>atMessageDescriptor.mem];
                         let index = <number>atMessageDescriptor.index;
                         atMessage = new AtMessageImplementations.CMTI(raw, mem, index);
+                        break;
+                case AtMessageId.CDSI:
+                        mem = <MemStorage>MemStorage[<string>atMessageDescriptor.mem];
+                        index = <number>atMessageDescriptor.index;
+                        atMessage = new AtMessageImplementations.CDSI(raw, mem, index);
                         break;
                 case AtMessageId.CNUM:
                         let alpha = <string>atMessageDescriptor.alpha;
