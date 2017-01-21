@@ -1,6 +1,6 @@
 %%
 
-id= (\+|\^)(CMTI|CPIN|CMEE|BOOT|RSSI|SIMST|SRVST|SYSINFO|CDSI)
+id= (\+|\^)(CMTI|CPIN|CMEE|BOOT|RSSI|SIMST|SRVST|SYSINFO|CDSI|CMGS)
 
 idMultiline= (\+|\^)(CNUM)
 idPdu= (\+|\^)(CMGR|CMGL|CDS|CMT)

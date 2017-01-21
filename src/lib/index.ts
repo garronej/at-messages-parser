@@ -12,7 +12,7 @@ export enum AtMessageId {
         OK, CONNECT, RING, NO_CARRIER, NO_DIALTONE, BUSY, NO_ANSWER, COMMAND_NOT_SUPPORT, TOO_MANY_PARAMETERS,
         INVITE,
         ERROR, CME_ERROR, CMS_ERROR,
-        CNUM, CMGR, CMTI, CPIN, CMEE, CMGL, CDSI, CDS, CMT,
+        CNUM, CMGR, CMTI, CPIN, CMEE, CMGL, CDSI, CDS, CMT, CMGS,
         HUAWEI_BOOT, HUAWEI_RSSI, HUAWEI_SIMST, HUAWEI_SRVST, HUAWEI_CPIN, HUAWEI_SYSINFO
 }
 
@@ -457,6 +457,15 @@ export namespace AtMessageImplementations {
                         this.statName = MessageStat[stat];
                 }
         }
+        
+        //\r\n+CMGS: 135\r\n
+
+        export class CMGS extends AtMessage {
+                constructor(raw: string,
+                        public readonly mr: number) {
+                        super(AtMessageId.CMGS, raw);
+                }
+        }
 
 
 }
@@ -626,6 +635,10 @@ function descriptorToInstance(atMessageDescriptor: any): AtMessage {
                         length = <number>atMessageDescriptor.length;
                         pdu = <string>atMessageDescriptor.pdu;
                         atMessage = new AtMessageImplementations.CMGL(raw, index, stat, length, pdu);
+                        break;
+                case AtMessageId.CMGS:
+                        let mr= <number>atMessageDescriptor.mr;
+                        atMessage= new AtMessageImplementations.CMGS(raw, mr);
                         break;
                 default: atMessage = new AtMessage(id, raw);
         }

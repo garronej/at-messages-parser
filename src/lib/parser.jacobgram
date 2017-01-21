@@ -253,7 +253,6 @@ KnownMessage= 'ID' 'REST' function(id, rest){
 
         atMessageDescriptor.id+= id.name;
 
-
         switch(atMessageDescriptor.id){
                 case "CMTI":
                         var match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
@@ -314,6 +313,12 @@ KnownMessage= 'ID' 'REST' function(id, rest){
                                 "isRoaming": match[3] === "1",
                                 "sysMode": parseInt(match[4]),
                                 "simState": parseInt(match[5])
+                        });
+                        break;
+                case "CMGS":
+                        var match= rest.match(/^:\ ?([0-9]+)(?:,.*)?/);
+                        Object.assign( atMessageDescriptor, {
+                                "mr": parseInt(match[1])
                         });
                         break;
                 default:

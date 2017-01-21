@@ -55,7 +55,8 @@ input += [
         '\r\n+CMEE: 1\r\n',
         '\r\n^CPIN: SIM PIN,3,10,3,10,3\r\n',
         '\r\n^CPIN: READY,,10,3,10,3\r\n',
-        '\r\n^SYSINFO:2,3,0,5,1,,4\r\n'
+        '\r\n^SYSINFO:2,3,0,5,1,,4\r\n',
+        '\r\n+CMGS: 135\r\n'
 ].join("");
 
 //Test message with pdu
