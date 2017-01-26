@@ -24,10 +24,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <>{id} {
 
-        this.jjval= {
-                "prefix": this.jjtext[0],
-                "name": this.jjtext.substring(1,this.jjtext.length)
-        };
+        this.jjval= this.jjtext;
 
         return "ID";
 
@@ -35,10 +32,7 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <>{idMultiline} {
 
-        this.jjval= {
-                "prefix": this.jjtext[0],
-                "name": this.jjtext.substring(1,this.jjtext.length)
-        };
+        this.jjval= this.jjtext;
 
         return "ID_MULTILINE";
 
@@ -48,12 +42,9 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
         this.expectPdu= true;
 
-        if( this.jjtext === "+CMGL" ) return "CMGL";
+        this.jjval= this.jjtext;
 
-        this.jjval= {
-                "prefix": this.jjtext[0],
-                "name": this.jjtext.substring(1,this.jjtext.length)
-        };
+        if( this.jjval === "+CMGL" ) return "CMGL";
 
         return "ID_PDU";
 
@@ -61,14 +52,14 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <>\+CME\sERROR:\s[0-9]+ {
 
-        this.jjval= parseInt(this.jjtext.match(/^\+CME\ ERROR:\ ([0-9]+)$/)[1]);
+        this.jjval= parseInt(this.jjtext.match(/^\+CME\ ERROR:\ ?([0-9]+)$/)[1]);
                 
         return "CME_ERROR";
 }
 
 <>\+CMS\sERROR:\s[0-9]+ {
 
-        this.jjval= parseInt(this.jjtext.match(/^\+CMS\ ERROR:\ ([0-9]+)$/)[1]);
+        this.jjval= parseInt(this.jjtext.match(/^\+CMS\ ERROR:\ ?([0-9]+)$/)[1]);
                 
         return "CMS_ERROR";
 
