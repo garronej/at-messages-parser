@@ -4,6 +4,12 @@ This module compile to object raw response send by a modem to AT command.
 
 Support only *AT+CMEE=0* and *AT+CMEE=1* mode, not *AT+CMEE=2*
 
+#Technical specifications
+
+This module have been build according to this specification document:
+
+https://www.paoli.cz/out/media/HUAWEI_MU609_HSPA_LGA_Modul_AT_Command_Interface_Specification_V100R002_04.pdf
+
 #Install 
 
 npm install garronej/at-messages-parser
