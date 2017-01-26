@@ -1,7 +1,8 @@
+require("colors");
 
 import {
         atMessagesParser,
-        AtMessageId,
+        atIds,
         AtMessage,
         AtMessageList,
         AtMessageImplementations
@@ -98,78 +99,9 @@ input += [
         '\r\n'
 ].join("");
 
-//console.log(JSON.stringify(input));
-
-try {
-
-        atMessages = atMessagesParser(input);
-
-} catch (error) {
-
-        console.log(error.message);
-        process.exit(1);
-
-}
-
-for (let atMessage of atMessages) {
-
-        switch (atMessage.id) {
-                case AtMessageId.AT_LIST:
-                        let atMessageList = <AtMessageList>atMessage;
-                        console.log(atMessageList);
-                        break;
-                case AtMessageId.CMGR:
-                        let atMessageCMGR = <AtMessageImplementations.CMGR>atMessage;
-                        console.log(atMessageCMGR);
-                        break;
-                case AtMessageId.CMTI:
-                        let atMessageCMTI = <AtMessageImplementations.CMTI>atMessage;
-                        console.log(atMessageCMTI);
-                        break;
-                case AtMessageId.CNUM:
-                        let atMessageCNUM = <AtMessageImplementations.CNUM>atMessage;
-                        console.log(atMessageCNUM);
-                        break;
-                case AtMessageId.ERROR:
-                        let atMessageERROR = <AtMessageImplementations.ERROR>atMessage;
-                        console.log(atMessageERROR);
-                        break;
-                case AtMessageId.CME_ERROR:
-                        let atMessageCME_ERROR = <AtMessageImplementations.CME_ERROR>atMessage;
-                        console.log(atMessageCME_ERROR);
-                        break;
-                case AtMessageId.CMS_ERROR:
-                        let atMessageCMS_ERROR = <AtMessageImplementations.CMS_ERROR>atMessage;
-                        console.log(atMessageCMS_ERROR);
-                        break;
-                case AtMessageId.HUAWEI_SIMST:
-                        let atMessageHuaweiSIMST = <AtMessageImplementations.HUAWEI_SIMST>atMessage;
-                        console.log(atMessageHuaweiSIMST);
-                        break;
-                case AtMessageId.HUAWEI_SRVST:
-                        let atMessageHuaweiSRVST = <AtMessageImplementations.HUAWEI_SRVST>atMessage;
-                        console.log(atMessageHuaweiSRVST);
-                        break;
-                case AtMessageId.CMEE:
-                        let atMessageCMEE = <AtMessageImplementations.CMEE>atMessage;
-                        console.log(atMessageCMEE);
-                        break;
-                case AtMessageId.HUAWEI_CPIN:
-                        let atMessageHuaweiCPIN = <AtMessageImplementations.HUAWEI_CPIN>atMessage;
-                        console.log(atMessageHuaweiCPIN);
-                        break;
-                case AtMessageId.HUAWEI_SYSINFO:
-                        let atMessageHuaweiSYSINFO = <AtMessageImplementations.HUAWEI_SYSINFO>atMessage;
-                        console.log(atMessageHuaweiSYSINFO);
-                        break;
-                default: console.log(atMessage);
-        }
-
-}
-
 //Test basic, basic command often dose not respect basic format
 
-input = [
+input += [
         "ATI\r",
         "\r\n",
         [
@@ -184,6 +116,12 @@ input = [
 ].join("");
 
 
+input+= "\r\n";
+
+input+= "\r\nABCDEF12323122DDDDD";
+
+input+= "\r\n0021000B913336766883F5000038C83208FD0E29906510FA1D5220CB20F43BA4409641E87748812C83D0EF90025906A1DF2105B20C42BF430A6419847E8714\r\n+CMS ERROR: 500\r\n";
+
 //console.log(JSON.stringify(input));
 
 try {
@@ -192,63 +130,46 @@ try {
 
 } catch (error) {
 
-        console.log(error.message);
+        console.log("Tests failed".red, error.message);
         process.exit(1);
 
 }
 
-for (let atMessage of atMessages) console.log(atMessage);
 
+//UsageExample
 
-input = "\r\n";
+for (let atMessage of atMessages) {
 
-console.log("input: ", JSON.stringify(input));
+        console.log(atMessage);
 
-try {
+        switch (atMessage.id) {
+                case atIds.CMGR:
+                        let atMessageCMGR = atMessage as AtMessageImplementations.CMGR;
 
-        atMessages = atMessagesParser(input);
+                        let length= atMessageCMGR.length;
+                        let pdu= atMessageCMGR.pdu;
+                        break;
+                case atIds.AT_LIST:
+                        let atMessageList = atMessage as AtMessageList;
+                        for( let atMessage of atMessageList.atMessages ){
+                                if( atMessage.id === atIds.CNUM ){
+                                        let atMessageCNUM= atMessage as AtMessageImplementations.CNUM;
 
-} catch (error) {
-
-        console.log(error.message);
-        process.exit(1);
-
-}
-
-for (let atMessage of atMessages) console.log(atMessage);
-
-
-input = "\r\nABCDEF12323122DDDDD";
-
-console.log("input: ", JSON.stringify(input));
-
-try {
-
-        atMessages = atMessagesParser(input);
-
-} catch (error) {
-
-        console.log(error.message);
-        process.exit(1);
+                                        let number= atMessageCNUM.number;
+                                }
+                        }
+                        break;
+                default:
+        }
 
 }
 
-for (let atMessage of atMessages) console.log(atMessage);
+//Debug
+
+console.log("If you see this all test passed successfully".green);
 
 
-input = "ABCDEF12323122DDDDD";
 
-console.log("input :", JSON.stringify(input));
 
-try {
 
-        atMessages = atMessagesParser(input);
 
-} catch (error) {
-
-        console.log(error.message);
-        process.exit(1);
-
-}
-
-for (let atMessage of atMessages) console.log(atMessage);
