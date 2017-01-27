@@ -132,6 +132,15 @@ export type MemStorage = "SM" | "ME" | "ON" | "EN" | "FD";
 
 export type PinState = "READY" | "SIM PIN" | "SIM PUK" | "SIM PIN2" | "SIM PUK2";
 
+export let pinStates= {
+        "READY": "READY" as PinState,
+        "SIM_PIN": "SIM PIN" as PinState,
+        "SIM_PUK": "SIM PUK" as PinState,
+        "SIM_PIN2": "SIM PIN2" as PinState,
+        "SIM_PUK2": "SIM PUK2" as PinState
+};
+
+
 
 export enum ServiceStatus {
         NO_SERVICES = 0,
