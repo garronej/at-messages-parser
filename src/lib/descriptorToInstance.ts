@@ -1,7 +1,6 @@
 import { 
         AtMessageId, 
         atIds, 
-        AtMessageDescriptor, 
         AtMessage, 
         AtMessageList,
         AtMessageImplementations,
@@ -10,110 +9,151 @@ import {
         ServiceStatus,
         ServiceDomain,
         SysMode,
+        SysSubMode,
         SimState,
         ReportMode,
         MessageStat
 } from "./AtMessage";
 
+
+export interface AtMessageDescriptor {
+        id?: AtMessageId;
+        raw: string;
+        [prop: string]: any;
+}
+
 export function descriptorToInstance(atMessageDescriptor: AtMessageDescriptor): AtMessage {
 
-        let id = atMessageDescriptor.id as AtMessageId;
+        let id = atMessageDescriptor.id;
         let raw = atMessageDescriptor.raw;
         let atMessage: AtMessage;
 
         switch (id) {
                 case atIds.AT_LIST:
-                        let atMessageDescriptors = atMessageDescriptor["atMessageDescriptors"] as AtMessageDescriptor[];
-                        atMessage = new AtMessageList(raw, atMessageDescriptors);
+                        atMessage = new AtMessageList(raw,
+                                (atMessageDescriptors => {
+
+                                        let atMessages: AtMessage[] = [];
+
+                                        for (let atMessageDescriptor of atMessageDescriptors)
+                                                atMessages.push(descriptorToInstance(atMessageDescriptor));
+
+                                        return atMessages;
+
+                                })(atMessageDescriptor["atMessageDescriptors"] as AtMessageDescriptor[])
+                        );
                         break;
                 case atIds.ERROR:
                         atMessage = new AtMessageImplementations.ERROR(raw);
                         break;
                 case atIds.CME_ERROR:
-                        let cmeErrorCode = atMessageDescriptor["code"] as number;
-                        atMessage = new AtMessageImplementations.CME_ERROR(raw, cmeErrorCode);
+                        atMessage = new AtMessageImplementations.CME_ERROR(raw,
+                                atMessageDescriptor["code"] as number
+                        );
                         break;
                 case atIds.CMS_ERROR:
-                        let cmsErrorCode = atMessageDescriptor["code"] as number;
-                        atMessage = new AtMessageImplementations.CMS_ERROR(raw, cmsErrorCode);
+                        atMessage = new AtMessageImplementations.CMS_ERROR(raw,
+                                atMessageDescriptor["code"] as number
+                        );
                         break;
                 case atIds.CMGR:
-                        let stat = atMessageDescriptor["stat"] as MessageStat;
-                        let length = atMessageDescriptor["length"] as number;
-                        let pdu = atMessageDescriptor["pdu"] as string;
-                        atMessage = new AtMessageImplementations.CMGR(raw, stat, length, pdu);
+                        atMessage = new AtMessageImplementations.CMGR(raw,
+                                atMessageDescriptor["stat"] as MessageStat,
+                                atMessageDescriptor["length"] as number,
+                                atMessageDescriptor["pdu"] as string
+                        );
                         break;
                 case atIds.CMT:
-                        length = atMessageDescriptor["length"] as number;
-                        pdu = atMessageDescriptor["pdu"] as string;
-                        atMessage = new AtMessageImplementations.CMT(raw, length, pdu);
+                        atMessage = new AtMessageImplementations.CMT(raw,
+                                atMessageDescriptor["length"] as number,
+                                atMessageDescriptor["pdu"] as string
+                        );
                         break;
                 case atIds.CDS:
-                        length = atMessageDescriptor["length"] as number;
-                        pdu = atMessageDescriptor["pdu"] as string;
-                        atMessage = new AtMessageImplementations.CDS(raw, length, pdu);
+                        atMessage = new AtMessageImplementations.CDS(raw,
+                                atMessageDescriptor["length"] as number,
+                                atMessageDescriptor["pdu"] as string
+                        );
                         break;
                 case atIds.CMTI:
-                        let mem = atMessageDescriptor["mem"] as MemStorage;
-                        let index = <number>atMessageDescriptor["index"];
-                        atMessage = new AtMessageImplementations.CMTI(raw, mem, index);
+                        atMessage = new AtMessageImplementations.CMTI(raw,
+                                atMessageDescriptor["mem"] as MemStorage,
+                                atMessageDescriptor["index"] as number
+                        );
                         break;
                 case atIds.CDSI:
-                        mem = atMessageDescriptor["mem"] as MemStorage;
-                        index = atMessageDescriptor["index"] as number;
-                        atMessage = new AtMessageImplementations.CDSI(raw, mem, index);
+                        atMessage = new AtMessageImplementations.CDSI(raw,
+                                atMessageDescriptor["mem"] as MemStorage,
+                                atMessageDescriptor["index"] as number
+                        );
                         break;
                 case atIds.CNUM:
-                        let alpha = atMessageDescriptor["alpha"] as string;
-                        let number = atMessageDescriptor["number"] as string;
-                        let isNational = atMessageDescriptor["isNational"] as boolean;
-                        let hasError = atMessageDescriptor["hasError"] as boolean;
-                        atMessage = new AtMessageImplementations.CNUM(raw, alpha, number, isNational);
+                        atMessage = new AtMessageImplementations.CNUM(raw,
+                                atMessageDescriptor["alpha"] as string,
+                                atMessageDescriptor["number"] as string,
+                                atMessageDescriptor["isNational"] as boolean
+                        );
                         break;
                 case atIds.CPIN:
-                        let pinState = atMessageDescriptor["pinState"] as PinState;
-                        atMessage = new AtMessageImplementations.CPIN(raw, pinState);
+                        atMessage = new AtMessageImplementations.CPIN(raw,
+                                atMessageDescriptor["pinState"] as PinState
+                        );
                         break;
                 case atIds.HUAWEI_SIMST:
-                        let simState = atMessageDescriptor["simState"] as SimState;
-                        let lock = atMessageDescriptor["lock"] as boolean;
-                        atMessage = new AtMessageImplementations.HUAWEI_SIMST(raw, simState, lock);
+                        atMessage = new AtMessageImplementations.HUAWEI_SIMST(raw,
+                                atMessageDescriptor["simState"] as SimState,
+                                atMessageDescriptor["lock"] as boolean
+                        );
                         break;
                 case atIds.HUAWEI_SRVST:
-                        let serviceStatus = atMessageDescriptor["serviceStatus"] as ServiceStatus;
-                        atMessage = new AtMessageImplementations.HUAWEI_SRVST(raw, serviceStatus);
+                        atMessage = new AtMessageImplementations.HUAWEI_SRVST(raw,
+                                atMessageDescriptor["serviceStatus"] as ServiceStatus
+                        );
                         break;
                 case atIds.CMEE:
-                        let reportMode = atMessageDescriptor["reportMode"] as ReportMode;
-                        atMessage = new AtMessageImplementations.CMEE(raw, reportMode);
+                        atMessage = new AtMessageImplementations.CMEE(raw,
+                                atMessageDescriptor["reportMode"] as ReportMode
+                        );
                         break;
                 case atIds.HUAWEI_CPIN:
-                        pinState = atMessageDescriptor["pinState"] as PinState;
-                        let times = atMessageDescriptor["times"] as number;
-                        let pukTimes = atMessageDescriptor["pukTimes"] as number;
-                        let pinTimes = atMessageDescriptor["pinTimes"] as number;
-                        let puk2Times = atMessageDescriptor["puk2Times"] as number;
-                        let pin2Times = atMessageDescriptor["pin2Times"] as number;
-                        atMessage = new AtMessageImplementations.HUAWEI_CPIN(raw, pinState, times, pukTimes, pinTimes, puk2Times, pin2Times);
+                        atMessage = new AtMessageImplementations.HUAWEI_CPIN(raw,
+                                atMessageDescriptor["pinState"] as PinState,
+                                atMessageDescriptor["times"] as number,
+                                atMessageDescriptor["pukTimes"] as number,
+                                atMessageDescriptor["pinTimes"] as number,
+                                atMessageDescriptor["puk2Times"] as number,
+                                atMessageDescriptor["pin2Times"] as number
+                        );
                         break;
                 case atIds.HUAWEI_SYSINFO:
-                        serviceStatus = atMessageDescriptor["serviceStatus"] as ServiceStatus;
-                        let serviceDomain = atMessageDescriptor["serviceDomain"] as ServiceDomain;
-                        let isRoaming = atMessageDescriptor["isRoaming"] as boolean;
-                        let sysMode = atMessageDescriptor["sysMode"] as SysMode;
-                        simState = atMessageDescriptor["simState"] as SimState;
-                        atMessage = new AtMessageImplementations.HUAWEI_SYSINFO(raw, serviceStatus, serviceDomain, isRoaming, sysMode, simState);
+                        atMessage = new AtMessageImplementations.HUAWEI_SYSINFO(raw,
+                                atMessageDescriptor["serviceStatus"] as ServiceStatus,
+                                atMessageDescriptor["serviceDomain"] as ServiceDomain,
+                                atMessageDescriptor["isRoaming"] as boolean,
+                                atMessageDescriptor["sysMode"] as SysMode,
+                                atMessageDescriptor["simState"] as SimState,
+                                atMessageDescriptor["cardLock"] as boolean,
+                                atMessageDescriptor["sysSubMode"] as SysSubMode
+                        );
+                        break;
+                case atIds.HUAWEI_MODE:
+                        atMessage= new AtMessageImplementations.HUAWEI_MODE(raw,
+                                atMessageDescriptor["sysMode"] as SysMode,
+                                atMessageDescriptor["sysSubMode"] as SysSubMode
+                        );
                         break;
                 case atIds.CMGL:
-                        index = atMessageDescriptor["index"] as number;
-                        stat = atMessageDescriptor["stat"] as MessageStat;
-                        length = atMessageDescriptor["length"] as number;
-                        pdu = atMessageDescriptor["pdu"] as string;
-                        atMessage = new AtMessageImplementations.CMGL(raw, index, stat, length, pdu);
+                        atMessage = new AtMessageImplementations.CMGL(raw,
+                                atMessageDescriptor["index"] as number,
+                                atMessageDescriptor["stat"] as MessageStat,
+                                atMessageDescriptor["length"] as number,
+                                atMessageDescriptor["pdu"] as string
+                        );
                         break;
                 case atIds.CMGS:
-                        let mr = atMessageDescriptor["mr"] as number;
-                        atMessage = new AtMessageImplementations.CMGS(raw, mr);
+                        atMessage = new AtMessageImplementations.CMGS(raw,
+                                atMessageDescriptor["mr"] as number
+                        );
                         break;
                 default: atMessage = new AtMessage(id, raw);
         }
@@ -121,22 +161,7 @@ export function descriptorToInstance(atMessageDescriptor: AtMessageDescriptor): 
 
         if (atMessageDescriptor["error"]) {
 
-                let raw = atMessageDescriptor["error"].raw;
-
-                switch (atMessageDescriptor["error"].id as AtMessageId) {
-                        case atIds.ERROR:
-                                atMessage.error = new AtMessageImplementations.ERROR(raw);
-                                break;
-                        case atIds.CME_ERROR:
-                                let cmeErrorCode = atMessageDescriptor["error"].code as number;
-                                atMessage.error = new AtMessageImplementations.CME_ERROR(raw, cmeErrorCode);
-                                break;
-                        case atIds.CMS_ERROR:
-                                let cmsErrorCode = atMessageDescriptor["error"].code as number;
-                                atMessage.error = new AtMessageImplementations.CMS_ERROR(raw, cmsErrorCode);
-                                break;
-                        default:
-                }
+                atMessage.error = descriptorToInstance(atMessageDescriptor["error"]);
 
                 delete atMessage.error.isFinal;
 

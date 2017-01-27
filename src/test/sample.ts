@@ -11,6 +11,7 @@ import {
 let input = "";
 let atMessages: AtMessage[];
 
+
 //Test Final result code
 
 input += [
@@ -57,7 +58,9 @@ input += [
         '\r\n^CPIN: SIM PIN,3,10,3,10,3\r\n',
         '\r\n^CPIN: READY,,10,3,10,3\r\n',
         '\r\n^SYSINFO:2,3,0,5,1,,4\r\n',
-        '\r\n+CMGS: 135\r\n'
+        '\r\n^SYSINFO:2,3,0,5,1,1,0\r\n',
+        '\r\n+CMGS: 135\r\n',
+        '\r\n^MODE: 3,4\r\n'
 ].join("");
 
 //Test message with pdu
@@ -76,6 +79,7 @@ input += [
         '\r\n+CPMS: 48,50,48,50,48,50\r\n'
 ].join("");
 
+
 //Test message multiline
 
 input += [
@@ -92,6 +96,7 @@ input += [
 ].join("");
 
 //Special case, with pdu and multiline
+
 
 input += [
         '\r\n+CMGL: 0,1,,22\r\n07913306092049F0040B913336766883F500007110811094904003CF7A1A',
@@ -146,16 +151,16 @@ for (let atMessage of atMessages) {
                 case atIds.CMGR:
                         let atMessageCMGR = atMessage as AtMessageImplementations.CMGR;
 
-                        let length= atMessageCMGR.length;
-                        let pdu= atMessageCMGR.pdu;
+                        let length = atMessageCMGR.length;
+                        let pdu = atMessageCMGR.pdu;
                         break;
                 case atIds.AT_LIST:
                         let atMessageList = atMessage as AtMessageList;
-                        for( let atMessage of atMessageList.atMessages ){
-                                if( atMessage.id === atIds.CNUM ){
-                                        let atMessageCNUM= atMessage as AtMessageImplementations.CNUM;
+                        for (let atMessage of atMessageList.atMessages) {
+                                if (atMessage.id === atIds.CNUM) {
+                                        let atMessageCNUM = atMessage as AtMessageImplementations.CNUM;
 
-                                        let number= atMessageCNUM.number;
+                                        let number = atMessageCNUM.number;
                                 }
                         }
                         break;
@@ -167,9 +172,3 @@ for (let atMessage of atMessages) {
 //Debug
 
 console.log("If you see this all test passed successfully".green);
-
-
-
-
-
-

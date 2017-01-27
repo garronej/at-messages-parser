@@ -1,6 +1,7 @@
 export * from "./AtMessage";
-import { AtMessageId, AtMessage, AtMessageDescriptor } from "./AtMessage";
-import { descriptorToInstance } from "./descriptorToInstance";
+
+import { AtMessageId, AtMessage } from "./AtMessage";
+import { descriptorToInstance, AtMessageDescriptor } from "./descriptorToInstance";
 const Lexer = require("./Lexer");
 const Parser = require("./Parser");
 require("colors");

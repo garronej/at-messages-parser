@@ -107,12 +107,18 @@ ListMessageWrapMultiline=  ListMessageWrapMultiline MessageWrapMultiline functio
 
 MessageWrap= Message function(message){ return message; }
 | Error Message function(error, message){
+
+        message.raw= error.raw + message.raw;
+
         message.error= error;
         return message;
 };
 
 MessageWrapMultiline= KnownMessageMultiLine function(message){ return message; } 
 | Error KnownMessageMultiLine function(error, message){
+
+        message.raw= error.raw + message.raw;
+
         message.error= error;
         return message;
 };
@@ -282,13 +288,31 @@ KnownMessage= 'ID' 'REST' function(id, rest){
                         });
                         break;
                 case "^SYSINFO":
-                        var match= rest.match(/^:\ ?([0-9]+),([0-9]+),([01]),([0-9]+),([0-9]+).*$/);
+                        var match= rest.match(/:\ ?([0-9]+),([0-9]+),(0|1),([0-9]+),([0-9]+)(?:,(0|1)?(?:,([0-9]+))?)?$/);
+
+                        var cardLock= undefined;
+
+                        if( match[6] !== undefined ) cardLock= ( match[6] === "1" );
+
+                        var sysSubMode= undefined;
+
+                        if( match[7] !== undefined ) sysSubMode= parseInt(match[7]);
+
                         Object.assign( atMessageDescriptor, {
                                 "serviceStatus": parseInt(match[1]),
                                 "serviceDomain": parseInt(match[2]),
                                 "isRoaming": match[3] === "1",
                                 "sysMode": parseInt(match[4]),
-                                "simState": parseInt(match[5])
+                                "simState": parseInt(match[5]),
+                                "cardLock": cardLock,
+                                "sysSubMode": sysSubMode
+                        });
+                        break;
+                case "^MODE":
+                        var match= rest.match(/^:\ ?([0-9]+),([0-9]+)$/);
+                        Object.assign( atMessageDescriptor, {
+                                "sysMode": parseInt(match[1]),
+                                "sysSubMode": parseInt(match[2])
                         });
                         break;
                 case "+CMGS":

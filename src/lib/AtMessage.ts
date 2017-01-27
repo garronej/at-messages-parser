@@ -8,7 +8,7 @@ export type AtMessageId =
         ">" |
         "ERROR" | "+CME ERROR" | "+CMS ERROR" |
         "+CNUM" | "+CMGR" | "+CMTI" | "+CPIN" | "+CMEE" | "+CMGL" | "+CDSI" | "+CDS" | "+CMT" | "+CMGS" |
-        "^BOOT" | "^RSSI" | "^SIMST" | "^SRVST" | "^CPIN" | "^SYSINFO";
+        "^BOOT" | "^RSSI" | "^SIMST" | "^SRVST" | "^CPIN" | "^SYSINFO" | "^MODE";
 
 export let atIds = {
         "ECHO": "ECHO" as AtMessageId,
@@ -45,7 +45,8 @@ export let atIds = {
         "HUAWEI_SIMST": "^SIMST" as AtMessageId, 
         "HUAWEI_SRVST": "^SRVST" as AtMessageId, 
         "HUAWEI_CPIN": "^CPIN" as AtMessageId, 
-        "HUAWEI_SYSINFO": "^SYSINFO" as AtMessageId
+        "HUAWEI_SYSINFO": "^SYSINFO" as AtMessageId,
+        "HUAWEI_MODE": "^MODE" as AtMessageId
 };
 
 let atMessageUnsolicited: AtMessageId[] = [
@@ -56,7 +57,8 @@ let atMessageUnsolicited: AtMessageId[] = [
         atIds.HUAWEI_BOOT,
         atIds.HUAWEI_RSSI,
         atIds.HUAWEI_SIMST,
-        atIds.HUAWEI_SRVST
+        atIds.HUAWEI_SRVST,
+        atIds.HUAWEI_MODE
 ];
 
 let atMessageFinal: AtMessageId[] = [
@@ -87,11 +89,6 @@ let atMessageError: AtMessageId[] = [
         atIds.CMS_ERROR
 ];
 
-export interface AtMessageDescriptor {
-        id?: AtMessageId;
-        raw: string;
-        [prop: string]: any;
-}
 
 export class AtMessage {
 
@@ -120,14 +117,12 @@ export class AtMessage {
 
 export class AtMessageList extends AtMessage {
 
-        public readonly atMessages: AtMessage[] = [];
-
-        constructor(raw: string, atMessageDescriptors: AtMessageDescriptor[]) {
+        constructor(raw: string,
+                public readonly atMessages: AtMessage[]
+        ) {
 
                 super(atIds.AT_LIST, raw);
 
-                for (let atMessageDescriptor of atMessageDescriptors)
-                        this.atMessages.push(descriptorToInstance(atMessageDescriptor));
 
         }
 }
@@ -161,7 +156,32 @@ export enum SysMode {
         GSM_GPRS = 3,
         HDR = 4,
         WCDMA = 5,
-        GPS = 6
+        GPS = 6,
+        GSM_WCDMA = 7,
+        CDMA_HDR_HYBRID = 8,
+        TD_SCDMA = 15
+}
+
+export enum SysSubMode {
+        NO_SERVICES= 0,
+        GSM = 1,
+        GPRS = 2,
+        EDGE = 3,
+        WCDMA = 4,
+        HSDPA = 5,
+        HSUPA = 6,
+        HSUPAHSDPA = 7,
+        TD_SCDMA = 8,
+        HSPA_P = 9,
+        EVDO_REV_0 = 10,
+        EVDO_REV_A = 11,
+        EVDO_REV_B = 12,
+        ONE_X_RTT = 13,
+        UMB = 14,
+        ONE_X_EVDV = 15,
+        TREE_X_RTT = 16,
+        HSPA_P_64QAM = 17,
+        HSPA_P_MIMO = 18
 }
 
 export enum SimState {
@@ -376,19 +396,36 @@ export namespace AtMessageImplementations {
                 public readonly serviceDomainName: string;
                 public readonly sysModeName: string;
                 public readonly simStateName: string;
+                public readonly sysSubModeName: string;
                 constructor(raw: string,
                         public readonly serviceStatus: ServiceStatus,
                         public readonly serviceDomain: ServiceDomain,
                         public readonly isRoaming: boolean,
                         public readonly sysMode: SysMode,
-                        public readonly simState: SimState) {
+                        public readonly simState: SimState,
+                        public readonly cardLock: boolean,
+                        public readonly sysSubMode: SysSubMode) {
                         super(atIds.HUAWEI_SYSINFO, raw);
 
                         this.serviceStatusName = ServiceStatus[serviceStatus];
                         this.serviceDomainName = ServiceDomain[serviceDomain];
+                        if (typeof (sysSubMode) === "number") this.sysSubModeName = SysSubMode[sysSubMode];
                         this.sysModeName = SysMode[sysMode];
                         this.simStateName = SimState[simState];
 
+                }
+        }
+
+        export class HUAWEI_MODE extends AtMessage {
+                public readonly sysModeName: string;
+                public readonly sysSubModeName: string;
+                constructor(raw: string,
+                        public readonly sysMode: SysMode,
+                        public readonly sysSubMode: SysSubMode
+                ){
+                        super(atIds.HUAWEI_MODE, raw);
+                        this.sysModeName= SysMode[this.sysMode];
+                        this.sysSubModeName= SysSubMode[this.sysSubMode];
                 }
         }
 
