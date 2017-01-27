@@ -1,6 +1,13 @@
 # at-messages-parser
 
-This module compile to object raw response send by a modem to AT command.
+Parse AT command response send my a GSM modem independently from the command issued.
+
+If the message is a response to a known command it will be compiled into an object
+so the relevant information can be extracted easily.
+When the parser does not recognize the message it transform it in generic
+AtMessage an continue parsing.
+
+This library is easier to use with TypeScript but is also usable in raw JavaScript.
 
 Support only *AT+CMEE=0* and *AT+CMEE=1* mode, not *AT+CMEE=2*
 
