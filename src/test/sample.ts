@@ -11,7 +11,6 @@ import {
 let input = "";
 let atMessages: AtMessage[];
 
-
 //Test Final result code
 
 input += [
@@ -60,7 +59,8 @@ input += [
         '\r\n^SYSINFO:2,3,0,5,1,,4\r\n',
         '\r\n^SYSINFO:2,3,0,5,1,1,0\r\n',
         '\r\n+CMGS: 135\r\n',
-        '\r\n^MODE: 3,4\r\n'
+        '\r\n^MODE: 3,4\r\n',
+        '\r\n+CPBS: "SM",3,50\r\n'
 ].join("");
 
 //Test message with pdu
@@ -76,9 +76,9 @@ input += [
 input += [
         '\r\n+WTF: iam not a known message\r\n',
         '\r\n123456789012345\r\n',
-        '\r\n+CPMS: 48,50,48,50,48,50\r\n'
+        '\r\n+CPMS: 48,50,48,50,48,50\r\n',
+        '\r\n+CPBS: ("SM","EN","ON")\r\n\r\nOK\r\n' //Response to the test command
 ].join("");
-
 
 //Test message multiline
 
@@ -96,7 +96,6 @@ input += [
 ].join("");
 
 //Special case, with pdu and multiline
-
 
 input += [
         '\r\n+CMGL: 0,1,,22\r\n07913306092049F0040B913336766883F500007110811094904003CF7A1A',
@@ -120,7 +119,6 @@ input += [
         "\r\nOK\r\n"
 ].join("");
 
-
 input+= "\r\n";
 
 input+= "\r\nABCDEF12323122DDDDD";
@@ -139,7 +137,6 @@ try {
         process.exit(1);
 
 }
-
 
 //UsageExample
 

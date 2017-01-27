@@ -7,7 +7,7 @@ export type AtMessageId =
         "OK" | "CONNECT" | "RING" | "NO CARRIER" | "NO DIALTONE" | "BUSY" | "NO ANSWER" | "COMMAND NOT SUPPORT" | "TOO MANY PARAMETERS" |
         ">" |
         "ERROR" | "+CME ERROR" | "+CMS ERROR" |
-        "+CNUM" | "+CMGR" | "+CMTI" | "+CPIN" | "+CMEE" | "+CMGL" | "+CDSI" | "+CDS" | "+CMT" | "+CMGS" |
+        "+CNUM" | "+CMGR" | "+CMTI" | "+CPIN" | "+CMEE" | "+CMGL" | "+CDSI" | "+CDS" | "+CMT" | "+CMGS" | "+CPBS" |
         "^BOOT" | "^RSSI" | "^SIMST" | "^SRVST" | "^CPIN" | "^SYSINFO" | "^MODE";
 
 export let atIds = {
@@ -39,6 +39,7 @@ export let atIds = {
         "CDS": "CDS" as AtMessageId, 
         "CMT": "+CMT" as AtMessageId, 
         "CMGS": "+CMGS" as AtMessageId,
+        "CPBS": "+CPBS" as AtMessageId,
 
         "HUAWEI_BOOT": "^BOOT" as AtMessageId, 
         "HUAWEI_RSSI": "^RSSI" as AtMessageId, 
@@ -464,5 +465,14 @@ export namespace AtMessageImplementations {
                 }
         }
 
+        export class CPBS extends AtMessage {
+                constructor(raw: string,
+                        public readonly storage: MemStorage,
+                        public readonly used: number,
+                        public readonly total: number
+                ){
+                        super(atIds.CPBS, raw);
+                }
+        }
 
 }

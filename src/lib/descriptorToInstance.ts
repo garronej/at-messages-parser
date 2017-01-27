@@ -155,6 +155,13 @@ export function descriptorToInstance(atMessageDescriptor: AtMessageDescriptor): 
                                 atMessageDescriptor["mr"] as number
                         );
                         break;
+                case atIds.CPBS:
+                        atMessage= new AtMessageImplementations.CPBS(raw,
+                                atMessageDescriptor["storage"] as MemStorage,
+                                atMessageDescriptor["used"] as number,
+                                atMessageDescriptor["total"] as number
+                        );
+                        break;
                 default: atMessage = new AtMessage(id, raw);
         }
 
