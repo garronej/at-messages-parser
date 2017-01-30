@@ -1,9 +1,6 @@
 %%
 
-id= (\+|\^)(CMTI|CPIN|CMEE|BOOT|RSSI|SIMST|SRVST|SYSINFO|CDSI|CMGS|MODE|CPBS)
-
-idMultiline= (\+|\^)(CNUM)
-idPdu= (\+|\^)(CMGR|CMGL|CDS|CMT)
+id= (\+|\^)(CMTI|CPIN|CMEE|BOOT|RSSI|SIMST|SRVST|SYSINFO|CDSI|CMGS|MODE|CPBS|CMGR|CMGL|CDS|CMT)
 
 finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAND\sNOT\sSUPPORT|TOO\sMANY\sPARAMETERS 
 
@@ -24,42 +21,31 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
 
 <>{id} {
 
-        this.jjval= this.jjtext;
+        var specials= [ "+CMGL", "+CNUM", "+CPBR" ];
+        var withPdu= [ "+CMGL", "+CMGR", "+CDS", "+CMT" ];
 
-        return "ID";
+        if( withPdu.indexOf(this.jjtext) >= 0 ) this.expectPdu= true;
 
-}
-
-<>{idMultiline} {
-
-        this.jjval= this.jjtext;
-
-        return "ID_MULTILINE";
-
-}
-
-<>{idPdu} {
-
-        this.expectPdu= true;
+        if( specials.indexOf(this.jjtext) >= 0 ) return this.jjtext;
 
         this.jjval= this.jjtext;
 
-        if( this.jjval === "+CMGL" ) return "CMGL";
-
-        return "ID_PDU";
+        if( withPdu.indexOf(this.jjtext) >= 0 ) return "ID_PDU";
+        else return "ID";
 
 }
 
-<>\+CME\sERROR:\s[0-9]+ {
 
-        this.jjval= parseInt(this.jjtext.match(/^\+CME\ ERROR:\ ?([0-9]+)$/)[1]);
+<>\+CME\sERROR:\s?[0-9]+ {
+
+        this.jjval= this.jjtext;
                 
         return "CME_ERROR";
 }
 
-<>\+CMS\sERROR:\s[0-9]+ {
+<>\+CMS\sERROR:\s?[0-9]+ {
 
-        this.jjval= parseInt(this.jjtext.match(/^\+CMS\ ERROR:\ ?([0-9]+)$/)[1]);
+        this.jjval= this.jjtext;
                 
         return "CMS_ERROR";
 

@@ -91,7 +91,7 @@ export function descriptorToInstance(atMessageDescriptor: AtMessageDescriptor): 
                         atMessage = new AtMessageImplementations.CNUM(raw,
                                 atMessageDescriptor["alpha"] as string,
                                 atMessageDescriptor["number"] as string,
-                                atMessageDescriptor["isNational"] as boolean
+                                atMessageDescriptor["type"] as number
                         );
                         break;
                 case atIds.CPIN:
@@ -160,6 +160,21 @@ export function descriptorToInstance(atMessageDescriptor: AtMessageDescriptor): 
                                 atMessageDescriptor["storage"] as MemStorage,
                                 atMessageDescriptor["used"] as number,
                                 atMessageDescriptor["total"] as number
+                        );
+                        break;
+                case atIds.CPBR:
+                        atMessage= new AtMessageImplementations.CPBR(raw,
+                                atMessageDescriptor["index"] as number,
+                                atMessageDescriptor["number"] as string,
+                                atMessageDescriptor["text"] as string,
+                                atMessageDescriptor["type"] as number
+                        );
+                        break;
+                case atIds.CPBR_TEST:
+                        atMessage= new AtMessageImplementations.CPBR_TEST(raw,
+                                atMessageDescriptor["range"] as [number, number],
+                                atMessageDescriptor["nLength"] as number,
+                                atMessageDescriptor["tLength"] as number
                         );
                         break;
                 default: atMessage = new AtMessage(id, raw);

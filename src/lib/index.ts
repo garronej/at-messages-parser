@@ -88,7 +88,6 @@ function parseJacob(rawAtMessages: string, output: { atMessageDescriptors: AtMes
 
         parser.parse(lexer, output);
 
-
 }
 
 function parseAlt(rawAtMessages: string, output: { atMessageDescriptors: AtMessageDescriptor[] }): void {
@@ -119,11 +118,8 @@ function parseAlt(rawAtMessages: string, output: { atMessageDescriptors: AtMessa
 
                 }
 
-
         }
 
         throw new Error("Nothing matched");
 
-
 }
-

@@ -80,7 +80,7 @@ input += [
         '\r\n+CPBS: ("SM","EN","ON")\r\n\r\nOK\r\n' //Response to the test command
 ].join("");
 
-//Test message multiline
+//Test +CNUM
 
 input += [
         '\r\n+CME ERROR: 25+CNUM: "","+33671651906",145\r\n\r\n',
@@ -95,13 +95,27 @@ input += [
         ].join("")
 ].join("");
 
-//Special case, with pdu and multiline
+//Test +CMGL
 
 input += [
         '\r\n+CMGL: 0,1,,22\r\n07913306092049F0040B913336766883F500007110811094904003CF7A1A',
         '\r\n+CMGL: 4,0,,24\r\n07913396050046F7240B913376499120F200007110815063404005CF7AFAFD06',
         '\r\n'
 ].join("");
+
+//Test +CPBR
+
+input += [
+        '\r\n',
+        '+CPBR: 34,"+33678047133",145,"Sabine"\r\n',
+        '+CPBR: 35,"+33675634785",145,"Simon"\r\n',
+        '\r\n+CME ERROR: 25\r\n',
+        '+CPBR: 37,"+33495716553",145,"Zamponi Corse"\r\n'
+].join("");
+
+//Test +CPBR TEST 
+
+input += '\r\n+CPBR: (1-250),24,30\r\n';
 
 //Test basic, basic command often dose not respect basic format
 
@@ -119,11 +133,13 @@ input += [
         "\r\nOK\r\n"
 ].join("");
 
-input+= "\r\n";
+//Message that should be parsed as ECHO
 
-input+= "\r\nABCDEF12323122DDDDD";
+input += "\r\n";
 
-input+= "\r\n0021000B913336766883F5000038C83208FD0E29906510FA1D5220CB20F43BA4409641E87748812C83D0EF90025906A1DF2105B20C42BF430A6419847E8714\r\n+CMS ERROR: 500\r\n";
+input += "\r\nABCDEF12323122DDDDD";
+
+input += "\r\n0021000B913336766883F5000038C83208FD0E29906510FA1D5220CB20F43BA4409641E87748812C83D0EF90025906A1DF2105B20C42BF430A6419847E8714\r\n+CMS ERROR: 500\r\n";
 
 //console.log(JSON.stringify(input));
 
@@ -165,7 +181,5 @@ for (let atMessage of atMessages) {
         }
 
 }
-
-//Debug
 
 console.log("If you see this all test passed successfully".green);

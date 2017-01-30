@@ -7,7 +7,7 @@ export type AtMessageId =
         "OK" | "CONNECT" | "RING" | "NO CARRIER" | "NO DIALTONE" | "BUSY" | "NO ANSWER" | "COMMAND NOT SUPPORT" | "TOO MANY PARAMETERS" |
         ">" |
         "ERROR" | "+CME ERROR" | "+CMS ERROR" |
-        "+CNUM" | "+CMGR" | "+CMTI" | "+CPIN" | "+CMEE" | "+CMGL" | "+CDSI" | "+CDS" | "+CMT" | "+CMGS" | "+CPBS" |
+        "+CNUM" | "+CMGR" | "+CMTI" | "+CPIN" | "+CMEE" | "+CMGL" | "+CDSI" | "+CDS" | "+CMT" | "+CMGS" | "+CPBS" | "+CPBR" | "+CPBR TEST" |
         "^BOOT" | "^RSSI" | "^SIMST" | "^SRVST" | "^CPIN" | "^SYSINFO" | "^MODE";
 
 export let atIds = {
@@ -40,6 +40,8 @@ export let atIds = {
         "CMT": "+CMT" as AtMessageId, 
         "CMGS": "+CMGS" as AtMessageId,
         "CPBS": "+CPBS" as AtMessageId,
+        "CPBR": "+CPBR" as AtMessageId,
+        "CPBR_TEST": "+CPBR TEST" as AtMessageId,
 
         "HUAWEI_BOOT": "^BOOT" as AtMessageId, 
         "HUAWEI_RSSI": "^RSSI" as AtMessageId, 
@@ -219,6 +221,65 @@ export enum MessageStat {
         ALL = 4
 }
 
+//TS 24.008 10.5.4.7
+export enum TypeOfNumber {
+        UNKNOWN = 0b000,
+        INTERNATIONAL_NUMBER = 0b001,
+        NATIONAL_NUMBER = 0b010,
+        NETWORK_SPECIFIC = 0b011,
+        DEDICATED_ACCESS_AKA_SHORT_CODE = 0b100,
+        RESERVED_FOR_EXTENSION = 0b111
+}
+
+export enum NumberingPlanIdentification {
+        UNKNOWN = 0b0000,
+        ISDN_OR_TELEPHONY = 0b0001,
+        DATA = 0b0011,
+        TELEX = 0b0100,
+        NATIONAL = 0b1000,
+        PRIVATE = 0b1001,
+        RESERVED_FOR_CTS = 0b1011,
+        RESERVED_FOR_EXTENSION = 0b1111
+}
+
+(()=>{
+
+        let type= 0b00011;
+
+        let npId= getBits(type, 4,1);
+        let ton= getBits(type, 3,1);
+
+        let tonName= TypeOfNumber[ton];
+        let npIdName= NumberingPlanIdentification[npId];
+
+        if( typeof(tonName) !== "string" ) tonName= "RESERVED";
+        if( typeof(npIdName) !== "string" ) npIdName= "RESERVED";
+
+
+})();
+
+
+function getBits(bits: number, to: number, from: number): number {
+
+        let getBit = (str: string, i: number): string => {
+                let index = str.length - i;
+                if (index >= 0) return str[index];
+                else return "0";
+        };
+
+        let str = bits.toString(2);
+
+        let chunk = "";
+
+        for (let i = from; i <= to; i++) chunk = getBit(str, i) + chunk;
+
+        return parseInt(chunk, 2);
+
+}
+
+
+
+
 export namespace AtMessageImplementations {
 
         //+CMEE: 2
@@ -361,12 +422,58 @@ export namespace AtMessageImplementations {
         //\r\nERROR+CNUM: "","+393701307294",145\r\n\r\n
         //\r\n+CNUM: "CC","+8613987654321",129\r\n
         export class CNUM extends AtMessage {
+
+                public readonly typeOfNumber: TypeOfNumber;
+                public readonly typeOfNumberName: string;
+                public readonly numberingPlanId: NumberingPlanIdentification;
+                public readonly numberingPlanIdName: string;
+
                 constructor(raw: string,
                         public readonly alpha: string,
                         public readonly number: string,
-                        public readonly isNational: boolean) {
+                        type: number) {
 
                         super(atIds.CNUM, raw);
+
+                        this.numberingPlanId= getBits(type, 4, 1);
+                        this.typeOfNumber= getBits(type, 7, 5);
+
+                        this.numberingPlanIdName= NumberingPlanIdentification[this.numberingPlanId] || "RESERVED";
+                        this.typeOfNumberName= TypeOfNumber[this.typeOfNumber] || "RESERVED";
+
+                }
+        }
+
+        export class CPBR extends AtMessage {
+                public readonly typeOfNumber: TypeOfNumber;
+                public readonly typeOfNumberName: string;
+                public readonly numberingPlanId: NumberingPlanIdentification;
+                public readonly numberingPlanIdName: string;
+
+                constructor(raw: string,
+                        public readonly index: number,
+                        public readonly number: string,
+                        public readonly text: string,
+                        type: number
+                ) {
+                        super(atIds.CPBR, raw);
+
+                        this.numberingPlanId = getBits(type, 4, 1);
+                        this.typeOfNumber = getBits(type, 7, 5);
+
+                        this.numberingPlanIdName = NumberingPlanIdentification[this.numberingPlanId] || "RESERVED";
+                        this.typeOfNumberName = TypeOfNumber[this.typeOfNumber] || "RESERVED";
+
+                }
+        }
+
+        export class CPBR_TEST extends AtMessage {
+                constructor(raw: string,
+                        public readonly range: [number, number],
+                        public readonly nLength: number,
+                        public readonly tLength: number
+                ) {
+                        super(atIds.CPBR_TEST, raw);
                 }
         }
 
@@ -432,10 +539,10 @@ export namespace AtMessageImplementations {
                 constructor(raw: string,
                         public readonly sysMode: SysMode,
                         public readonly sysSubMode: SysSubMode
-                ){
+                ) {
                         super(atIds.HUAWEI_MODE, raw);
-                        this.sysModeName= SysMode[this.sysMode];
-                        this.sysSubModeName= SysSubMode[this.sysSubMode];
+                        this.sysModeName = SysMode[this.sysMode];
+                        this.sysSubModeName = SysSubMode[this.sysSubMode];
                 }
         }
 
@@ -470,7 +577,7 @@ export namespace AtMessageImplementations {
                         public readonly storage: MemStorage,
                         public readonly used: number,
                         public readonly total: number
-                ){
+                ) {
                         super(atIds.CPBS, raw);
                 }
         }
