@@ -1,117 +1,89 @@
 %%
 
-id= (\+|\^)(CMTI|CPIN|CMEE|BOOT|RSSI|SIMST|SRVST|SYSINFO|CDSI|CMGS|MODE|CPBS|CMGR|CMGL|CDS|CMT|CNUM|CPBR)
-
-finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAND\sNOT\sSUPPORT|TOO\sMANY\sPARAMETERS 
-
+final=OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAND\sNOT\sSUPPORT|TOO\sMANY\sPARAMETERS|ERROR
+        
 %%
 
-<>\r\n {
+<> . {}
+
+<UNSOLICITED> \r\n(\+|\^)[A-Z]+ {
+        "use strict";
+        
+        let id= this.jjtext.substring(2);
+
+        if( this.defs.atIdsUnso.indexOf(id) < 0 ){
+                this.jjval= this.jjtext;
+                return "UNPARSED";
+        }
+
+        this.pushState("REST");
+
+        this.jjval= id;
+
+        if( this.defs.atIdsPdu.indexOf(id) >= 0 ){
+                this.expectPdu= true;
+                return "ID_UNSO_PDU";
+        }else return "ID_UNSO";
+
+}
+
+<UNSOLICITED> (\r|\n|.) {
+
+        this.jjval= this.jjtext;
+
+        return "UNPARSED";
+}
+
+
+<REGULAR> \r\n(\+|\^)[A-Z]+ {
+        
+        this.jjval= this.jjtext.substring(2);
+
+        if( 
+                this.jjval === this.defs.atIds.CME_ERROR || 
+                this.jjval === this.defs.atIds.CMS_ERROR 
+        ) return "ID_ES_ERROR";
+
+        this.pushState("REST");
+
+        if( this.defs.atIdsPdu.indexOf(id) >= 0 ){
+                this.expectPdu= true;
+                return "ID_PDU";
+        }else return "ID";
+
+}
+
+<REGULAR> \r\n{final}\r\n {
+        this.jjval= this.jjtext.substring(2,this.jjtext.length-2)
+        return "FINAL";
+}
+
+<REGULAR> (\r|\n|.) {
+        this.jjval= this.jjtext;
+        return "UNPARSED";
+}
+
+
+
+<REST> .*\r\n {
+
+        this.popState();
 
         if( this.expectPdu ){
-
-                this.expectPdu= false; 
-
+                this.expectPdu= false;
                 this.pushState("PDU");
         }
-                
 
-        return "SEP";
-}
-
-<>{id} {
-
-        var specials= [ "+CMGL", "+CNUM", "+CPBR" ];
-        var withPdu= [ "+CMGL", "+CMGR", "+CDS", "+CMT" ];
-
-        if( withPdu.indexOf(this.jjtext) >= 0 ) this.expectPdu= true;
-        
-        if( specials.indexOf(this.jjtext) >= 0 ) return this.jjtext;
-
-        this.jjval= this.jjtext;
-
-        if( withPdu.indexOf(this.jjtext) >= 0 ) return "ID_PDU"; 
-        else return "ID";
-        
-
-}
-
-
-<>\+CME\sERROR:\s?[0-9]+ {
-
-        this.jjval= this.jjtext;
-                
-        return "CME_ERROR";
-}
-
-<>\+CMS\sERROR:\s?[0-9]+ {
-
-        this.jjval= this.jjtext;
-                
-        return "CMS_ERROR";
-
-}
-
-<>ERROR { return "ERROR"; }
-
-<>{finalResultCode} {
-
-        this.jjval= this.jjtext;
-
-        return "FINAL_RESULT_CODE";
-}
-
-<> A\/\r { 
-
-        this.jjval= this.jjtext;
-
-        return "ECHO";
-}
-
-<>AT { this.pushState("ECHO"); }
-
-<> >\x20 { return "INVITE"; }
-
-
-<>[^\r] { 
-
-        this.prevChar= this.jjtext;
-
-        this.pushState("REST"); 
-        
-}
-
-<REST>[^\r]*/\r {
-
-        this.jjval= this.prevChar + this.jjtext;
-
-        this.popState();
+        this.jjval = this.jjtext.slice(0, -2);
 
         return "REST";
-
 }
 
-<PDU>\r\n {
+<PDU> [a-fA-F0-9]+\r\n {
 
         this.popState();
-                
-        return "SEP";
 
-}
-
-<PDU>[a-fA-F0-9]+ {
-
-        this.jjval= this.jjtext;
+        this.jjval= this.jjtext.slice(0, -2);
 
         return "PDU";
-}
-
-<ECHO> [^\r]*\r {
-
-        this.jjval= "AT" + this.jjtext;
-
-        this.popState();
-
-        return "ECHO";
-
 }

@@ -5,428 +5,236 @@ Program= Instructions;
 Instructions= Instructions Instruction
 | Instruction;
 
+Instruction= 'ID_ES_ERROR' 'REST' function(id, rest){
 
-Instruction= 'SEP' 'INVITE' function(){
+        var atIds= this.defs.atIds;
+        var AtImps= this.defs.AtImps;
+        var AtMessage= this.defs.AtMessage;
 
-        this.atMessageDescriptors.push({
-                "id": ">",
-                "raw": "\r\n> "
-        });
+        var atMessage;
+        var raw= "\r\n" + id + rest + "\r\n";
+        var code= parseInt(rest.match(/^:\ ?([0-9]+)$/)[1]);
 
-} | 'ECHO' function(echo){
-
-        this.atMessageDescriptors.push({
-                "id": "ECHO",
-                "raw": echo
-        });
-
-} | ListCmgl 'SEP' function(messages){
-
-        var raw= "";
-
-        messages.forEach(function(message){
-                raw+= message.raw;
-        });
-
-        raw+= "\r\n";
-
-        this.atMessageDescriptors.push({
-                "id": "AT LIST",
-                "raw": raw,
-                "atMessageDescriptors": messages
-        });
-
-} | 'SEP' ListCpbr function(_, messages){
-
-        if( messages.length === 1 && messages[0].id === "+CPBR TEST" ){
-
-                var message= messages[0];
-
-                message.raw= "\r\n" + message.raw;
-
-                this.atMessageDescriptors.push(message);
-
-        }else{
-
-                var raw= "\r\n";
-
-                messages.forEach(function(message){
-                        raw+= message.raw;
-                });
-
-                this.atMessageDescriptors.push({
-                        "id": "AT LIST",
-                        "raw": raw,
-                        "atMessageDescriptors": messages
-                });
-
+        switch (id) {
+                case atIds.CME_ERROR:
+                        atMessage = new AtImps.CME_ERROR(raw, code);
+                        break;
+                case atIds.CMS_ERROR:
+                        atMessage = new AtImps.CMS_ERROR(raw, code); 
+                        break;
         }
 
+        this.atMessages.push(atMessage);
 
-} | 'SEP' ListCnum 'SEP' function(_, messages){
+} | 'ID_PDU' 'REST' 'PDU' Final function(id, rest, finalMessage){
 
-        var raw= "\r\n";
+        var atIds= this.defs.atIds;
+        var AtImps= this.defs.AtImps;
+        var AtMessage= this.defs.AtMessage;
 
-        messages.forEach(function(message){
-                raw+= message.raw;
-        });
-
-        raw+= "\r\n";
-
-        this.atMessageDescriptors.push({
-                "id": "AT LIST",
-                "raw": raw,
-                "atMessageDescriptors": messages
-        });
-
-} | 'SEP' 'REST' 'SEP' function(_, rest){
-
-        this.atMessageDescriptors.push({ 
-                "raw": "\r\n" + rest + "\r\n"
-        });
-
-} | 'SEP' KnownMessage 'SEP' function(_, message){
-
-        message.raw= "\r\n" + message.raw + "\r\n";
-
-        this.atMessageDescriptors.push(message);
-
-} | 'SEP' KnownMessagePdu 'SEP' function(_, message){
-
-        message.raw= "\r\n" + message.raw + "\r\n";
-
-        this.atMessageDescriptors.push(message);
-
-} | 'SEP' Error 'SEP' function(_, message){
-
-        message.raw= "\r\n" + message.raw + "\r\n";
-
-        this.atMessageDescriptors.push(message);
-
-} | 'SEP' 'FINAL_RESULT_CODE' 'SEP' function(_, finalResultCode){
-
-        this.atMessageDescriptors.push({
-                "id": finalResultCode,
-                "raw": "\r\n" + finalResultCode + "\r\n"
-        });
-
-};
-
-
-
-ListCpbr= ListCpbr Cpbr 'SEP' function(messages, message){
-
-        message.raw+= "\r\n";
-
-        messages.push(message);
-
-        return messages;
-
-
-} | Cpbr 'SEP' function(message){
-
-        message.raw+= "\r\n";
-
-        return [ message ];
-
-};
-Cpbr= '+CPBR' 'REST' function(_, rest){
-
-        //var rest=': 34,"+33678047134",145,"Sabine"';
-        //var rest=": (1-250),24,30";
-
-        var message= { "raw": "+CPBR" + rest };
+        var atMessage;
+        var raw= "\r\n" + id + rest + "\r\n" + pdu + "\r\n";
 
         var match;
-
-        if( match= rest.match(/^:\ ?([0-9]+),"([^"]*)",([0-9]+),"([^"]*)"$/) ){
-
-                Object.assign(message, {
-                        "id": "+CPBR",
-                        "index": parseInt(match[1]),
-                        "number": match[2],
-                        "type": parseInt(match[3]),
-                        "text": match[4]
-                });
-
-                return message;
-
+        switch (id) {
+                case atIds.CMGR:
+                        match= rest.match(/^:\ ?([0-9]+),[0-9]*,([0-9]+)$/);
+                        atMessage = new AtImps.CMGR(raw,
+                                parseInt(match[1]),
+                                parseInt(match[2]),
+                                pdu
+                        );
+                        break;
         }
 
-        if( match= rest.match(/:\ ?\(([0-9]+)-([0-9]+)\),([0-9]+),([0-9]+)/) ){
+        this.atMessages.push(atMessage);
+        this.atMessages.push(finalMessages);
 
-                Object.assign(message, {
-                        "id": "+CPBR TEST",
-                        "range": [ parseInt(match[1]), parseInt(match[2]) ],
-                        "nLength": parseInt(match[3]),
-                        "tLength": parseInt(match[4])
-                });
+} | 'ID' 'REST' Final function(id, rest, finalMessage){
 
-                return message;
+        var atIds= this.defs.atIds;
+        var AtImps= this.defs.AtImps;
+        var AtMessage= this.defs.AtMessage;
 
-        }
-};
-
-
-
-
-ListCmgl= ListCmgl 'SEP' Cmgl function(messages,_ ,message){
-
-        message.raw= "\r\n" + message.raw;
-
-        messages.push(message);
-
-        return messages;
-
-} | 'SEP' Cmgl function(_ , message){
-
-        message.raw= "\r\n" + message.raw;
-
-        return [ message ];
-
-};
-Cmgl= '+CMGL' 'REST' 'SEP' 'PDU' function(_ ,rest ,_ , pdu ){
-
-        var match= rest.match(/^:\ ?([0-9]+),([0-9]+),(?:[0-9]+)?,([0-9]+)$/);
-
-        return {
-                "id": "+CMGL",
-                "raw": "+CMGL" + rest + "\r\n" + pdu,
-                "index": parseInt(match[1]),
-                "stat": parseInt(match[2]),
-                "length": parseInt(match[3]),
-                "pdu": pdu
-        };
-
-};
-
-
-
-ListCnum= ListCnum CnumWrap 'SEP' function(messages, message){
-
-
-        message.raw+= "\r\n";
-
-        messages.push(message);
-
-        return messages;
-
-
-} | CnumWrap 'SEP' function(message) {
-
-
-        message.raw+= "\r\n";
-
-        return [ message ];
-
-
-};
-CnumWrap= Cnum function(message){ 
-
-        return message;
-
-} | Error Cnum function(errorMessage, message){
-
-        message.raw= errorMessage.raw + message.raw;
-
-        message.error= errorMessage;
-
-        return message;
-};
-Cnum= '+CNUM' 'REST' function(_, rest){
-
-
-        var match= rest.match(/^:\ ?"([^"]*)","([^"]*)",([0-9]+)/);
-
-        var isNational= undefined;
-
-        if( match[3] === "129" ) isNational= true
-        else if( match[3] === "145" ) isNational= false
-
-        return {
-                "id": "+CNUM",
-                "raw": "+CNUM" + rest,
-                "alpha": match[1],
-                "number": match[2],
-                "type": parseInt(match[3])
-        };
-
-};
-
-
-Error= 'ERROR' function(){
-
-        return {
-                "id": "ERROR",
-                "raw": "ERROR"
-        };
-
-} | 'CME_ERROR' function(raw){
-
-        var match= raw.match(/^\+CME\ ERROR:\ ?([0-9]+)$/);
-
-        return {
-                "id": "+CME ERROR",
-                "raw": raw,
-                "code": parseInt(match[1])
-        };
-
-} | 'CMS_ERROR' function(raw){
-
-        var match= raw.match(/^\+CMS\ ERROR:\ ?([0-9]+)$/);
-
-        return {
-                "id": "+CMS ERROR",
-                "raw": raw,
-                "code": parseInt(match[1])
-        };
-
-};
-
-
-KnownMessagePdu= 'ID_PDU' 'REST' 'SEP' 'PDU' function(id, rest, _, pdu){
-
-        var message= {
-                "id": id,
-                "raw": id + rest + "\r\n" + pdu,
-                "pdu": pdu
-        };
-
-        switch(id){
-                case "+CMGR":
-                        var match= rest.match(/^:\ ?([0-9]+),[0-9]*,([0-9]+)$/);
-                        Object.assign( message, {
-                                "stat": parseInt(match[1]),
-                                "length": parseInt(match[2])
-                        });
-                        break;
-                case "+CMT":
-                        var match= rest.match(/^:\ ?(?:.+)?,([0-9]+)$/);
-                        Object.assign( message, {
-                                "length": parseInt(match[1])
-                        });
-                        break;
-                case "+CDS":
-                        var match= rest.match(/^:\ ?([0-9]+)$/);
-                        Object.assign( message, {
-                                "length": parseInt(match[1])
-                        });
-                        break;
-                default:
-        }
-
-        return message;
-
-};
-
-KnownMessage= 'ID' 'REST' function(id, rest){
-
-        var message= {
-                "id": id,
-                "raw": id + rest
-        };
+        var atMessage;
+        var raw= "\r\n" + id + rest + "\r\n";
 
         var match;
-
-        switch(id){
-                case "+CMTI":
-                        match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
-                        Object.assign( message, {
-                                "mem": match[1],
-                                "index": parseInt(match[2])
-                        });
-                        break;
-                case "+CDSI":
-                        match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
-                        Object.assign( message, {
-                                "mem": match[1],
-                                "index": parseInt(match[2])
-                        });
-                        break;
-                case "+CPIN":
+        switch (id) {
+                case atIds.CPIN:
                         match= rest.match(/^:\ ?([\ A-Z]+)$/)
-                        Object.assign( message, {
-                                "pinState": match[1]
-                        });
+                        atMessage = new AtImps.CPIN(raw,
+                                match[1]
+                        );
                         break;
-                case "^SIMST":
-                        match= rest.match(/^:\ ?([0-9]+)(?:,([01]))?$/);
-                        var lock= undefined;
-                        if( match[2] !== undefined ) lock= (match[2] === "1")
-                        Object.assign( message, {
-                                "simState": parseInt(match[1]),
-                                "lock": lock
-                        });
-                        break;
-                case "^SRVST":
+                case atIds.CMEE:
                         match= rest.match(/^:\ ?([0-9]+)$/);
-                        Object.assign( message, {
-                                "serviceStatus": parseInt(match[1])
-                        });
+                        atMessage = new AtImps.CMEE(raw,
+                                parseInt(match[1])
+                        );
                         break;
-                case "+CMEE":
-                        match= rest.match(/^:\ ?([0-9]+)$/);
-                        Object.assign( message, {
-                                "reportMode": parseInt(match[1])
-                        });
-                        break;
-                case "^CPIN":
+                case atIds.HUAWEI_CPIN:
                         match= rest.match(/^:\ ?([\ A-Z]+),((?:[0-9]+)?),([0-9]+),([0-9]+),([0-9]+),([0-9]+)$/);
                         var times= undefined;
                         if( match[2] !== "" ) times= parseInt(match[2]);
-                        Object.assign( message, {
-                                "pinState": match[1],
-                                "times": times,
-                                "pukTimes": parseInt(match[3]),
-                                "pinTimes": parseInt(match[4]),
-                                "puk2Times": parseInt(match[5]),
-                                "pin2Times": parseInt(match[6])
-                        });
+                        atMessage = new AtImps.HUAWEI_CPIN(raw,
+                                match[1],
+                                times,
+                                parseInt(match[3]),
+                                parseInt(match[4]),
+                                parseInt(match[5]),
+                                parseInt(match[6])
+                        );
                         break;
-                case "^SYSINFO":
+                case atIds.HUAWEI_SYSINFO:
                         match= rest.match(/:\ ?([0-9]+),([0-9]+),(0|1),([0-9]+),([0-9]+)(?:,(0|1)?(?:,([0-9]+))?)?$/);
                         var cardLock= undefined;
                         if( match[6] !== undefined ) cardLock= ( match[6] === "1" );
                         var sysSubMode= undefined;
                         if( match[7] !== undefined ) sysSubMode= parseInt(match[7]);
-                        Object.assign( message, {
-                                "serviceStatus": parseInt(match[1]),
-                                "serviceDomain": parseInt(match[2]),
-                                "isRoaming": match[3] === "1",
-                                "sysMode": parseInt(match[4]),
-                                "simState": parseInt(match[5]),
-                                "cardLock": cardLock,
-                                "sysSubMode": sysSubMode
-                        });
+                        atMessage = new AtImps.HUAWEI_SYSINFO(raw,
+                                parseInt(match[1]),
+                                parseInt(match[2]),
+                                match[3] === "1",
+                                parseInt(match[4]),
+                                parseInt(match[5]),
+                                cardLock,
+                                sysSubMode
+                        );
                         break;
-                case "^MODE":
-                        match= rest.match(/^:\ ?([0-9]+),([0-9]+)$/);
-                        Object.assign( message, {
-                                "sysMode": parseInt(match[1]),
-                                "sysSubMode": parseInt(match[2])
-                        });
-                        break;
-                case "+CMGS":
+                case atIds.CMGS:
                         match= rest.match(/^:\ ?([0-9]+)(?:,.*)?/);
-                        Object.assign( message, {
-                                "mr": parseInt(match[1])
-                        });
+                        atMessage = new AtImps.CMGS(raw,
+                                parseInt(match[1])
+                        );
                         break;
-                case "+CPBS":
+                case atIds.CPBS:
                         match= rest.match(/:\ ?"([A-Z]{2})"(?:,([0-9]+)?(?:,([0-9]+))?)?$/);
                         var used= undefined;
                         if( match[2] !== undefined ) used= parseInt(match[2]);
                         var total= undefined;
                         if( match[3] !== undefined ) total= parseInt(match[3]);
-                        Object.assign( message, {
-                                "storage": match[1],
-                                "used": used,
-                                "total": total
-                        });
+                        atMessage= new AtImps.CPBS(raw,
+                                match[1],
+                                used,
+                                total
+                        );
                         break;
-                default:
+                case atIds.CPBR:
+                        if( match= rest.match(/^:\ ?([0-9]+),"([^"]*)",([0-9]+),"([^"]*)"$/) ){
+                                atMessage= new AtImps.CPBR(raw,
+                                        parseInt(match[1]),
+                                        match[2],
+                                        parseInt(match[3]),
+                                        match[4]
+                                );
+                                break;
+                        }
+
+                        if( match= rest.match(/:\ ?\(([0-9]+)-([0-9]+)\),([0-9]+),([0-9]+)/) ){
+                                atMessage= new AtImps.CPBR_TEST(raw,
+                                        [ parseInt(match[1]), parseInt(match[2]) ],
+                                        parseInt(match[3]),
+                                        parseInt(match[4])
+                                );
+                                break;
+                        }
+                default: atMessage = new AtMessage(id, raw);
         }
 
-        return message;
+        this.atMessages.push(atMessage);
+        this.atMessages.push(finalMessages);
+
+} | 'ID_UNSO' 'REST' function(id, rest) {
+
+        var atIds= this.defs.atIds;
+        var AtImps= this.defs.AtImps;
+        var AtMessage= this.defs.AtMessage;
+
+        var atMessage;
+        var raw= "\r\n" + id + rest + "\r\n";
+
+        var match;
+        switch (id) {
+                case atIds.CMTI:
+                        match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
+                        atMessage = new AtImps.CMTI(raw,
+                                match[1],
+                                parseInt(match[2])
+                        );
+                        break;
+                case atIds.CDSI:
+                        match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
+                        atMessage = new AtImps.CDSI(raw,
+                                match[1],
+                                parseInt(match[2])
+                        );
+                        break;
+                case atIds.HUAWEI_SIMST:
+                        match= rest.match(/^:\ ?([0-9]+)(?:,([01]))?$/);
+                        var lock= undefined;
+                        if( match[2] !== undefined ) lock= (match[2] === "1")
+                        atMessage = new AtImps.HUAWEI_SIMST(raw,
+                                parseInt(match[1]),
+                                lock
+                        );
+                        break;
+                case atIds.HUAWEI_SRVST:
+                        match= rest.match(/^:\ ?([0-9]+)$/);
+                        atMessage = new AtImps.HUAWEI_SRVST(raw,
+                                parseInt(match[1])
+                        );
+                        break;
+                case atIds.HUAWEI_MODE:
+                        match= rest.match(/^:\ ?([0-9]+),([0-9]+)$/);
+                        atMessage= new AtImps.HUAWEI_MODE(raw,
+                                parseInt(match[1]),
+                                parseInt(match[2])
+                        );
+                        break;
+                default: atMessage = new AtMessage(id, raw);
+        }
+
+        this.atMessages.push(atMessage);
+
+} | 'ID_UNSO_PDU' 'REST' 'PDU' function(id, rest, pdu){
+
+        var atIds= this.defs.atIds;
+        var AtImps= this.defs.AtImps;
+        var AtMessage= this.defs.AtMessage;
+
+        var atMessage;
+        var raw= "\r\n" + id + rest + "\r\n" + pdu + "\r\n";
+
+        var match;
+        switch (id) {
+                case atIds.CMT:
+                        match= rest.match(/^:\ ?(?:.+)?,([0-9]+)$/);
+                        atMessage = new AtImps.CMT(raw,
+                                parseInt(match[1]),
+                                pdu
+                        );
+                        break;
+                case atIds.CDS:
+                        match= rest.match(/^:\ ?([0-9]+)$/);
+                        atMessage = new AtImps.CDS(raw,
+                                parseInt(match[1]),
+                                pdu
+                        );
+                        break;
+        }
+
+        this.atMessages.push(atMessage);
+
+} | 'UNPARSED' function(unparsed){
+
+        this.leftToParse+= unparsed;
+
+};
+
+
+Final= 'FINAL' function(final){
+
+        return new this.defs.AtMessage(final, "\r\n" + final + "\r\n");
 
 };

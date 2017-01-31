@@ -52,7 +52,7 @@ export let atIds = {
         "HUAWEI_MODE": "^MODE" as AtMessageId
 };
 
-let atMessageUnsolicited: AtMessageId[] = [
+export let atIdsUnso: AtMessageId[] = [
         atIds.CMTI,
         atIds.CMT,
         atIds.CDSI,
@@ -64,7 +64,8 @@ let atMessageUnsolicited: AtMessageId[] = [
         atIds.HUAWEI_MODE
 ];
 
-let atMessageFinal: AtMessageId[] = [
+
+export let atIdsFinal: AtMessageId[] = [
         atIds.OK,
         atIds.CONNECT,
         atIds.RING,
@@ -80,7 +81,7 @@ let atMessageFinal: AtMessageId[] = [
         atIds.INVITE
 ];
 
-let atMessageError: AtMessageId[] = [
+export let atIdsError: AtMessageId[] = [
         atIds.NO_CARRIER,
         atIds.NO_DIALTONE,
         atIds.BUSY,
@@ -92,12 +93,19 @@ let atMessageError: AtMessageId[] = [
         atIds.CMS_ERROR
 ];
 
+export let atIdsPdu: AtMessageId[] = [
+        atIds.CMGR,
+        atIds.CMT,
+        atIds.CDS,
+        atIds.CMGL
+];
+
 
 export class AtMessage {
 
         public isUnsolicited?: boolean;
         public isFinal?: boolean;
-        public error?: AtMessageImplementations.ERROR | AtMessageImplementations.CME_ERROR | AtMessageImplementations.CMS_ERROR;
+        public error?: AtMessage;
         public isError?: boolean;
 
 
@@ -105,13 +113,13 @@ export class AtMessage {
                 public readonly raw: string
         ) {
 
-                if (atMessageUnsolicited.indexOf(this.id) > -1)
+                if (atIdsUnso.indexOf(this.id) > -1)
                         this.isUnsolicited = true;
 
-                if (atMessageFinal.indexOf(this.id) > -1)
+                if (atIdsFinal.indexOf(this.id) > -1)
                         this.isFinal = true;
 
-                if (atMessageError.indexOf(this.id) > -1)
+                if (atIdsError.indexOf(this.id) > -1)
                         this.isError = true;
 
         }
@@ -135,15 +143,13 @@ export type MemStorage = "SM" | "ME" | "ON" | "EN" | "FD";
 
 export type PinState = "READY" | "SIM PIN" | "SIM PUK" | "SIM PIN2" | "SIM PUK2";
 
-export let pinStates= {
+export let pinStates = {
         "READY": "READY" as PinState,
         "SIM_PIN": "SIM PIN" as PinState,
         "SIM_PUK": "SIM PUK" as PinState,
         "SIM_PIN2": "SIM PIN2" as PinState,
         "SIM_PUK2": "SIM PUK2" as PinState
 };
-
-
 
 export enum ServiceStatus {
         NO_SERVICES = 0,
@@ -175,7 +181,7 @@ export enum SysMode {
 }
 
 export enum SysSubMode {
-        NO_SERVICES= 0,
+        NO_SERVICES = 0,
         GSM = 1,
         GPRS = 2,
         EDGE = 3,
@@ -242,7 +248,6 @@ export enum NumberingPlanIdentification {
         RESERVED_FOR_EXTENSION = 0b1111
 }
 
-
 function getBits(bits: number, to: number, from: number): number {
 
         let getBit = (str: string, i: number): string => {
@@ -261,10 +266,7 @@ function getBits(bits: number, to: number, from: number): number {
 
 }
 
-
-
-
-export namespace AtMessageImplementations {
+export namespace AtImps {
 
         //+CMEE: 2
         export class CMEE extends AtMessage {
@@ -307,13 +309,6 @@ export namespace AtMessageImplementations {
                 }
         }
 
-        //ERROR
-        export class ERROR extends AtMessage {
-                constructor(raw) {
-                        super(atIds.ERROR, raw);
-                }
-        }
-
 
         //+CME ERROR: 3
         export class CME_ERROR extends AtMessage {
@@ -339,6 +334,7 @@ export namespace AtMessageImplementations {
                         this.verbose = getCmsErrorVerbose(this.code);
                 }
         }
+
 
         //+CMGR: 0,,26\r\n07913306092069F0040B913336766883F5000061216232414440084EF289EC26BBC9\r\n
         export class CMGR extends AtMessage {
@@ -419,11 +415,11 @@ export namespace AtMessageImplementations {
 
                         super(atIds.CNUM, raw);
 
-                        this.numberingPlanId= getBits(type, 4, 1);
-                        this.typeOfNumber= getBits(type, 7, 5);
+                        this.numberingPlanId = getBits(type, 4, 1);
+                        this.typeOfNumber = getBits(type, 7, 5);
 
-                        this.numberingPlanIdName= NumberingPlanIdentification[this.numberingPlanId] || "RESERVED";
-                        this.typeOfNumberName= TypeOfNumber[this.typeOfNumber] || "RESERVED";
+                        this.numberingPlanIdName = NumberingPlanIdentification[this.numberingPlanId] || "RESERVED";
+                        this.typeOfNumberName = TypeOfNumber[this.typeOfNumber] || "RESERVED";
 
                 }
         }
@@ -437,8 +433,8 @@ export namespace AtMessageImplementations {
                 constructor(raw: string,
                         public readonly index: number,
                         public readonly number: string,
+                        type: number,
                         public readonly text: string,
-                        type: number
                 ) {
                         super(atIds.CPBR, raw);
 
