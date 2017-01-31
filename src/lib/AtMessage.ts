@@ -221,7 +221,7 @@ export enum MessageStat {
         ALL = 4
 }
 
-//TS 24.008 10.5.4.7
+//TS 24.008 10.5.4.7 145 === 10010001
 export enum TypeOfNumber {
         UNKNOWN = 0b000,
         INTERNATIONAL_NUMBER = 0b001,
@@ -241,22 +241,6 @@ export enum NumberingPlanIdentification {
         RESERVED_FOR_CTS = 0b1011,
         RESERVED_FOR_EXTENSION = 0b1111
 }
-
-(()=>{
-
-        let type= 0b00011;
-
-        let npId= getBits(type, 4,1);
-        let ton= getBits(type, 3,1);
-
-        let tonName= TypeOfNumber[ton];
-        let npIdName= NumberingPlanIdentification[npId];
-
-        if( typeof(tonName) !== "string" ) tonName= "RESERVED";
-        if( typeof(npIdName) !== "string" ) npIdName= "RESERVED";
-
-
-})();
 
 
 function getBits(bits: number, to: number, from: number): number {

@@ -20,6 +20,7 @@ export function atMessagesParser(input: string): AtMessage[] {
 function rawToDescriptors(rawAtMessages: string): AtMessageDescriptor[] {
 
         let input = { "leftToParse": rawAtMessages };
+
         let output = { "atMessageDescriptors": [] };
 
         while (true) {

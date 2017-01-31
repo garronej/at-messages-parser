@@ -1,6 +1,6 @@
 %%
 
-id= (\+|\^)(CMTI|CPIN|CMEE|BOOT|RSSI|SIMST|SRVST|SYSINFO|CDSI|CMGS|MODE|CPBS|CMGR|CMGL|CDS|CMT)
+id= (\+|\^)(CMTI|CPIN|CMEE|BOOT|RSSI|SIMST|SRVST|SYSINFO|CDSI|CMGS|MODE|CPBS|CMGR|CMGL|CDS|CMT|CNUM|CPBR)
 
 finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAND\sNOT\sSUPPORT|TOO\sMANY\sPARAMETERS 
 
@@ -25,13 +25,14 @@ finalResultCode= OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAN
         var withPdu= [ "+CMGL", "+CMGR", "+CDS", "+CMT" ];
 
         if( withPdu.indexOf(this.jjtext) >= 0 ) this.expectPdu= true;
-
+        
         if( specials.indexOf(this.jjtext) >= 0 ) return this.jjtext;
 
         this.jjval= this.jjtext;
 
-        if( withPdu.indexOf(this.jjtext) >= 0 ) return "ID_PDU";
+        if( withPdu.indexOf(this.jjtext) >= 0 ) return "ID_PDU"; 
         else return "ID";
+        
 
 }
 

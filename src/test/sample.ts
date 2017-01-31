@@ -37,9 +37,11 @@ input += [
         'A/\r'
 ].join("");
 
+
 //Test invite 
 
 input += "\r\n> ";
+
 
 //Test implemented simple
 
@@ -63,6 +65,7 @@ input += [
         '\r\n+CPBS: "SM",3,50\r\n'
 ].join("");
 
+
 //Test message with pdu
 
 input += [
@@ -70,6 +73,7 @@ input += [
         '\r\n+CDS: 26\r\n0891683108608805F906750D91683109731147F4313050913492003130509134430000\r\n',
         '\r\n+CMT: ,24\r\n0891683108608805F9240D91683109731147F400003130505152430004F4F29C0E\r\n'
 ].join("");
+
 
 //Test message not implemented
 
@@ -95,6 +99,7 @@ input += [
         ].join("")
 ].join("");
 
+
 //Test +CMGL
 
 input += [
@@ -103,14 +108,14 @@ input += [
         '\r\n'
 ].join("");
 
+
+
 //Test +CPBR
 
 input += [
         '\r\n',
         '+CPBR: 34,"+33678047133",145,"Sabine"\r\n',
-        '+CPBR: 35,"+33675634785",145,"Simon"\r\n',
-        '\r\n+CME ERROR: 25\r\n',
-        '+CPBR: 37,"+33495716553",145,"Zamponi Corse"\r\n'
+        '+CPBR: 35,"+33678047122",145,"Felipe"\r\n'
 ].join("");
 
 //Test +CPBR TEST 
@@ -133,6 +138,7 @@ input += [
         "\r\nOK\r\n"
 ].join("");
 
+
 //Message that should be parsed as ECHO
 
 input += "\r\n";
@@ -142,6 +148,7 @@ input += "\r\nABCDEF12323122DDDDD";
 input += "\r\n0021000B913336766883F5000038C83208FD0E29906510FA1D5220CB20F43BA4409641E87748812C83D0EF90025906A1DF2105B20C42BF430A6419847E8714\r\n+CMS ERROR: 500\r\n";
 
 //console.log(JSON.stringify(input));
+
 
 try {
 

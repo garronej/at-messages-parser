@@ -36,7 +36,7 @@ Instruction= 'SEP' 'INVITE' function(){
                 "atMessageDescriptors": messages
         });
 
-} | 'SEP' ListCpbr function(messages){
+} | 'SEP' ListCpbr function(_, messages){
 
         if( messages.length === 1 && messages[0].id === "+CPBR TEST" ){
 
@@ -67,7 +67,7 @@ Instruction= 'SEP' 'INVITE' function(){
 
         var raw= "\r\n";
 
-        message.forEach(function(message){
+        messages.forEach(function(message){
                 raw+= message.raw;
         });
 
@@ -86,6 +86,12 @@ Instruction= 'SEP' 'INVITE' function(){
         });
 
 } | 'SEP' KnownMessage 'SEP' function(_, message){
+
+        message.raw= "\r\n" + message.raw + "\r\n";
+
+        this.atMessageDescriptors.push(message);
+
+} | 'SEP' KnownMessagePdu 'SEP' function(_, message){
 
         message.raw= "\r\n" + message.raw + "\r\n";
 
@@ -116,13 +122,6 @@ ListCpbr= ListCpbr Cpbr 'SEP' function(messages, message){
 
         return messages;
 
-} | ListCpbr 'SEP' Error 'SEP' function(messages, _, errorMessage){
-
-        error.raw= "\r\n" + errorMessage.raw + "\r\n";
-
-        messages.push(errorMessage);
-
-        return messages;
 
 } | Cpbr 'SEP' function(message){
 
@@ -171,7 +170,7 @@ Cpbr= '+CPBR' 'REST' function(_, rest){
 
 
 
-ListCmgl= ListCmgl 'SEP' Cmgl function(messages, message){
+ListCmgl= ListCmgl 'SEP' Cmgl function(messages,_ ,message){
 
         message.raw= "\r\n" + message.raw;
 
@@ -179,7 +178,7 @@ ListCmgl= ListCmgl 'SEP' Cmgl function(messages, message){
 
         return messages;
 
-} | 'SEP' Cmgl function(message){
+} | 'SEP' Cmgl function(_ , message){
 
         message.raw= "\r\n" + message.raw;
 
@@ -205,17 +204,21 @@ Cmgl= '+CMGL' 'REST' 'SEP' 'PDU' function(_ ,rest ,_ , pdu ){
 
 ListCnum= ListCnum CnumWrap 'SEP' function(messages, message){
 
+
         message.raw+= "\r\n";
 
         messages.push(message);
 
         return messages;
 
+
 } | CnumWrap 'SEP' function(message) {
+
 
         message.raw+= "\r\n";
 
         return [ message ];
+
 
 };
 CnumWrap= Cnum function(message){ 
@@ -231,6 +234,7 @@ CnumWrap= Cnum function(message){
         return message;
 };
 Cnum= '+CNUM' 'REST' function(_, rest){
+
 
         var match= rest.match(/^:\ ?"([^"]*)","([^"]*)",([0-9]+)/);
 
@@ -341,7 +345,7 @@ KnownMessage= 'ID' 'REST' function(id, rest){
                         break;
                 case "+CPIN":
                         match= rest.match(/^:\ ?([\ A-Z]+)$/)
-                        Object.assign( atMessageDescriptor, {
+                        Object.assign( message, {
                                 "pinState": match[1]
                         });
                         break;
@@ -370,7 +374,7 @@ KnownMessage= 'ID' 'REST' function(id, rest){
                         match= rest.match(/^:\ ?([\ A-Z]+),((?:[0-9]+)?),([0-9]+),([0-9]+),([0-9]+),([0-9]+)$/);
                         var times= undefined;
                         if( match[2] !== "" ) times= parseInt(match[2]);
-                        Object.assign( atMessageDescriptor, {
+                        Object.assign( message, {
                                 "pinState": match[1],
                                 "times": times,
                                 "pukTimes": parseInt(match[3]),
@@ -423,6 +427,6 @@ KnownMessage= 'ID' 'REST' function(id, rest){
                 default:
         }
 
-        return atMessageDescriptor;
+        return message;
 
 };
