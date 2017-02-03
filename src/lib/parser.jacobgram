@@ -2,10 +2,15 @@
 
 Program= Instructions;
 
-Instructions= Instructions Instruction
-| Instruction;
+Instructions= Instructions Instruction | Instruction;
 
-Instruction= 'ID_ES_ERROR' 'REST' function(id, rest){
+Instruction= Phase1 | Phase2 | 'UNPARSED' function(unparsed){
+
+        this.leftToParse+= unparsed;
+
+};
+
+Phase1= 'ID_UNSO' 'REST' function(id, rest) {
 
         var atIds= this.defs.atIds;
         var AtImps= this.defs.AtImps;
@@ -13,24 +18,91 @@ Instruction= 'ID_ES_ERROR' 'REST' function(id, rest){
 
         var atMessage;
         var raw= "\r\n" + id + rest + "\r\n";
-        var code= parseInt(rest.match(/^:\ ?([0-9]+)$/)[1]);
 
+        var match;
         switch (id) {
-                case atIds.CME_ERROR:
-                        atMessage = new AtImps.CME_ERROR(raw, code);
+                case atIds.CMTI:
+                        match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
+                        atMessage = new AtImps.CMTI(raw,
+                                match[1],
+                                parseInt(match[2])
+                        );
                         break;
-                case atIds.CMS_ERROR:
-                        atMessage = new AtImps.CMS_ERROR(raw, code); 
+                case atIds.CDSI:
+                        match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
+                        atMessage = new AtImps.CDSI(raw,
+                                match[1],
+                                parseInt(match[2])
+                        );
                         break;
+                case atIds.HUAWEI_SIMST:
+                        match= rest.match(/^:\ ?([0-9]+)(?:,([01]))?$/);
+                        var lock= undefined;
+                        if( match[2] !== undefined ) lock= (match[2] === "1")
+                        atMessage = new AtImps.HUAWEI_SIMST(raw,
+                                parseInt(match[1]),
+                                lock
+                        );
+                        break;
+                case atIds.HUAWEI_SRVST:
+                        match= rest.match(/^:\ ?([0-9]+)$/);
+                        atMessage = new AtImps.HUAWEI_SRVST(raw,
+                                parseInt(match[1])
+                        );
+                        break;
+                case atIds.HUAWEI_MODE:
+                        match= rest.match(/^:\ ?([0-9]+),([0-9]+)$/);
+                        atMessage= new AtImps.HUAWEI_MODE(raw,
+                                parseInt(match[1]),
+                                parseInt(match[2])
+                        );
+                        break;
+                default: atMessage = new AtMessage(id, raw);
         }
 
         this.atMessages.push(atMessage);
 
-} | 'ID_PDU' 'REST' 'PDU' Final function(id, rest, finalMessage){
+} | 'ID_UNSO_PDU' 'REST_PDU' function(id, rest_pdu){
 
         var atIds= this.defs.atIds;
         var AtImps= this.defs.AtImps;
         var AtMessage= this.defs.AtMessage;
+
+        var rest= rest_pdu[0];
+        var pdu= rest_pdu[1];
+
+        var atMessage;
+        var raw= "\r\n" + id + rest + "\r\n" + pdu + "\r\n";
+
+        var match;
+        switch (id) {
+                case atIds.CMT:
+                        match= rest.match(/^:\ ?(?:.+)?,([0-9]+)$/);
+                        atMessage = new AtImps.CMT(raw,
+                                parseInt(match[1]),
+                                pdu
+                        );
+                        break;
+                case atIds.CDS:
+                        match= rest.match(/^:\ ?([0-9]+)$/);
+                        atMessage = new AtImps.CDS(raw,
+                                parseInt(match[1]),
+                                pdu
+                        );
+                        break;
+        }
+
+        this.atMessages.push(atMessage);
+};
+
+Phase2= 'ID_PDU' 'REST_PDU' function(id, rest_pdu){
+
+        var atIds= this.defs.atIds;
+        var AtImps= this.defs.AtImps;
+        var AtMessage= this.defs.AtMessage;
+
+        var rest= rest_pdu[0];
+        var pdu= rest_pdu[1];
 
         var atMessage;
         var raw= "\r\n" + id + rest + "\r\n" + pdu + "\r\n";
@@ -48,9 +120,9 @@ Instruction= 'ID_ES_ERROR' 'REST' function(id, rest){
         }
 
         this.atMessages.push(atMessage);
-        this.atMessages.push(finalMessages);
+        this.atMessages.push(new AtMessage(atIds.OK, "\r\nOK\r\n"));
 
-} | 'ID' 'REST' Final function(id, rest, finalMessage){
+} | 'ID' 'REST' function(id, rest){
 
         var atIds= this.defs.atIds;
         var AtImps= this.defs.AtImps;
@@ -130,7 +202,6 @@ Instruction= 'ID_ES_ERROR' 'REST' function(id, rest){
                                 );
                                 break;
                         }
-
                         if( match= rest.match(/:\ ?\(([0-9]+)-([0-9]+)\),([0-9]+),([0-9]+)/) ){
                                 atMessage= new AtImps.CPBR_TEST(raw,
                                         [ parseInt(match[1]), parseInt(match[2]) ],
@@ -143,98 +214,6 @@ Instruction= 'ID_ES_ERROR' 'REST' function(id, rest){
         }
 
         this.atMessages.push(atMessage);
-        this.atMessages.push(finalMessages);
-
-} | 'ID_UNSO' 'REST' function(id, rest) {
-
-        var atIds= this.defs.atIds;
-        var AtImps= this.defs.AtImps;
-        var AtMessage= this.defs.AtMessage;
-
-        var atMessage;
-        var raw= "\r\n" + id + rest + "\r\n";
-
-        var match;
-        switch (id) {
-                case atIds.CMTI:
-                        match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
-                        atMessage = new AtImps.CMTI(raw,
-                                match[1],
-                                parseInt(match[2])
-                        );
-                        break;
-                case atIds.CDSI:
-                        match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
-                        atMessage = new AtImps.CDSI(raw,
-                                match[1],
-                                parseInt(match[2])
-                        );
-                        break;
-                case atIds.HUAWEI_SIMST:
-                        match= rest.match(/^:\ ?([0-9]+)(?:,([01]))?$/);
-                        var lock= undefined;
-                        if( match[2] !== undefined ) lock= (match[2] === "1")
-                        atMessage = new AtImps.HUAWEI_SIMST(raw,
-                                parseInt(match[1]),
-                                lock
-                        );
-                        break;
-                case atIds.HUAWEI_SRVST:
-                        match= rest.match(/^:\ ?([0-9]+)$/);
-                        atMessage = new AtImps.HUAWEI_SRVST(raw,
-                                parseInt(match[1])
-                        );
-                        break;
-                case atIds.HUAWEI_MODE:
-                        match= rest.match(/^:\ ?([0-9]+),([0-9]+)$/);
-                        atMessage= new AtImps.HUAWEI_MODE(raw,
-                                parseInt(match[1]),
-                                parseInt(match[2])
-                        );
-                        break;
-                default: atMessage = new AtMessage(id, raw);
-        }
-
-        this.atMessages.push(atMessage);
-
-} | 'ID_UNSO_PDU' 'REST' 'PDU' function(id, rest, pdu){
-
-        var atIds= this.defs.atIds;
-        var AtImps= this.defs.AtImps;
-        var AtMessage= this.defs.AtMessage;
-
-        var atMessage;
-        var raw= "\r\n" + id + rest + "\r\n" + pdu + "\r\n";
-
-        var match;
-        switch (id) {
-                case atIds.CMT:
-                        match= rest.match(/^:\ ?(?:.+)?,([0-9]+)$/);
-                        atMessage = new AtImps.CMT(raw,
-                                parseInt(match[1]),
-                                pdu
-                        );
-                        break;
-                case atIds.CDS:
-                        match= rest.match(/^:\ ?([0-9]+)$/);
-                        atMessage = new AtImps.CDS(raw,
-                                parseInt(match[1]),
-                                pdu
-                        );
-                        break;
-        }
-
-        this.atMessages.push(atMessage);
-
-} | 'UNPARSED' function(unparsed){
-
-        this.leftToParse+= unparsed;
-
+        this.atMessages.push(new AtMessage(atIds.OK, "\r\nOK\r\n"));
 };
 
-
-Final= 'FINAL' function(final){
-
-        return new this.defs.AtMessage(final, "\r\n" + final + "\r\n");
-
-};

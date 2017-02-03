@@ -1,89 +1,100 @@
 %%
 
-final=OK|CONNECT|RING|NO\sCARRIER|NO\sDIALTONE|BUSY|NO\sANSWER|COMMAND\sNOT\sSUPPORT|TOO\sMANY\sPARAMETERS|ERROR
         
 %%
 
-<> . {}
+<> (.|\r|\n) { console.log("!!!!!!!!!"); }
 
-<UNSOLICITED> \r\n(\+|\^)[A-Z]+ {
-        "use strict";
+
+<P1> (\r|\n|.) {
+
+        this.jjval= this.jjtext;
+
+        return "UNPARSED";
+}
+
+<P1> \r\n(\+|\^)[A-Z]+ {
         
-        let id= this.jjtext.substring(2);
+        var id= this.jjtext.substring(2);
 
         if( this.defs.atIdsUnso.indexOf(id) < 0 ){
                 this.jjval= this.jjtext;
                 return "UNPARSED";
         }
 
-        this.pushState("REST");
 
         this.jjval= id;
 
         if( this.defs.atIdsPdu.indexOf(id) >= 0 ){
-                this.expectPdu= true;
+                this.pushState("P1_REST_PDU");
                 return "ID_UNSO_PDU";
-        }else return "ID_UNSO";
-
-}
-
-<UNSOLICITED> (\r|\n|.) {
-
-        this.jjval= this.jjtext;
-
-        return "UNPARSED";
-}
-
-
-<REGULAR> \r\n(\+|\^)[A-Z]+ {
-        
-        this.jjval= this.jjtext.substring(2);
-
-        if( 
-                this.jjval === this.defs.atIds.CME_ERROR || 
-                this.jjval === this.defs.atIds.CMS_ERROR 
-        ) return "ID_ES_ERROR";
-
-        this.pushState("REST");
-
-        if( this.defs.atIdsPdu.indexOf(id) >= 0 ){
-                this.expectPdu= true;
-                return "ID_PDU";
-        }else return "ID";
-
-}
-
-<REGULAR> \r\n{final}\r\n {
-        this.jjval= this.jjtext.substring(2,this.jjtext.length-2)
-        return "FINAL";
-}
-
-<REGULAR> (\r|\n|.) {
-        this.jjval= this.jjtext;
-        return "UNPARSED";
-}
-
-
-
-<REST> .*\r\n {
-
-        this.popState();
-
-        if( this.expectPdu ){
-                this.expectPdu= false;
-                this.pushState("PDU");
+        }else{
+                this.pushState("P1_REST");
+                return "ID_UNSO";
         }
 
-        this.jjval = this.jjtext.slice(0, -2);
+}
 
+<P1_REST_PDU> .*\r\n[a-fA-F0-9]+\r\n {
+        this.popState();
+        this.jjval= this.jjtext.split("\r\n");
+        return "REST_PDU";
+}
+
+<P1_REST> .*\r\n {
+        this.popState();
+        this.jjval = this.jjtext.slice(0, -2);
         return "REST";
 }
 
-<PDU> [a-fA-F0-9]+\r\n {
+<P2> (\r|\n|.) {
+
+
+        this.jjval= this.jjtext;
+        
+        console.log("UNPARSED", JSON.stringify(this.jjtext));
+        return "UNPARSED";
+}
+
+<P2> \r\n(\+|\^)[A-Z]+ {
+        
+        var id= this.jjtext.substring(2);
+
+        if( this.defs.atIdsArr.indexOf(id) < 0 ){
+                this.jjval= this.jjtext;
+                console.log("ON RETURN UNPARSED", JSON.stringify(this.jjtext));
+                return "UNPARSED";
+        }
+
+        this.jjval= id;
+
+        if( this.defs.atIdsPdu.indexOf(id) >= 0 ){
+                this.pushState("P2_REST_PDU");
+                return "ID_PDU";
+        }else{
+                this.pushState("P2_REST");
+                 return "ID";
+        }
+
+}
+
+<P2_REST_PDU> .*\r\n[a-fA-F0-9]+\r\n\r\nOK\r\n {
 
         this.popState();
 
-        this.jjval= this.jjtext.slice(0, -2);
+        this.jjval= this.jjtext.split("\r\n");
 
-        return "PDU";
+        return "REST_PDU";
+
 }
+
+
+<P2_REST> .*\r\n\r\nOK\r\n {
+
+        this.popState();
+
+        this.jjval= this.jjtext.slice(0,-8);
+        return "REST";
+}
+
+

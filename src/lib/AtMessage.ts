@@ -36,7 +36,7 @@ export let atIds = {
         "CMEE": "+CMEE" as AtMessageId, 
         "CMGL": "+CMGL" as AtMessageId, 
         "CDSI": "+CDSI" as AtMessageId,
-        "CDS": "CDS" as AtMessageId, 
+        "CDS": "+CDS" as AtMessageId, 
         "CMT": "+CMT" as AtMessageId, 
         "CMGS": "+CMGS" as AtMessageId,
         "CPBS": "+CPBS" as AtMessageId,
@@ -51,6 +51,12 @@ export let atIds = {
         "HUAWEI_SYSINFO": "^SYSINFO" as AtMessageId,
         "HUAWEI_MODE": "^MODE" as AtMessageId
 };
+
+export let atIdsArr: AtMessageId[]= (()=>{
+        let out= [];
+        for( let key of Object.keys(atIds) ) out.push(atIds[key]);
+        return out;
+})();
 
 export let atIdsUnso: AtMessageId[] = [
         atIds.CMTI,

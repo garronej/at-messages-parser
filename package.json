@@ -13,8 +13,8 @@
     "build": "npm run tsc && npm run jacob",
     "tsc": "./node_modules/.bin/tsc -p ./tsconfig.json",
     "jacob": "npm run jacoblex && npm run jacobgram",
-    "jacoblex": "jacob -t ./src/lib/lexer.jacoblex -l ./out/lib/Lexer.js",
-    "jacobgram": "jacob -g ./src/lib/parser.jacobgram -p ./out/lib/Parser.js",
+    "jacoblex": "./node_modules/.bin/jacob -t ./src/lib/lexer.jacoblex -l ./out/lib/Lexer.js",
+    "jacobgram": "./node_modules/.bin/jacob -g ./src/lib/parser.jacobgram -p ./out/lib/Parser.js",
     "test": "node ./out/test/sample"
   },
   "author": "Joseph Garrone",
@@ -23,7 +23,7 @@
     "@types/colors": "^1.1.1",
     "@types/node": "^4.0.0",
     "colors": "^1.1.2",
-    "jacob": "garronej/Jacob",
+    "jacob": "Canna71/Jacob",
     "typescript": "^2.1.4"
   },
   "devDependencies": {}
