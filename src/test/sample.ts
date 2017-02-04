@@ -12,6 +12,7 @@ let atMessages: AtMessage[];
 let expect: string;
 let test: string;
 
+/*
 
 test= "unsolicited";
 
@@ -758,7 +759,10 @@ expect =
   }
 ]`;
 
+
 atMessages = atMessagesParser([
+        '\r\r\n+CMGL: (0-4)\r\n',
+        '\r\nOK\r\n',
         '\r\n+CMGL: 0,1,,22\r\n07913306007110811094904003CF7A1A\r\n',
         '\r\nOK\r\n',
         '\r\n+CMGL: 0,1,,22\r\n07913306007110811094904003CF7A1A',
@@ -768,6 +772,18 @@ atMessages = atMessagesParser([
 ].join(""));
 
 
+
+
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);
 console.log(`Pass test ${test}`.green);
+*/
+
+atMessages = atMessagesParser([
+        '\r\r\n+CMGL: (0-4)\r\n',
+        '\r\nOK\r\n'
+].join(""));
+
+console.log(JSON.stringify(atMessages, null, 2).blue);
+
+//AT+CMGL=?\r\r\n+CMGL: (0-4)\r\n\r\nOK\r\n

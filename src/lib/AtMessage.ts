@@ -19,7 +19,7 @@ export type AtMessageId =
         "^CONN" | "^CEND" | "^SMMEMFULL" | "^IPDATA" | "^IPSTATE" | "^TIMESETRULT" | "^DATASETRULT" | "^XDSTATUS" | "^POSITION" | "^POSEND" |
         "^WNINV" | "^FOTASTATE" | "^FWLSTATE" | "^NDISEND" | "^NDISSTAT" |
 
-        "+CNUM" | "+CMGR" | "+CPIN" | "+CMEE" | "+CMGL" | "+CMGS" | "+CPBS" | "+CPBR" | "+CPBR TEST" | "^CPIN" | "^SYSINFO"
+        "+CNUM" | "+CMGR" | "+CPIN" | "+CMEE" | "+CMGL" | "+CMGS" | "+CPBS" | "+CPBR" | "+CPBR TEST" | "^CPIN" | "^SYSINFO" | "+CMGL TEST"
         ;
 
 export let atIds = {
@@ -89,6 +89,7 @@ export let atIds = {
         "CPBR_TEST": "+CPBR TEST" as AtMessageId,
         "HUAWEI_CPIN": "^CPIN" as AtMessageId,
         "HUAWEI_SYSINFO": "^SYSINFO" as AtMessageId,
+        "CMGL_TEST": "+CMGL TEST" as AtMessageId
 };
 
 export let atIdsAll: AtMessageId[] = (() => {
@@ -285,12 +286,11 @@ export enum ReportMode {
         DEBUG_INFO_VERBOSE = 2
 }
 
-
 export enum MessageStat {
-        RECEIVED_UNREAD = 0,
-        RECEIVED_READ = 1,
-        STORED_UNSENT = 2,
-        STORED_SENT = 3,
+        REC_UNREAD= 0,
+        REC_READ= 1,
+        STO_UNSENT = 2,
+        STO_SENT = 3,
         ALL = 4
 }
 
@@ -622,6 +622,14 @@ export namespace AtImps {
                         public readonly total: number
                 ) {
                         super(atIds.CPBS, raw);
+                }
+        }
+
+        export class CMGL_TEST extends AtMessage {
+                constructor(raw: string,
+                        public readonly range: [MessageStat, MessageStat]
+                ){
+                        super(atIds.CPBR_TEST, raw);
                 }
         }
 

@@ -67,6 +67,8 @@
 
         this.jjval= id;
 
+        console.log("ID", JSON.stringify(this.jjtext));
+
         this.pushState("P2_REST");
 
         if( this.defs.atIdsPdu.indexOf(id) >= 0 ) return "ID_PDU";

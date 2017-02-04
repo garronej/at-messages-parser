@@ -21,9 +21,7 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
 
                 if (!output.leftToParse) break;
 
-                /*
                 console.log(`Phase ${phase}`.green);
-                */
 
                 let lexer = new Lexer();
 
@@ -37,12 +35,10 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
 
                 parser.parse(lexer, output);
 
-                /*
                 console.log(`End ${phase}`.blue, {
                         "leftToParse": output.leftToParse,
                         "atMessages": output.atMessages
                 });
-                */
 
         }
 
