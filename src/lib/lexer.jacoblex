@@ -49,10 +49,8 @@
 
 <P2> (\r|\n|.) {
 
-
         this.jjval= this.jjtext;
         
-        console.log("UNPARSED", JSON.stringify(this.jjtext));
         return "UNPARSED";
 }
 
@@ -60,9 +58,8 @@
         
         var id= this.jjtext.substring(2);
 
-        if( this.defs.atIdsArr.indexOf(id) < 0 ){
+        if( this.defs.atIdsAll.indexOf(id) < 0 ){
                 this.jjval= this.jjtext;
-                console.log("ON RETURN UNPARSED", JSON.stringify(this.jjtext));
                 return "UNPARSED";
         }
 
@@ -98,3 +95,34 @@
 }
 
 
+
+
+<P3> (\r|\n|.) {
+
+        this.jjval= this.jjtext;
+        
+        return "UNPARSED";
+}
+
+<P3> \r\n.+\r\n {
+
+        if( this.jjtext.match(/^\r\n\+CM[ES]\ ERROR/) ){
+
+                this.jjval= this.jjtext;
+
+                return "CM_ERROR";
+
+        }
+        
+        var id= this.jjtext.substring(2, this.jjtext.length-2);
+
+        if( this.defs.atIdsFinal.indexOf(id) < 0 || id === this.defs.atIds.OK ){
+                this.jjval= this.jjtext;
+                return "UNPARSED";
+        }
+
+        this.jjval= id;
+
+        return "FINAL";
+
+}

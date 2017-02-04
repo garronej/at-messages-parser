@@ -13,6 +13,18 @@ export function getCmeErrorVerbose(errorNo: number): string {
 
 }
 
+export function getCmeErrorCode(verbose: string): number {
+
+    for( let iStr of Object.keys(cmeErrorDictionary) ){
+
+        if( cmeErrorDictionary[iStr] === verbose ) return parseInt(iStr);
+
+    }
+    
+    return undefined;
+
+}
+
 
 let cmsErrorDictionary = JSON.parse(
     readFileSync(
@@ -20,6 +32,23 @@ let cmsErrorDictionary = JSON.parse(
         { "encoding": "utf8" }
     )
 );
+
+export function getCmsErrorCode(verbose: string): number{
+
+    for( let iStr of Object.keys(cmsErrorDictionary) ){
+
+        let i= parseInt(iStr);
+
+        if( isNaN(i) ) continue;
+
+        if( cmsErrorDictionary[iStr] === verbose ) return i;
+        
+
+    }
+
+    return undefined;
+
+}
 
 export function getCmsErrorVerbose(errorNo: number): string {
     if (0 <= errorNo && errorNo <= 127) return cmsErrorDictionary["0-127"];

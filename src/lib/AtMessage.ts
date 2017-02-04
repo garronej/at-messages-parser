@@ -1,4 +1,10 @@
-import { getCmeErrorVerbose, getCmsErrorVerbose } from "./errorVerbose";
+import { 
+        getCmeErrorVerbose, 
+        getCmsErrorVerbose,
+        getCmeErrorCode,
+        getCmsErrorCode
+} from "./errorVerbose";
+
 import { descriptorToInstance } from "./descriptorToInstance";
 
 export type AtMessageId =
@@ -7,54 +13,87 @@ export type AtMessageId =
         "OK" | "CONNECT" | "RING" | "NO CARRIER" | "NO DIALTONE" | "BUSY" | "NO ANSWER" | "COMMAND NOT SUPPORT" | "TOO MANY PARAMETERS" |
         ">" |
         "ERROR" | "+CME ERROR" | "+CMS ERROR" |
-        "+CNUM" | "+CMGR" | "+CMTI" | "+CPIN" | "+CMEE" | "+CMGL" | "+CDSI" | "+CDS" | "+CMT" | "+CMGS" | "+CPBS" | "+CPBR" | "+CPBR TEST" |
-        "^BOOT" | "^RSSI" | "^SIMST" | "^SRVST" | "^CPIN" | "^SYSINFO" | "^MODE";
+        "+CMTI" | "+CMT" | "+CDSI" | "+CDS" | "^SIMST" | "^SRVST" | "^MODE" |
+
+        "+CLIP" | "+CCWA" | "+CRING" | "+CUSD" | "+CUSATP" | "+CUSATEND" | "+PACSP" | "^NWTIME" | "^SYSSTART" | "^ORIG" | "^THERM" | "^CONF" |
+        "^CONN" | "^CEND" | "^SMMEMFULL" | "^IPDATA" | "^IPSTATE" | "^TIMESETRULT" | "^DATASETRULT" | "^XDSTATUS" | "^POSITION" | "^POSEND" |
+        "^WNINV" | "^FOTASTATE" | "^FWLSTATE" | "^NDISEND" | "^NDISSTAT" |
+
+        "+CNUM" | "+CMGR" | "+CPIN" | "+CMEE" | "+CMGL" | "+CMGS" | "+CPBS" | "+CPBR" | "+CPBR TEST" | "^CPIN" | "^SYSINFO"
+        ;
 
 export let atIds = {
         "ECHO": "ECHO" as AtMessageId,
         "AT_LIST": "AT LIST" as AtMessageId,
 
-        "OK": "OK" as AtMessageId, 
-        "CONNECT": "CONNECT" as AtMessageId, 
-        "RING": "RING" as AtMessageId, 
-        "NO_CARRIER": "NO CARRIER" as AtMessageId, 
+        "OK": "OK" as AtMessageId,
+        "CONNECT": "CONNECT" as AtMessageId,
+        "RING": "RING" as AtMessageId,
+        "NO_CARRIER": "NO CARRIER" as AtMessageId,
         "NO_DIALTONE": "NO DIALTONE" as AtMessageId,
-        "BUSY": "BUSY" as AtMessageId, 
-        "NO_ANSWER": "NO ANSWER" as AtMessageId, 
-        "COMMAND_NOT_SUPPORT": "COMMAND NOT SUPPORT" as AtMessageId, 
+        "BUSY": "BUSY" as AtMessageId,
+        "NO_ANSWER": "NO ANSWER" as AtMessageId,
+        "COMMAND_NOT_SUPPORT": "COMMAND NOT SUPPORT" as AtMessageId,
         "TOO_MANY_PARAMETERS": "TOO MANY PARAMETERS" as AtMessageId,
 
         "INVITE": ">" as AtMessageId,
-        "ERROR" : "ERROR" as AtMessageId, 
-        "CME_ERROR": "+CME ERROR" as AtMessageId, 
+
+        "ERROR": "ERROR" as AtMessageId,
+        "CME_ERROR": "+CME ERROR" as AtMessageId,
         "CMS_ERROR": "+CMS ERROR" as AtMessageId,
 
-        "CNUM": "+CNUM" as AtMessageId,
-        "CMGR": "+CMGR" as AtMessageId, 
-        "CMTI": "+CMTI" as AtMessageId, 
-        "CPIN": "+CPIN" as AtMessageId,
-        "CMEE": "+CMEE" as AtMessageId, 
-        "CMGL": "+CMGL" as AtMessageId, 
+        "CMTI": "+CMTI" as AtMessageId,
+        "CMT": "+CMT" as AtMessageId,
         "CDSI": "+CDSI" as AtMessageId,
-        "CDS": "+CDS" as AtMessageId, 
-        "CMT": "+CMT" as AtMessageId, 
+        "CDS": "+CDS" as AtMessageId,
+        "HUAWEI_SIMST": "^SIMST" as AtMessageId,
+        "HUAWEI_SRVST": "^SRVST" as AtMessageId,
+        "HUAWEI_MODE": "^MODE" as AtMessageId,
+
+        "CLIP": "+CLIP" as AtMessageId,
+        "CCWA": "+CCWA" as AtMessageId,
+        "CRING": "+CRING" as AtMessageId,
+        "CUSD": "+CUSD" as AtMessageId,
+        "CUSATP": "+CUSATP" as AtMessageId,
+        "CUSATEND": "+CUSATEND" as AtMessageId,
+        "PACSP": "+PACSP" as AtMessageId,
+        "HUAWEI_NWTIME": "^NWTIME" as AtMessageId,
+        "HUAWEI_SYSSTART": "^SYSSTART" as AtMessageId,
+        "HUAWEI_ORIG": "^ORIG" as AtMessageId,
+        "HUAWEI_THERM": "^THERM" as AtMessageId,
+        "HUAWEI_CONF": "^CONF" as AtMessageId,
+        "HUAWEI_CONN": "^CONN" as AtMessageId,
+        "HUAWEI_CEND": "^CEND" as AtMessageId,
+        "HUAWEI_SMMEMFULL": "^SMMEMFULL" as AtMessageId,
+        "HUAWEI_IPDATA": "^IPDATA" as AtMessageId,
+        "HUAWEI_IPSTATE": "^IPSTATE" as AtMessageId,
+        "HUAWEI_TIMESETRULT": "^TIMESETRULT" as AtMessageId,
+        "HUAWEI_DATASETRULT": "^DATASETRULT" as AtMessageId,
+        "HUAWEI_XDSTATUS": "^XDSTATUS" as AtMessageId,
+        "HUAWEI_POSITION": "^POSITION" as AtMessageId,
+        "HUAWEI_POSEND": "^POSEND" as AtMessageId,
+        "HUAWEI_WNINV": "^WNINV" as AtMessageId,
+        "HUAWEI_FOTASTATE": "^FOTASTATE" as AtMessageId,
+        "HUAWEI_FWLSTATE": "^FWLSTATE" as AtMessageId,
+        "HUAWEI_NDISEND": "^NDISEND" as AtMessageId,
+        "HUAWEI_NDISSTAT": "^NDISSTAT" as AtMessageId,
+
+        "CNUM": "+CNUM" as AtMessageId,
+        "CMGR": "+CMGR" as AtMessageId,
+        "CPIN": "+CPIN" as AtMessageId,
+        "CMEE": "+CMEE" as AtMessageId,
+        "CMGL": "+CMGL" as AtMessageId,
         "CMGS": "+CMGS" as AtMessageId,
         "CPBS": "+CPBS" as AtMessageId,
         "CPBR": "+CPBR" as AtMessageId,
         "CPBR_TEST": "+CPBR TEST" as AtMessageId,
-
-        "HUAWEI_BOOT": "^BOOT" as AtMessageId, 
-        "HUAWEI_RSSI": "^RSSI" as AtMessageId, 
-        "HUAWEI_SIMST": "^SIMST" as AtMessageId, 
-        "HUAWEI_SRVST": "^SRVST" as AtMessageId, 
-        "HUAWEI_CPIN": "^CPIN" as AtMessageId, 
+        "HUAWEI_CPIN": "^CPIN" as AtMessageId,
         "HUAWEI_SYSINFO": "^SYSINFO" as AtMessageId,
-        "HUAWEI_MODE": "^MODE" as AtMessageId
 };
 
-export let atIdsArr: AtMessageId[]= (()=>{
-        let out= [];
-        for( let key of Object.keys(atIds) ) out.push(atIds[key]);
+export let atIdsAll: AtMessageId[] = (() => {
+        let out = [];
+        for (let key of Object.keys(atIds)) out.push(atIds[key]);
         return out;
 })();
 
@@ -63,13 +102,38 @@ export let atIdsUnso: AtMessageId[] = [
         atIds.CMT,
         atIds.CDSI,
         atIds.CDS,
-        atIds.HUAWEI_BOOT,
-        atIds.HUAWEI_RSSI,
         atIds.HUAWEI_SIMST,
         atIds.HUAWEI_SRVST,
-        atIds.HUAWEI_MODE
-];
+        atIds.HUAWEI_MODE,
 
+        atIds.CLIP,
+        atIds.CCWA,
+        atIds.CRING,
+        atIds.CUSD,
+        atIds.CUSATP,
+        atIds.CUSATEND,
+        atIds.PACSP,
+        atIds.HUAWEI_NWTIME,
+        atIds.HUAWEI_SYSSTART,
+        atIds.HUAWEI_ORIG,
+        atIds.HUAWEI_THERM,
+        atIds.HUAWEI_CONF,
+        atIds.HUAWEI_CONN,
+        atIds.HUAWEI_CEND,
+        atIds.HUAWEI_SMMEMFULL,
+        atIds.HUAWEI_IPDATA,
+        atIds.HUAWEI_IPSTATE,
+        atIds.HUAWEI_TIMESETRULT,
+        atIds.HUAWEI_DATASETRULT,
+        atIds.HUAWEI_XDSTATUS,
+        atIds.HUAWEI_POSITION,
+        atIds.HUAWEI_POSEND,
+        atIds.HUAWEI_WNINV,
+        atIds.HUAWEI_FOTASTATE,
+        atIds.HUAWEI_FWLSTATE,
+        atIds.HUAWEI_NDISEND,
+        atIds.HUAWEI_NDISSTAT
+];
 
 export let atIdsFinal: AtMessageId[] = [
         atIds.OK,
@@ -106,7 +170,6 @@ export let atIdsPdu: AtMessageId[] = [
         atIds.CMGL
 ];
 
-
 export class AtMessage {
 
         public isUnsolicited?: boolean;
@@ -137,10 +200,7 @@ export class AtMessageList extends AtMessage {
         constructor(raw: string,
                 public readonly atMessages: AtMessage[]
         ) {
-
                 super(atIds.AT_LIST, raw);
-
-
         }
 }
 
@@ -274,7 +334,6 @@ function getBits(bits: number, to: number, from: number): number {
 
 export namespace AtImps {
 
-        //+CMEE: 2
         export class CMEE extends AtMessage {
                 public readonly reportModeName: string;
                 constructor(raw: string,
@@ -285,7 +344,6 @@ export namespace AtImps {
                 }
         }
 
-        //^SIMST: <sim_state>[,<lock_state>]
         export class HUAWEI_SIMST extends AtMessage {
 
                 public readonly simStateName: string;
@@ -305,7 +363,6 @@ export namespace AtImps {
 
         }
 
-        //^SRVST: 0
         export class HUAWEI_SRVST extends AtMessage {
                 public readonly serviceStatusName: string;
                 constructor(raw: string,
@@ -315,36 +372,56 @@ export namespace AtImps {
                 }
         }
 
-
-        //+CME ERROR: 3
         export class CME_ERROR extends AtMessage {
+
                 public readonly verbose: string;
+                public code?: number;
 
                 constructor(raw: string,
-                        public readonly code: number) {
+                        info: number|string) {
 
                         super(atIds.CME_ERROR, raw);
-                        this.verbose = getCmeErrorVerbose(this.code);
+
+                        switch(typeof(info)){
+                                case "number":
+                                        this.code= info as number;
+                                        this.verbose = getCmeErrorVerbose(this.code);
+                                        break;
+                                case "string":
+                                        this.verbose = info as string;
+                                        let code= getCmeErrorCode(this.verbose);
+                                        if( code ) this.code= code;
+                                        break;
+                        }
+
                 }
         }
 
-        //+CMS ERROR: 301
         export class CMS_ERROR extends AtMessage {
                 public readonly verbose: string;
+                public code?: number;
 
                 constructor(raw: string,
-                        public readonly code: number) {
+                        info: number|string) {
 
                         super(atIds.CMS_ERROR, raw);
 
-                        this.verbose = getCmsErrorVerbose(this.code);
+                        switch(typeof(info)){
+                                case "number":
+                                        this.code= info as number;
+                                        this.verbose = getCmsErrorVerbose(this.code);
+                                        break;
+                                case "string":
+                                        this.verbose = info as string;
+                                        let code= getCmsErrorCode(this.verbose);
+                                        if( code ) this.code= code;
+                                        break;
+                        }
+
                 }
         }
 
-
-        //+CMGR: 0,,26\r\n07913306092069F0040B913336766883F5000061216232414440084EF289EC26BBC9\r\n
         export class CMGR extends AtMessage {
-
                 public readonly statName: string;
 
                 constructor(raw: string,
@@ -359,10 +436,7 @@ export namespace AtImps {
 
         }
 
-        //+CMTI: "SM",29
         export class CMTI extends AtMessage {
-
-
                 constructor(raw: string,
                         public readonly mem: MemStorage,
                         public readonly index: number) {
@@ -373,8 +447,6 @@ export namespace AtImps {
 
         }
 
-
-        //+CMT: ,24\r\n0891683108608805F9240D91683109731147F400003130505152430004F4F29C0E
         export class CMT extends AtMessage {
                 constructor(raw: string,
                         public readonly length: number,
@@ -383,9 +455,6 @@ export namespace AtImps {
                 }
         }
 
-
-
-        //+CDSI: "SM",29
         export class CDSI extends AtMessage {
                 constructor(raw: string,
                         public readonly mem: MemStorage,
@@ -395,8 +464,6 @@ export namespace AtImps {
                 }
         }
 
-
-        //+CDS: 26\r\n0891683108608805F906750D91683109731147F4313050913492003130509134430000
         export class CDS extends AtMessage {
                 constructor(raw: string,
                         public readonly length: number,
@@ -405,8 +472,6 @@ export namespace AtImps {
                 }
         }
 
-        //\r\nERROR+CNUM: "","+393701307294",145\r\n\r\n
-        //\r\n+CNUM: "CC","+8613987654321",129\r\n
         export class CNUM extends AtMessage {
 
                 public readonly typeOfNumber: TypeOfNumber;
@@ -463,8 +528,6 @@ export namespace AtImps {
                 }
         }
 
-        //\r\n+CPIN: SIM PIN\r\n
-        //\r\n+CPIN: READY\r\n
         export class CPIN extends AtMessage {
                 constructor(raw: string,
                         public readonly pinState: PinState) {
@@ -473,13 +536,10 @@ export namespace AtImps {
                 }
         }
 
-        // \r\n^CPIN: SIM PIN,3,10,3,10,3\r\n
-        // \r\n^CPIN: READY,,10,3,10,3\r\n
         export class HUAWEI_CPIN extends AtMessage {
 
                 public readonly pinStateName: string;
 
-                //<code>,[<times>],<puk_times>,<pin_times>,<puk2_times>,<pin2_ti mes><
                 constructor(raw: string,
                         public readonly pinState: PinState,
                         public readonly times: number,
@@ -532,8 +592,6 @@ export namespace AtImps {
                 }
         }
 
-        //\r\n+CMGL: 0,1,,22\r\n07913306092049F0040B913336766883F500007110811094904003CF7A1A
-
         export class CMGL extends AtMessage {
 
                 public readonly statName: string;
@@ -548,8 +606,6 @@ export namespace AtImps {
                         this.statName = MessageStat[stat];
                 }
         }
-
-        //\r\n+CMGS: 135\r\n
 
         export class CMGS extends AtMessage {
                 constructor(raw: string,

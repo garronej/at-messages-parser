@@ -17,7 +17,7 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
                 "defs": defs
         }
 
-        for (let phase of ["P1", "P2"]) {
+        for (let phase of ["P1", "P2", "P3"]) {
 
                 if (!output.leftToParse) break;
 
@@ -44,8 +44,26 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
 
         }
 
-        if (output.leftToParse)
-                throw new Error(`Left to parse: ${JSON.stringify(output.leftToParse)}`);
+        let split= output.leftToParse.split("\r\nOK\r\n");
+
+        if( split[split.length-1] ) throw new Error();
+
+        for (let i = 0; i < split.length - 1; i++) {
+
+                let raw = split[i];
+                output.atMessages.push(new defs.AtMessage(defs.atIds.OK, "\r\nOK\r\n"));
+
+                if (!raw) continue;
+                else{
+                        if( !raw.match(/^\r\n.(?:\r|\n|.)+.\r\n$/) )
+                                throw new Error();
+                        
+                        output.atMessages.push(new defs.AtMessage(undefined, raw));
+                        
+                }
+                
+
+        }
 
         return reorder(rawAtMessages, output.atMessages);
 
