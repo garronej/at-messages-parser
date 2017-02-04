@@ -4,10 +4,18 @@ Program= Instructions;
 
 Instructions= Instructions Instruction | Instruction;
 
-Instruction= Phase1 | Phase2 | Phase3
+Instruction= Phase1 | Phase2 | PhaseCnum | Phase3
 | 'UNPARSED' function(unparsed){
 
         this.leftToParse+= unparsed;
+
+} | 'ID_UNSO' 'FAIL' function(id, unparsed){
+
+        this.leftToParse+= "\r\n" + id + unparsed;
+
+} | 'ID' 'FAIL' function(id, unparsed){
+
+        this.leftToParse+= "\r\n" + id + unparsed;
 
 };
 
@@ -109,6 +117,7 @@ Phase1= 'ID_UNSO' 'REST' function(id, rest) {
                 this.leftToParse+= raw;
 
         }
+
 };
 
 Phase2= 'ID_PDU' 'REST_PDU' function(id, rest_pdu){
@@ -249,7 +258,95 @@ Phase2= 'ID_PDU' 'REST_PDU' function(id, rest_pdu){
                 this.leftToParse+= raw + "\r\nOK\r\n";
 
         }
+
 };
+
+
+PhaseCnum= 'START_CNUM' ListCnum 'END_CNUM' function(_, cnumRaws){
+        "use strict";
+
+        let AtMessage= this.defs.AtMessage;
+        let AtMessageList= this.defs.AtMessageList;
+        let AtImps= this.defs.AtImps;
+        let atIds= this.defs.atIds;
+
+        let atMessages= [];
+
+        let raw= "\r\n";
+
+        for( let cnumRaw of cnumRaws ){
+
+                raw+= cnumRaw;
+
+                let split= cnumRaw.split("+CNUM");
+
+                let rawError= split[0];
+                let rest= split[1];
+
+                let match= rest.match(/^:\ ?"([^"]*)","([^"]*)",([0-9]+)/);
+
+                let atMessageCNUM= new AtImps.CNUM("+CNUM"+rest,
+                        match[1],
+                        match[2],
+                        parseInt(match[3])
+                );
+
+                atMessages.push(atMessageCNUM);
+
+                if( !rawError ) continue;
+
+                let error;
+                let id= atIds.ERROR;
+                let info;
+
+                if( match= rawError.match(/^(\+CM[ES]\ ERROR):\ ?(.+)$/) ){
+
+                        id= match[1];
+
+                        info= parseInt(match[2]);
+
+                        if( isNaN(info) ) info= match[2];
+
+                }
+
+                switch (id) {
+                        case atIds.CME_ERROR:
+                                error = new AtImps.CME_ERROR(rawError, info);
+                                break;
+                        case atIds.CMS_ERROR:
+                                error = new AtImps.CMS_ERROR(rawError, info);
+                                break;
+                        case atIds.ERROR:
+                                error= new AtMessage(atIds.ERROR, rawError);
+                                break;
+                }
+
+                delete error.isFinal;
+
+                atMessageCNUM.error= error;
+
+        }
+
+        raw+= "\r\n";
+
+        this.atMessages.push(new AtMessageList(raw, atMessages));
+
+        this.atMessages.push(new AtMessage(atIds.OK, "\r\nOK\r\n"));
+
+};
+
+ListCnum= ListCnum 'CNUM' function(raws, raw){
+
+        raws.push(raw);
+
+        return raws;
+
+} | 'CNUM' function(raw){
+
+        return [ raw ];
+
+};
+
 
 Phase3= 'FINAL' function(id){
 

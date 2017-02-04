@@ -17,11 +17,13 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
                 "defs": defs
         }
 
-        for (let phase of ["P1", "P2", "P3"]) {
+        for (let phase of ["P1", "P2", "CNUM", "P3"]) {
 
                 if (!output.leftToParse) break;
 
-                //console.log(`Phase ${phase}`.green);
+                /*
+                console.log(`Phase ${phase}`.green);
+                */
 
                 let lexer = new Lexer();
 
@@ -55,7 +57,7 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
 
                 if (!raw) continue;
                 else{
-                        if( !raw.match(/^\r\n.(?:\r|\n|.)+.\r\n$/) )
+                        if( !raw.match(/^\r\n(?:\r|\n|.)+\r\n$/) )
                                 throw new Error();
                         
                         output.atMessages.push(new defs.AtMessage(undefined, raw));

@@ -22,20 +22,16 @@
                 return "UNPARSED";
         }
 
-
         this.jjval= id;
+        
+        this.pushState("P1_REST");
 
-        if( this.defs.atIdsPdu.indexOf(id) >= 0 ){
-                this.pushState("P1_REST_PDU");
-                return "ID_UNSO_PDU";
-        }else{
-                this.pushState("P1_REST");
-                return "ID_UNSO";
-        }
+        if( this.defs.atIdsPdu.indexOf(id) >= 0 ) return "ID_UNSO_PDU";
+        else return "ID_UNSO";
 
 }
 
-<P1_REST_PDU> .*\r\n[a-fA-F0-9]+\r\n {
+<P1_REST> .*\r\n[a-fA-F0-9]+\r\n {
         this.popState();
         this.jjval= this.jjtext.split("\r\n");
         return "REST_PDU";
@@ -45,6 +41,12 @@
         this.popState();
         this.jjval = this.jjtext.slice(0, -2);
         return "REST";
+}
+
+<P1_REST> (\r|\n|.) {
+        this.popState();
+        this.jjval= this.jjtext;
+        return "FAIL";
 }
 
 <P2> (\r|\n|.) {
@@ -65,17 +67,14 @@
 
         this.jjval= id;
 
-        if( this.defs.atIdsPdu.indexOf(id) >= 0 ){
-                this.pushState("P2_REST_PDU");
-                return "ID_PDU";
-        }else{
-                this.pushState("P2_REST");
-                 return "ID";
-        }
+        this.pushState("P2_REST");
+
+        if( this.defs.atIdsPdu.indexOf(id) >= 0 ) return "ID_PDU";
+        else return "ID";
 
 }
 
-<P2_REST_PDU> .*\r\n[a-fA-F0-9]+\r\n\r\nOK\r\n {
+<P2_REST> .*\r\n[a-fA-F0-9]+\r\n\r\nOK\r\n {
 
         this.popState();
 
@@ -92,8 +91,63 @@
 
         this.jjval= this.jjtext.slice(0,-8);
         return "REST";
+
 }
 
+<P2_REST> (\r|\n|.) {
+        this.popState();
+        this.jjval= this.jjtext;
+        return "FAIL";
+}
+
+
+
+<CNUM> (\r|\n|.) {
+
+        this.jjval= this.jjtext;
+        
+        return "UNPARSED";
+}
+
+<CNUM> \r\n/\+CME\sERROR:\s?.+\+CNUM {
+
+        this.pushState("CNUM_LIST");
+
+        return "START_CNUM";
+
+}
+
+<CNUM> \r\n/\+CNUM {
+
+        this.pushState("CNUM_LIST");
+
+        return "START_CNUM";
+
+}
+
+<CNUM> \r\n/ERROR\+CNUM {
+
+        this.pushState("CNUM_LIST");
+
+        return "START_CNUM";
+
+}
+
+<CNUM_LIST> .+\r\n {
+
+        this.jjval= this.jjtext;
+
+        return "CNUM";
+
+}
+
+
+<CNUM_LIST> \r\n\r\nOK\r\n {
+
+        this.popState();
+
+        return "END_CNUM";
+}
 
 
 
