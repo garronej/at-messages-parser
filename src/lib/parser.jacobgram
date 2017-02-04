@@ -4,7 +4,7 @@ Program= Instructions;
 
 Instructions= Instructions Instruction | Instruction;
 
-Instruction= Phase1 | Phase2 | PhaseCnum | Phase3
+Instruction= Phase1 | Phase2 | PhaseCnum | PhaseCmgl | Phase3
 | 'UNPARSED' function(unparsed){
 
         this.leftToParse+= unparsed;
@@ -13,7 +13,15 @@ Instruction= Phase1 | Phase2 | PhaseCnum | Phase3
 
         this.leftToParse+= "\r\n" + id + unparsed;
 
+} | 'ID_UNSO_PDU' 'FAIL' function(id, unparsed){
+
+        this.leftToParse+= "\r\n" + id + unparsed;
+
 } | 'ID' 'FAIL' function(id, unparsed){
+
+        this.leftToParse+= "\r\n" + id + unparsed;
+
+} | 'ID_PDU' 'FAIL' function(id, unparsed){
 
         this.leftToParse+= "\r\n" + id + unparsed;
 
@@ -145,6 +153,7 @@ Phase2= 'ID_PDU' 'REST_PDU' function(id, rest_pdu){
                                         pdu
                                 );
                                 break;
+                        default: throw new Error();
                 }
 
                 this.atMessages.push(atMessage);
@@ -247,7 +256,7 @@ Phase2= 'ID_PDU' 'REST_PDU' function(id, rest_pdu){
                                         );
                                         break;
                                 }
-                        default: atMessage = new AtMessage(id, raw);
+                        default: throw new Error();
                 }
 
                 this.atMessages.push(atMessage);
@@ -342,6 +351,53 @@ ListCnum= ListCnum 'CNUM' function(raws, raw){
         return raws;
 
 } | 'CNUM' function(raw){
+
+        return [ raw ];
+
+};
+
+PhaseCmgl= ListCmgl 'END_CMGL' function(cmglRaws) {
+        "use strict";
+
+        let AtMessage= this.defs.AtMessage;
+        let AtMessageList= this.defs.AtMessageList;
+        let AtImps= this.defs.AtImps;
+        let atIds= this.defs.atIds;
+
+        let atMessages= [];
+        let regExp= /^\r\n\+CMGL:\ ?([0-9]+),([0-9]+),(?:[0-9]+)?,([0-9]+)\r\n([a-fA-F0-9]+)$/;
+        let raw= "";
+
+        for( let cmglRaw of cmglRaws){
+
+                raw+= cmglRaw;
+
+                let match= cmglRaw.match(regExp);
+
+                atMessages.push(new AtImps.CMGL(cmglRaw,
+                        parseInt(match[1]),
+                        parseInt(match[2]),
+                        parseInt(match[3]),
+                        match[4]
+                ));
+
+        }
+
+        raw+="\r\n";
+
+        this.atMessages.push(new AtMessageList(raw, atMessages));
+        this.atMessages.push(new AtMessage(atIds.OK, "\r\nOK\r\n"));
+
+
+};
+
+ListCmgl= ListCmgl 'CMGL' function(raws, raw){
+
+        raws.push(raw);
+
+        return raws;
+
+} | 'CMGL' function(raw){
 
         return [ raw ];
 

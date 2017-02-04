@@ -3,7 +3,7 @@
         
 %%
 
-<> (.|\r|\n) { console.log("!!!!!!!!!"); }
+<> NEVER {}
 
 
 <P1> (\r|\n|.) {
@@ -57,7 +57,7 @@
 }
 
 <P2> \r\n(\+|\^)[A-Z]+ {
-        
+
         var id= this.jjtext.substring(2);
 
         if( this.defs.atIdsAll.indexOf(id) < 0 ){
@@ -95,6 +95,7 @@
 }
 
 <P2_REST> (\r|\n|.) {
+
         this.popState();
         this.jjval= this.jjtext;
         return "FAIL";
@@ -147,6 +148,39 @@
         this.popState();
 
         return "END_CNUM";
+}
+
+
+<CMGL> (\r|\n|.) {
+
+        this.jjval= this.jjtext;
+        
+        return "UNPARSED";
+}
+
+
+<CMGL> /\r\n\+CMGL {
+
+        this.pushState("CMGL_LIST");
+
+}
+
+<CMGL_LIST> \r\n\+CMGL:\s?.+\r\n[a-fA-F0-9]+ {
+
+        this.jjval= this.jjtext;
+
+        return "CMGL";
+
+}
+
+<CMGL_LIST> \r\n\r\nOK\r\n {
+
+        this.popState();
+
+        this.jjval= this.jjtext;
+
+        return "END_CMGL";
+
 }
 
 

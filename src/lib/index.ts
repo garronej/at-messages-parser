@@ -17,7 +17,7 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
                 "defs": defs
         }
 
-        for (let phase of ["P1", "P2", "CNUM", "P3"]) {
+        for (let phase of ["P1", "P2", "CNUM", "CMGL", "P3"]) {
 
                 if (!output.leftToParse) break;
 
