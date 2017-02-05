@@ -13,12 +13,15 @@ export type AtMessageId =
         "ERROR" | "+CME ERROR" | "+CMS ERROR" |
         "+CMTI" | "+CMT" | "+CDSI" | "+CDS" | "^SIMST" | "^SRVST" | "^MODE" |
 
+        "^RSSI" | "^CSNR" | "^DSFLOWRPT" | "^EARST" | "^ACTIVEBAND" | "^RSSILVL" | "^HRSSILVL" | "^HDRRSSI" | "^CRSSI" | "^ANLEVEL" | "^BOOT" |
+
         "+CLIP" | "+CCWA" | "+CRING" | "+CUSD" | "+CUSATP" | "+CUSATEND" | "+PACSP" | "^NWTIME" | "^SYSSTART" | "^ORIG" | "^THERM" | "^CONF" |
         "^CONN" | "^CEND" | "^SMMEMFULL" | "^IPDATA" | "^IPSTATE" | "^TIMESETRULT" | "^DATASETRULT" | "^XDSTATUS" | "^POSITION" | "^POSEND" |
         "^WNINV" | "^FOTASTATE" | "^FWLSTATE" | "^NDISEND" | "^NDISSTAT" |
 
         "+CNUM" | "+CMGR" | "+CPIN" | "+CMEE" | "+CMGL" | "+CMGS" | "+CPBS" | "+CPBR" | "+CPBR TEST" | "^CPIN" | "^SYSINFO" | "+CMGL TEST"
         ;
+
 
 export let atIds = {
         "ECHO": "ECHO" as AtMessageId,
@@ -47,6 +50,18 @@ export let atIds = {
         "HUAWEI_SIMST": "^SIMST" as AtMessageId,
         "HUAWEI_SRVST": "^SRVST" as AtMessageId,
         "HUAWEI_MODE": "^MODE" as AtMessageId,
+
+        "HUAWEI_RSSI": "^RSSI" as AtMessageId,
+        "HUAWEI_CSNR": "^CSNR" as AtMessageId,
+        "HUAWEI_DSFLOWRPT": "^DSFLOWRPT" as AtMessageId,
+        "HUAWEI_EARST": "^EARST" as AtMessageId,
+        "HUAWEI_ACTIVEBAND": "^ACTIVEBAND" as AtMessageId,
+        "HUAWEI_RSSILVL": "^RSSILVL" as AtMessageId,
+        "HUAWEI_HRSSILVL": "^HRSSILVL" as AtMessageId,
+        "HUAWEI_HDRRSSI": "^HDRRSSI" as AtMessageId,
+        "HUAWEI_CRSSI": "^CRSSI" as AtMessageId,
+        "HUAWEI_ANLEVEL": "^ANLEVEL" as AtMessageId,
+        "HUAWEI_BOOT": "^BOOT" as AtMessageId,
 
         "CLIP": "+CLIP" as AtMessageId,
         "CCWA": "+CCWA" as AtMessageId,
@@ -105,6 +120,18 @@ export let atIdsUnso: AtMessageId[] = [
         atIds.HUAWEI_SIMST,
         atIds.HUAWEI_SRVST,
         atIds.HUAWEI_MODE,
+
+        atIds.HUAWEI_RSSI
+       atIds.HUAWEI_CSNR
+       atIds.HUAWEI_DSFLOWRPT
+       atIds.HUAWEI_EARST
+       atIds.HUAWEI_ACTIVEBAND
+       atIds.HUAWEI_RSSILVL
+       atIds.HUAWEI_HRSSILVL
+       atIds.HUAWEI_HDRRSSI
+       atIds.HUAWEI_CRSSI
+       atIds.HUAWEI_ANLEVEL
+       atIds.HUAWEI_BOOT
 
         atIds.CLIP,
         atIds.CCWA,
@@ -285,8 +312,8 @@ export enum ReportMode {
 }
 
 export enum MessageStat {
-        REC_UNREAD= 0,
-        REC_READ= 1,
+        REC_UNREAD = 0,
+        REC_READ = 1,
         STO_UNSENT = 2,
         STO_SENT = 3,
         ALL = 4
@@ -377,19 +404,19 @@ export namespace AtImps {
                 public code?: number;
 
                 constructor(raw: string,
-                        info: number|string) {
+                        info: number | string) {
 
                         super(atIds.CME_ERROR, raw);
 
-                        switch(typeof(info)){
+                        switch (typeof (info)) {
                                 case "number":
-                                        this.code= info as number;
+                                        this.code = info as number;
                                         this.verbose = getCmeErrorVerbose(this.code);
                                         break;
                                 case "string":
                                         this.verbose = info as string;
-                                        let code= getCmeErrorCode(this.verbose);
-                                        if( code ) this.code= code;
+                                        let code = getCmeErrorCode(this.verbose);
+                                        if (code) this.code = code;
                                         break;
                         }
 
@@ -401,19 +428,19 @@ export namespace AtImps {
                 public code?: number;
 
                 constructor(raw: string,
-                        info: number|string) {
+                        info: number | string) {
 
                         super(atIds.CMS_ERROR, raw);
 
-                        switch(typeof(info)){
+                        switch (typeof (info)) {
                                 case "number":
-                                        this.code= info as number;
+                                        this.code = info as number;
                                         this.verbose = getCmsErrorVerbose(this.code);
                                         break;
                                 case "string":
                                         this.verbose = info as string;
-                                        let code= getCmsErrorCode(this.verbose);
-                                        if( code ) this.code= code;
+                                        let code = getCmsErrorCode(this.verbose);
+                                        if (code) this.code = code;
                                         break;
                         }
 
@@ -626,8 +653,8 @@ export namespace AtImps {
         export class CMGL_TEST extends AtMessage {
                 constructor(raw: string,
                         public readonly range: [MessageStat, MessageStat]
-                ){
-                        super(atIds.CPBR_TEST, raw);
+                ) {
+                        super(atIds.CMGL_TEST, raw);
                 }
         }
 

@@ -28,7 +28,7 @@ atMessages = atMessagesParser([
 expect =
 `[
   {
-    "id": "+CPBR TEST",
+    "id": "+CMGL TEST",
     "raw": "\\r\\n+CMGL: (0-4)\\r\\n",
     "range": [
       0,
