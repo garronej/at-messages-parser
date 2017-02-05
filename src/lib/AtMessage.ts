@@ -121,17 +121,17 @@ export let atIdsUnso: AtMessageId[] = [
         atIds.HUAWEI_SRVST,
         atIds.HUAWEI_MODE,
 
-        atIds.HUAWEI_RSSI
-       atIds.HUAWEI_CSNR
-       atIds.HUAWEI_DSFLOWRPT
-       atIds.HUAWEI_EARST
-       atIds.HUAWEI_ACTIVEBAND
-       atIds.HUAWEI_RSSILVL
-       atIds.HUAWEI_HRSSILVL
-       atIds.HUAWEI_HDRRSSI
-       atIds.HUAWEI_CRSSI
-       atIds.HUAWEI_ANLEVEL
-       atIds.HUAWEI_BOOT
+        atIds.HUAWEI_RSSI,
+        atIds.HUAWEI_CSNR,
+        atIds.HUAWEI_DSFLOWRPT,
+        atIds.HUAWEI_EARST,
+        atIds.HUAWEI_ACTIVEBAND,
+        atIds.HUAWEI_RSSILVL,
+        atIds.HUAWEI_HRSSILVL,
+        atIds.HUAWEI_HDRRSSI,
+        atIds.HUAWEI_CRSSI,
+        atIds.HUAWEI_ANLEVEL,
+        atIds.HUAWEI_BOOT,
 
         atIds.CLIP,
         atIds.CCWA,
