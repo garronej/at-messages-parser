@@ -1,142 +1,130 @@
 %%
-
-        
 %%
 
 <> NEVER {}
 
 
-<P1> (\r|\n|.) {
+
+
+
+<UNSO> (\r|\n|.) {
 
         this.jjval= this.jjtext;
 
         return "UNPARSED";
 }
 
-<P1> \r\n(\+|\^)[A-Z]+ {
+<UNSO> \r\n(\+|\^)[A-Z]+.*(\r\n[a-fA-F0-9]+)?/\r\n {
+
+        //console.log("MESSAGE UNSO", JSON.stringify(this.jjtext));
+
+        var match= this.jjtext.match(/^\r\n([\+\^][A-Z]+)/);
         
-        var id= this.jjtext.substring(2);
+        var id= match[1];
 
         if( this.defs.atIdsUnso.indexOf(id) < 0 ){
                 this.jjval= this.jjtext;
                 return "UNPARSED";
         }
 
-        this.jjval= id;
-        
-        this.pushState("P1_REST");
 
-        if( this.defs.atIdsPdu.indexOf(id) >= 0 ) return "ID_UNSO_PDU";
-        else return "ID_UNSO";
+        this.jjtextPrev= this.jjtext;
+
+        this.pushState("UNSO_END");
 
 }
 
-<P1_REST> .*\r\n[a-fA-F0-9]+\r\n {
-        this.popState();
-        this.jjval= this.jjtext.split("\r\n");
-        return "REST_PDU";
-}
-
-<P1_REST> .*\r\n {
-        this.popState();
-        this.jjval = this.jjtext.slice(0, -2);
-        return "REST";
-}
-
-<P1_REST> (\r|\n|.) {
-        this.popState();
-        this.jjval= this.jjtext;
-        return "FAIL";
-}
-
-<P2> (\r|\n|.) {
-
-        this.jjval= this.jjtext;
-        
-        return "UNPARSED";
-}
-
-<P2> \r\n(\+|\^)[A-Z]+ {
-
-        var id= this.jjtext.substring(2);
-
-        if( this.defs.atIdsAll.indexOf(id) < 0 ){
-                this.jjval= this.jjtext;
-                return "UNPARSED";
-        }
-
-        this.jjval= id;
-
-        console.log("ID", JSON.stringify(this.jjtext));
-
-        this.pushState("P2_REST");
-
-        if( this.defs.atIdsPdu.indexOf(id) >= 0 ) return "ID_PDU";
-        else return "ID";
-
-}
-
-<P2_REST> .*\r\n[a-fA-F0-9]+\r\n\r\nOK\r\n {
+<UNSO_END> \r\n {
 
         this.popState();
 
-        this.jjval= this.jjtext.split("\r\n");
+        var regExp= /^(\r\n([\+\^][A-Z]+)(.*)(?:\r\n([a-fA-F0-9]+))?\r\n)$/;
 
-        return "REST_PDU";
+        this.jjval= (this.jjtextPrev + "\r\n").match(regExp);
+
+        /*
+        console.log("MESSAGE END", 
+        JSON.stringify(this.jjtextPrev+ "\r\n"), 
+        JSON.stringify(this.jjval)
+        );
+        */
+
+        return "MESSAGE";
 
 }
 
 
-<P2_REST> .*\r\n\r\nOK\r\n {
+<RESP> (\r|\n|.) {
 
-        this.popState();
-
-        this.jjval= this.jjtext.slice(0,-8);
-        return "REST";
-
-}
-
-<P2_REST> (\r|\n|.) {
-
-        this.popState();
-        this.jjval= this.jjtext;
-        return "FAIL";
-}
-
-
-
-<CNUM> (\r|\n|.) {
+        //console.log("UNPARSED FUCK", JSON.stringify(this.jjtext));
 
         this.jjval= this.jjtext;
         
         return "UNPARSED";
 }
 
-<CNUM> \r\n/\+CME\sERROR:\s?.+\+CNUM {
+<RESP> ^ATE0\r {
 
-        this.pushState("CNUM_LIST");
+        this.jjval= this.jjtext;
 
-        return "START_CNUM";
-
-}
-
-<CNUM> \r\n/\+CNUM {
-
-        this.pushState("CNUM_LIST");
-
-        return "START_CNUM";
+        return "ECHO";
 
 }
 
-<CNUM> \r\n/ERROR\+CNUM {
+<RESP> \r\n>\s/$ {
 
-        this.pushState("CNUM_LIST");
+        //console.log("INVITE", JSON.stringify(this.jjtext));
 
-        return "START_CNUM";
+        this.jjval= this.jjtext;
+
+        return "INVITE";
+}
+
+<RESP> \r\n(\+|\^)[A-Z]+.*(\r\n[a-fA-F0-9]+)?\r\n\r\nOK\r\n {
+
+        //console.log("MESSAGE", JSON.stringify(this.jjtext));
+        var regExp= /^(\r\n([\+\^][A-Z]+)(.*)(?:\r\n([a-fA-F0-9]+))?\r\n)(\r\nOK\r\n)?$/;
+
+        this.jjval= this.jjtext.match(regExp);
+
+        return "MESSAGE";
 
 }
 
-<CNUM_LIST> .+\r\n {
+
+<LIST_CNUM> (\r|\n|.) {
+
+        this.jjval= this.jjtext;
+        
+        return "UNPARSED";
+}
+
+<LIST_CNUM> \r\n/\+CME\sERROR:\s?.+\+CNUM {
+
+        this.pushState("LIST_CNUM_EXPECT");
+
+        return "START_LIST_CNUM";
+
+}
+
+<LIST_CNUM> \r\n/ERROR\+CNUM {
+
+        this.pushState("LIST_CNUM_EXPECT");
+
+        return "START_LIST_CNUM";
+
+}
+
+<LIST_CNUM> \r\n/\+CNUM {
+
+        this.pushState("LIST_CNUM_EXPECT");
+
+        return "START_LIST_CNUM";
+
+}
+
+
+<LIST_CNUM_EXPECT> .+\r\n {
 
         this.jjval= this.jjtext;
 
@@ -144,16 +132,17 @@
 
 }
 
-
-<CNUM_LIST> \r\n\r\nOK\r\n {
+<LIST_CNUM_EXPECT> \r\n\r\nOK\r\n {
 
         this.popState();
 
-        return "END_CNUM";
+        return "END_LIST_CNUM";
 }
 
 
-<CMGL> (\r|\n|.) {
+
+
+<LIST_CMGL> (\r|\n|.) {
 
         this.jjval= this.jjtext;
         
@@ -161,13 +150,13 @@
 }
 
 
-<CMGL> /\r\n\+CMGL {
+<LIST_CMGL> /\r\n\+CMGL {
 
-        this.pushState("CMGL_LIST");
+        this.pushState("LIST_CMGL_EXPECT");
 
 }
 
-<CMGL_LIST> \r\n\+CMGL:\s?.+\r\n[a-fA-F0-9]+ {
+<LIST_CMGL_EXPECT> \r\n\+CMGL:\s?.+\r\n[a-fA-F0-9]+ {
 
         this.jjval= this.jjtext;
 
@@ -175,26 +164,27 @@
 
 }
 
-<CMGL_LIST> \r\n\r\nOK\r\n {
+<LIST_CMGL_EXPECT> \r\n\r\nOK\r\n {
 
         this.popState();
 
         this.jjval= this.jjtext;
 
-        return "END_CMGL";
+        return "END_LIST_CMGL";
 
 }
 
 
 
-<P3> (\r|\n|.) {
+<FINAL> (\r|\n|.) {
 
         this.jjval= this.jjtext;
         
         return "UNPARSED";
 }
 
-<P3> \r\n.+\r\n {
+
+<FINAL> \r\n.+\r\n {
 
         if( this.jjtext.match(/^\r\n\+CM[ES]\ ERROR/) ){
 

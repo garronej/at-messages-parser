@@ -9,6 +9,10 @@ require("colors");
 
 export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
 
+        if( rawAtMessages === "\r\nOK\r\n" )
+                return [ new defs.AtMessage(defs.atIds.OK, "\r\nOK\r\n") ];
+        
+
         let parser = new Parser();
 
         let output = {
@@ -17,11 +21,17 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
                 "defs": defs
         }
 
-        for (let phase of ["P1", "P2", "CNUM", "CMGL", "P3"]) {
+        for (let phase of [
+                "UNSO",
+                "RESP",
+                "LIST_CNUM",
+                "LIST_CMGL",
+                "FINAL"
+        ]) {
 
                 if (!output.leftToParse) break;
 
-                console.log(`Phase ${phase}`.green);
+                //console.log(`Phase ${phase}`.green);
 
                 let lexer = new Lexer();
 
@@ -35,16 +45,18 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
 
                 parser.parse(lexer, output);
 
+                /*
                 console.log(`End ${phase}`.blue, {
                         "leftToParse": output.leftToParse,
                         "atMessages": output.atMessages
                 });
+                */
 
         }
 
-        let split= output.leftToParse.split("\r\nOK\r\n");
+        let split = output.leftToParse.split("\r\nOK\r\n");
 
-        if( split[split.length-1] ) throw new Error();
+        if (split[split.length - 1]) throw new Error();
 
         for (let i = 0; i < split.length - 1; i++) {
 
@@ -52,14 +64,13 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
                 output.atMessages.push(new defs.AtMessage(defs.atIds.OK, "\r\nOK\r\n"));
 
                 if (!raw) continue;
-                else{
-                        if( !raw.match(/^\r\n(?:\r|\n|.)+\r\n$/) )
+                else {
+                        if (!raw.match(/^\r\n(?:\r|\n|.)+\r\n$/))
                                 throw new Error();
-                        
+
                         output.atMessages.push(new defs.AtMessage(undefined, raw));
-                        
+
                 }
-                
 
         }
 

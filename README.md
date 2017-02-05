@@ -9,7 +9,10 @@ AtMessage an continue parsing.
 
 This library is easier to use with TypeScript but is also usable in raw JavaScript.
 
-Support only *AT+CMEE=0* and *AT+CMEE=1* mode, not *AT+CMEE=2*
+Note: You have to turn off the echo to use this library ( e.g. run ATE0\r )
+Note: AT+CPBR will be parsed correctly only if you read one entry at the time.
+(e.g. response to AT+CPBR=0,250\r will not be parsed, but AT+CPBR=4,4\r will)
+
 
 #Technical specifications
 
@@ -374,4 +377,48 @@ console.assert(expect === JSON.stringify(atMessages, null, 2),
 console.log(`Pass test ${test}`.green);
 
 console.log("All tests passed".green);
+````
+
+#Example
+
+````JavaScript
+try {
+
+        atMessages = atMessagesParser(input);
+
+} catch (error) {
+
+        process.exit(1);
+
+}
+
+
+//UsageExample
+
+for (let atMessage of atMessages) {
+
+        console.log(atMessage);
+
+        switch (atMessage.id) {
+                case atIds.CMGR:
+                        let atMessageCMGR = atMessage as AtMessageImplementations.CMGR;
+
+                        let length= atMessageCMGR.length;
+                        let pdu= atMessageCMGR.pdu;
+                        break;
+                case atIds.AT_LIST:
+                        let atMessageList = atMessage as AtMessageList;
+                        for( let atMessage of atMessageList.atMessages ){
+                                if( atMessage.id === atIds.CNUM ){
+                                        let atMessageCNUM= atMessage as AtMessageImplementations.CNUM;
+
+                                        let number= atMessageCNUM.number;
+                                }
+                        }
+                        break;
+                default:
+        }
+
+}
+
 ````
