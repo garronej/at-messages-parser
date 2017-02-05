@@ -5,8 +5,6 @@ import {
         getCmsErrorCode
 } from "./errorVerbose";
 
-import { descriptorToInstance } from "./descriptorToInstance";
-
 export type AtMessageId =
         "ECHO" |
         "AT LIST" |
