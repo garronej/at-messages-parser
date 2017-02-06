@@ -24,8 +24,8 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
         for (let phase of [
                 "UNSO",
                 "RESP",
-                "LIST_CNUM",
                 "LIST_CMGL",
+                "LIST_CNUM",
                 "FINAL"
         ]) {
 
@@ -46,10 +46,9 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
                 parser.parse(lexer, output);
 
                 /*
-                console.log(`End ${phase}`.blue, {
-                        "leftToParse": output.leftToParse,
-                        "atMessages": output.atMessages
-                });
+                console.log(`End ${phase}`.blue);
+                console.log(`LeftToParse: \n${JSON.stringify(output.leftToParse)}`.blue);
+                console.log(`atMessages: \n${JSON.stringify(output.atMessages,null,2)}`.green);
                 */
 
         }

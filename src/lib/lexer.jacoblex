@@ -14,11 +14,11 @@
         return "UNPARSED";
 }
 
-<UNSO> \r\n(\+|\^)[A-Z]+.*(\r\n[a-fA-F0-9]+)?/\r\n {
+<UNSO> \r\n(\+|\^)[A-Z]+ {
 
         //console.log("MESSAGE UNSO", JSON.stringify(this.jjtext));
 
-        var match= this.jjtext.match(/^\r\n([\+\^][A-Z]+)/);
+        var match= this.jjtext.match(/^\r\n([\+\^][A-Z]+)$/);
         
         var id= match[1];
 
@@ -27,20 +27,49 @@
                 return "UNPARSED";
         }
 
-
         this.jjtextPrev= this.jjtext;
 
-        this.pushState("UNSO_END");
+        if( this.defs.atIdsPdu.indexOf(id) >= 0 ){
+
+                this.pushState("UNSO_END_PDU");
+
+        }else{
+
+                this.pushState("UNSO_END");
+
+        }
+
+
+
 
 }
 
-<UNSO_END> \r\n {
+<UNSO_END_PDU> .*\r\n[a-fA-F0-9]+\r\n {
 
         this.popState();
 
-        var regExp= /^(\r\n([\+\^][A-Z]+)(.*)(?:\r\n([a-fA-F0-9]+))?\r\n)$/;
+        var regExp= /^(\r\n([\+\^][A-Z]+)(.*)\r\n([a-fA-F0-9]+)\r\n)$/;
 
-        this.jjval= (this.jjtextPrev + "\r\n").match(regExp);
+        this.jjval= (this.jjtextPrev + this.jjtext).match(regExp);
+
+        /*
+        console.log("MESSAGE END", 
+        JSON.stringify(this.jjtextPrev+ "\r\n"), 
+        JSON.stringify(this.jjval)
+        );
+        */
+
+        return "MESSAGE";
+
+}
+
+<UNSO_END> .*\r\n {
+
+        this.popState();
+
+        var regExp= /^(\r\n([\+\^][A-Z]+)(.*)\r\n)$/;
+
+        this.jjval= (this.jjtextPrev + this.jjtext).match(regExp);
 
         /*
         console.log("MESSAGE END", 
@@ -92,6 +121,40 @@
 }
 
 
+
+<LIST_CMGL> (\r|\n|.) {
+
+        this.jjval= this.jjtext;
+        
+        return "UNPARSED";
+}
+
+
+<LIST_CMGL> /\r\n\+CMGL {
+
+        this.pushState("LIST_CMGL_EXPECT");
+
+}
+
+<LIST_CMGL_EXPECT> \r\n\+CMGL:\s?.+\r\n[a-fA-F0-9]+ {
+
+        this.jjval= this.jjtext;
+
+        return "CMGL";
+
+}
+
+<LIST_CMGL_EXPECT> \r\n\r\nOK\r\n {
+
+        this.popState();
+
+        this.jjval= this.jjtext;
+
+        return "END_LIST_CMGL";
+
+}
+
+
 <LIST_CNUM> (\r|\n|.) {
 
         this.jjval= this.jjtext;
@@ -137,41 +200,6 @@
         this.popState();
 
         return "END_LIST_CNUM";
-}
-
-
-
-
-<LIST_CMGL> (\r|\n|.) {
-
-        this.jjval= this.jjtext;
-        
-        return "UNPARSED";
-}
-
-
-<LIST_CMGL> /\r\n\+CMGL {
-
-        this.pushState("LIST_CMGL_EXPECT");
-
-}
-
-<LIST_CMGL_EXPECT> \r\n\+CMGL:\s?.+\r\n[a-fA-F0-9]+ {
-
-        this.jjval= this.jjtext;
-
-        return "CMGL";
-
-}
-
-<LIST_CMGL_EXPECT> \r\n\r\nOK\r\n {
-
-        this.popState();
-
-        this.jjval= this.jjtext;
-
-        return "END_LIST_CMGL";
-
 }
 
 
