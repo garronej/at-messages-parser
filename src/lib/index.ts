@@ -29,9 +29,47 @@ export function atMessagesParser(rawAtMessages: string): defs.AtMessage[] {
                 "FINAL"
         ]) {
 
-                if (!output.leftToParse) break;
+                if (phase === "RESP") {
 
-                //console.log(`Phase ${phase}`.green);
+                        switch (output.leftToParse) {
+                                case "\r\n":
+                                        output.atMessages.push(new defs.AtMessage(
+                                                defs.atIds.ECHO,
+                                                output.leftToParse
+                                        ));
+                                        output.leftToParse = "";
+                                        break;
+                                case "ATE0\r\r\nOK\r\n":
+                                        output.atMessages.push(new defs.AtMessage(
+                                                defs.atIds.ECHO,
+                                                "ATE0\r"
+                                        ));
+                                        output.atMessages.push(new defs.AtMessage(
+                                                defs.atIds.OK,
+                                                "\r\nOK\r\n"
+                                        ));
+                                        output.leftToParse = "";
+                                        break;
+                                case "ATE0\r":
+                                        output.atMessages.push(new defs.AtMessage(
+                                                defs.atIds.ECHO,
+                                                output.leftToParse
+                                        ));
+                                        output.leftToParse = "";
+                                        break;
+                                case "\r\n> ":
+                                        output.atMessages.push(new defs.AtMessage(
+                                                defs.atIds.INVITE,
+                                                output.leftToParse
+                                        ));
+                                        output.leftToParse = "";
+                                        break;
+                                default:
+                        }
+
+                }
+
+                if (!output.leftToParse) break;
 
                 let lexer = new Lexer();
 

@@ -8,18 +8,24 @@ import {
 export type AtMessageId =
         "ECHO" |
         "AT LIST" |
-        "OK" | "CONNECT" | "RING" | "NO CARRIER" | "NO DIALTONE" | "BUSY" | "NO ANSWER" | "COMMAND NOT SUPPORT" | "TOO MANY PARAMETERS" |
+        "OK" | "CONNECT" | "RING" | "NO CARRIER" | "NO DIALTONE" | "BUSY" | 
+        "NO ANSWER" | "COMMAND NOT SUPPORT" | "TOO MANY PARAMETERS" |
         ">" |
         "ERROR" | "+CME ERROR" | "+CMS ERROR" |
         "+CMTI" | "+CMT" | "+CDSI" | "+CDS" | "^SIMST" | "^SRVST" | "^MODE" |
 
-        "^RSSI" | "^CSNR" | "^DSFLOWRPT" | "^EARST" | "^ACTIVEBAND" | "^RSSILVL" | "^HRSSILVL" | "^HDRRSSI" | "^CRSSI" | "^ANLEVEL" | "^BOOT" |
+        "^RSSI" | "^CSNR" | "^DSFLOWRPT" | "^EARST" | "^ACTIVEBAND" | 
+        "^RSSILVL" | "^HRSSILVL" | "^HDRRSSI" | "^CRSSI" | "^ANLEVEL" | "^BOOT" |
 
-        "+CLIP" | "+CCWA" | "+CRING" | "+CUSD" | "+CUSATP" | "+CUSATEND" | "+PACSP" | "^NWTIME" | "^SYSSTART" | "^ORIG" | "^THERM" | "^CONF" |
-        "^CONN" | "^CEND" | "^SMMEMFULL" | "^IPDATA" | "^IPSTATE" | "^TIMESETRULT" | "^DATASETRULT" | "^XDSTATUS" | "^POSITION" | "^POSEND" |
+        "+CLIP" | "+CCWA" | "+CRING" | "+CUSD" | "+CUSATP" | "+CUSATEND" | 
+        "+PACSP" | "^NWTIME" | "^SYSSTART" | "^ORIG" | "^THERM" | "^CONF" |
+        "^CONN" | "^CEND" | "^SMMEMFULL" | "^IPDATA" | "^IPSTATE" | "^TIMESETRULT" | 
+        "^DATASETRULT" | "^XDSTATUS" | "^POSITION" | "^POSEND" |
         "^WNINV" | "^FOTASTATE" | "^FWLSTATE" | "^NDISEND" | "^NDISSTAT" |
 
-        "+CNUM" | "+CMGR" | "+CPIN" | "+CMEE" | "+CMGL" | "+CMGS" | "+CPBS" | "+CPBR" | "+CPBR TEST" | "^CPIN" | "^SYSINFO" | "+CMGL TEST"
+        "+CNUM" | "+CMGR" | "+CPIN" | "+CMEE" | "+CMGL" | 
+        "+CMGS" | "+CPBS" | "+CPBR" | "+CPBR TEST" | "^CPIN" | 
+        "^SYSINFO" | "+CMGL TEST"
         ;
 
 
@@ -102,7 +108,8 @@ export let atIds = {
         "CPBR_TEST": "+CPBR TEST" as AtMessageId,
         "HUAWEI_CPIN": "^CPIN" as AtMessageId,
         "HUAWEI_SYSINFO": "^SYSINFO" as AtMessageId,
-        "CMGL_TEST": "+CMGL TEST" as AtMessageId
+        "CMGL_TEST": "+CMGL TEST" as AtMessageId,
+        "CPMS" : "+CPMS" as AtMessageId
 };
 
 export let atIdsAll: AtMessageId[] = (() => {

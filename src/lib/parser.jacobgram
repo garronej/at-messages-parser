@@ -10,13 +10,6 @@ Instruction= Message | ListCMGL | ListCNUM | Final
 
         this.leftToParse+= unparsed;
 
-} | 'ECHO' function(raw){
-
-        this.atMessages.push(new this.defs.AtMessage(this.defs.atIds.ECHO, raw));
-
-} | 'INVITE' function(raw){
-
-        this.atMessages.push(new this.defs.AtMessage(this.defs.atIds.INVITE, raw));
 };
 
 Message= 'MESSAGE' function(full_raw_id_rest_pdu_ok) {

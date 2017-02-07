@@ -87,27 +87,12 @@
 
         //console.log("UNPARSED FUCK", JSON.stringify(this.jjtext));
 
+
         this.jjval= this.jjtext;
         
         return "UNPARSED";
 }
 
-<RESP> ^ATE0\r {
-
-        this.jjval= this.jjtext;
-
-        return "ECHO";
-
-}
-
-<RESP> \r\n>\s/$ {
-
-        //console.log("INVITE", JSON.stringify(this.jjtext));
-
-        this.jjval= this.jjtext;
-
-        return "INVITE";
-}
 
 <RESP> \r\n(\+|\^)[A-Z]+.*(\r\n[a-fA-F0-9]+)?\r\n\r\nOK\r\n {
 
