@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -17,7 +14,6 @@ test= "final messages";
 atMessages = atMessagesParser([
   '\r\nERROR\r\n',
   '\r\nCONNECT\r\n',
-  '\r\nRING\r\n',
   '\r\nNO CARRIER\r\n',
   '\r\nNO DIALTONE\r\n',
   '\r\nBUSY\r\n',
@@ -26,61 +22,57 @@ atMessages = atMessagesParser([
   '\r\nTOO MANY PARAMETERS\r\n'
 ].join(""));
 
-expect = 
+expect=
 `[
   {
-    "id": "ERROR",
     "raw": "\\r\\nERROR\\r\\n",
+    "id": "ERROR",
     "isFinal": true,
     "isError": true
   },
   {
-    "id": "CONNECT",
     "raw": "\\r\\nCONNECT\\r\\n",
+    "id": "CONNECT",
     "isFinal": true
   },
   {
-    "id": "RING",
-    "raw": "\\r\\nRING\\r\\n",
-    "isFinal": true
-  },
-  {
-    "id": "NO CARRIER",
     "raw": "\\r\\nNO CARRIER\\r\\n",
+    "id": "NO_CARRIER",
     "isFinal": true,
     "isError": true
   },
   {
-    "id": "NO DIALTONE",
     "raw": "\\r\\nNO DIALTONE\\r\\n",
+    "id": "NO_DIALTONE",
     "isFinal": true,
     "isError": true
   },
   {
-    "id": "BUSY",
     "raw": "\\r\\nBUSY\\r\\n",
+    "id": "BUSY",
     "isFinal": true,
     "isError": true
   },
   {
-    "id": "NO ANSWER",
     "raw": "\\r\\nNO ANSWER\\r\\n",
+    "id": "NO_ANSWER",
     "isFinal": true,
     "isError": true
   },
   {
-    "id": "COMMAND NOT SUPPORT",
     "raw": "\\r\\nCOMMAND NOT SUPPORT\\r\\n",
+    "id": "COMMAND_NOT_SUPPORT",
     "isFinal": true,
     "isError": true
   },
   {
-    "id": "TOO MANY PARAMETERS",
     "raw": "\\r\\nTOO MANY PARAMETERS\\r\\n",
+    "id": "TOO_MANY_PARAMETERS",
     "isFinal": true,
     "isError": true
   }
 ]`;
+
 
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);

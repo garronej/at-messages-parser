@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -19,18 +16,20 @@ atMessages = atMessagesParser([
         '\r\nOK\r\n'
 ].join(""));
 
-expect = 
+expect =
 `[
   {
-    "id": "ECHO",
-    "raw": "ATE0\\r"
+    "raw": "ATE0\\r",
+    "id": "ECHO"
   },
   {
-    "id": "OK",
     "raw": "\\r\\nOK\\r\\n",
+    "id": "OK",
     "isFinal": true
   }
 ]`;
+
+
 
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);
@@ -41,13 +40,15 @@ atMessages = atMessagesParser('ATE0\r');
 expect = 
 `[
   {
-    "id": "ECHO",
-    "raw": "ATE0\\r"
+    "raw": "ATE0\\r",
+    "id": "ECHO"
   }
 ]`;
 
+
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);
+
 
 atMessages = atMessagesParser([
   '\r\n^SIMST: 255,1\r\n',
@@ -56,33 +57,35 @@ atMessages = atMessagesParser([
   "\r\nOK\r\n"
 ].join(""));
 
-expect=
+
+expect =
 `[
   {
-    "id": "^SIMST",
     "raw": "\\r\\n^SIMST: 255,1\\r\\n",
+    "id": "CX_SIMST_URC",
     "isUnsolicited": true,
     "simState": 255,
     "simStateName": "NO_SIM",
     "lock": true
   },
   {
-    "id": "ECHO",
-    "raw": "ATE0\\r"
+    "raw": "ATE0\\r",
+    "id": "ECHO"
   },
   {
-    "id": "+CDS",
     "raw": "\\r\\n+CDS: 12\\r\\n0891683108608805509134430000\\r\\n",
+    "id": "P_CDS_URC",
     "isUnsolicited": true,
     "length": 12,
     "pdu": "0891683108608805509134430000"
   },
   {
-    "id": "OK",
     "raw": "\\r\\nOK\\r\\n",
+    "id": "OK",
     "isFinal": true
   }
 ]`;
+
 
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);
@@ -96,20 +99,20 @@ atMessages = atMessagesParser([
 expect =
 `[
   {
-    "id": "^SIMST",
     "raw": "\\r\\n^SIMST: 255,1\\r\\n",
+    "id": "CX_SIMST_URC",
     "isUnsolicited": true,
     "simState": 255,
     "simStateName": "NO_SIM",
     "lock": true
   },
   {
-    "id": "ECHO",
-    "raw": "\\r\\n"
+    "raw": "\\r\\n",
+    "id": "ECHO"
   },
   {
-    "id": "+CDS",
     "raw": "\\r\\n+CDS: 12\\r\\n0891683108608805509134430000\\r\\n",
+    "id": "P_CDS_URC",
     "isUnsolicited": true,
     "length": 12,
     "pdu": "0891683108608805509134430000"
@@ -120,29 +123,33 @@ expect =
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);
 
+
 atMessages= atMessagesParser("\r\n");
 
-expect= 
+
+expect =
 `[
   {
-    "id": "ECHO",
-    "raw": "\\r\\n"
+    "raw": "\\r\\n",
+    "id": "ECHO"
   }
 ]`;
+
 
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);
 
 atMessages= atMessagesParser("\r\n> ");
 
-expect= 
+expect =
 `[
   {
-    "id": ">",
     "raw": "\\r\\n> ",
+    "id": "INVITE",
     "isFinal": true
   }
 ]`;
+
 
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);

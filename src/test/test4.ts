@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -22,11 +19,11 @@ atMessages = atMessagesParser([
         '\r\n+CMTI: "SM",26\r\n'
 ].join(""));
 
-expect=
+expect =
 `[
   {
-    "id": "^SYSINFO",
     "raw": "\\r\\n^SYSINFO:2,3,0,5,1,,4\\r\\n",
+    "id": "CX_SYSINFO_EXEC",
     "serviceStatus": 2,
     "serviceDomain": 3,
     "isRoaming": false,
@@ -40,20 +37,20 @@ expect=
     "simStateName": "VALID_SIM"
   },
   {
-    "id": "+CMTI",
     "raw": "\\r\\n+CMTI: \\"SM\\",26\\r\\n",
+    "id": "P_CMTI_URC",
     "isUnsolicited": true,
     "mem": "SM",
     "index": 26
   },
   {
-    "id": "OK",
     "raw": "\\r\\nOK\\r\\n",
+    "id": "OK",
     "isFinal": true
   },
   {
-    "id": "+CMTI",
     "raw": "\\r\\n+CMTI: \\"SM\\",26\\r\\n",
+    "id": "P_CMTI_URC",
     "isUnsolicited": true,
     "mem": "SM",
     "index": 26

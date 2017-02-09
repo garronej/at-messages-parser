@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -16,16 +13,18 @@ test= "reordering 2";
 
 atMessages = atMessagesParser([
   '\r\n^SYSIN',
-  '\r\n+CMTI: "SM",26\r\n',
-  'FO:2,3,0,5,1,,4\r\n',
+  '\r\n+CDS: 12\r\n0891683108608805509134430000\r\n',
+  'FO:2,3,0,5,',
+  '\r\n^BOOT:37478870,0,0,0,77\r\n',
+  '1,,4\r\n',
   '\r\nOK\r\n'
 ].join(""));
 
-expect=
+expect =
 `[
   {
-    "id": "^SYSINFO",
     "raw": "\\r\\n^SYSINFO:2,3,0,5,1,,4\\r\\n",
+    "id": "CX_SYSINFO_EXEC",
     "serviceStatus": 2,
     "serviceDomain": 3,
     "isRoaming": false,
@@ -39,15 +38,20 @@ expect=
     "simStateName": "VALID_SIM"
   },
   {
-    "id": "+CMTI",
-    "raw": "\\r\\n+CMTI: \\"SM\\",26\\r\\n",
+    "raw": "\\r\\n+CDS: 12\\r\\n0891683108608805509134430000\\r\\n",
+    "id": "P_CDS_URC",
     "isUnsolicited": true,
-    "mem": "SM",
-    "index": 26
+    "length": 12,
+    "pdu": "0891683108608805509134430000"
   },
   {
-    "id": "OK",
+    "raw": "\\r\\n^BOOT:37478870,0,0,0,77\\r\\n",
+    "id": "CX_BOOT_URC",
+    "isUnsolicited": true
+  },
+  {
     "raw": "\\r\\nOK\\r\\n",
+    "id": "OK",
     "isFinal": true
   }
 ]`;

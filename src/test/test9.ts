@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -21,35 +18,35 @@ atMessages= atMessagesParser([
   '\r\n+CME ERROR: operation not allowed\r\n',
 ].join(""));
 
-expect= 
+expect =
 `[
   {
-    "id": "+CMS ERROR",
     "raw": "\\r\\n+CMS ERROR: 301\\r\\n",
+    "id": "P_CMS_ERROR",
     "isFinal": true,
     "isError": true,
     "code": 301,
     "verbose": "SMS service of ME reserved"
   },
   {
-    "id": "+CME ERROR",
     "raw": "\\r\\n+CME ERROR: 3\\r\\n",
+    "id": "P_CME_ERROR",
     "isFinal": true,
     "isError": true,
     "code": 3,
     "verbose": "operation not allowed"
   },
   {
-    "id": "+CMS ERROR",
     "raw": "\\r\\n+CMS ERROR: SMS service of ME reserved\\r\\n",
+    "id": "P_CMS_ERROR",
     "isFinal": true,
     "isError": true,
     "verbose": "SMS service of ME reserved",
     "code": 301
   },
   {
-    "id": "+CME ERROR",
     "raw": "\\r\\n+CME ERROR: operation not allowed\\r\\n",
+    "id": "P_CME_ERROR",
     "isFinal": true,
     "isError": true,
     "verbose": "operation not allowed",

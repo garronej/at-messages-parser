@@ -2,35 +2,32 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
 let expect: string;
 let test: string;
 
-test= "unsolicited pdu";
+test= "implemented urc with pdu";
 
 atMessages = atMessagesParser([
         '\r\n+CMT: ,13\r\n0891683108608805F9240D91683109\r\n',
         '\r\n+CDS: 12\r\n0891683108608805509134430000\r\n',
 ].join(""));
 
-expect=
+expect = 
 `[
   {
-    "id": "+CMT",
     "raw": "\\r\\n+CMT: ,13\\r\\n0891683108608805F9240D91683109\\r\\n",
+    "id": "P_CMT_URC",
     "isUnsolicited": true,
     "length": 13,
     "pdu": "0891683108608805F9240D91683109"
   },
   {
-    "id": "+CDS",
     "raw": "\\r\\n+CDS: 12\\r\\n0891683108608805509134430000\\r\\n",
+    "id": "P_CDS_URC",
     "isUnsolicited": true,
     "length": 12,
     "pdu": "0891683108608805509134430000"

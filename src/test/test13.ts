@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -33,12 +30,11 @@ expect =
     "raw": "\\r\\nManufacturer: huawei\\r\\nModel: K3520\\r\\nRevision: 11.314.12.02.00\\r\\nIMEI: 353284020952548\\r\\n+GCAP: +CGSM,+DS,+ES\\r\\n"
   },
   {
-    "id": "OK",
     "raw": "\\r\\nOK\\r\\n",
+    "id": "OK",
     "isFinal": true
   }
 ]`;
-
 
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);

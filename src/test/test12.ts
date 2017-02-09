@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -16,19 +13,26 @@ test= "unso unimplemented";
 
 atMessages = atMessagesParser([
   '\r\n+PACSP0\r\n',
-  '\r\n^SYSSTART\r\n'
+  '\r\n^SYSSTART\r\n',
+  '\r\n^BOOT:37478870,0,0,0,77\r\n'
 ].join(""));
 
-expect= 
+
+expect =
 `[
   {
-    "id": "+PACSP",
     "raw": "\\r\\n+PACSP0\\r\\n",
+    "id": "P_PACSP_URC",
     "isUnsolicited": true
   },
   {
-    "id": "^SYSSTART",
     "raw": "\\r\\n^SYSSTART\\r\\n",
+    "id": "CX_SYSSTART_URC",
+    "isUnsolicited": true
+  },
+  {
+    "raw": "\\r\\n^BOOT:37478870,0,0,0,77\\r\\n",
+    "id": "CX_BOOT_URC",
     "isUnsolicited": true
   }
 ]`;

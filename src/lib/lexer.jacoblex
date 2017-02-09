@@ -5,8 +5,6 @@
 
 
 
-
-
 <UNSO> (\r|\n|.) {
 
         this.jjval= this.jjtext;
@@ -20,16 +18,16 @@
 
         var match= this.jjtext.match(/^\r\n([\+\^][A-Z]+)$/);
         
-        var id= match[1];
+        var token= match[1];
 
-        if( this.defs.atIdsUnso.indexOf(id) < 0 ){
+        if( !this.bl.isUnso(token) ){
                 this.jjval= this.jjtext;
                 return "UNPARSED";
         }
 
         this.jjtextPrev= this.jjtext;
 
-        if( this.defs.atIdsPdu.indexOf(id) >= 0 ){
+        if( this.bl.hasPdu(token) ){
 
                 this.pushState("UNSO_END_PDU");
 
@@ -38,8 +36,6 @@
                 this.pushState("UNSO_END");
 
         }
-
-
 
 
 }
@@ -207,14 +203,15 @@
 
         }
         
-        var id= this.jjtext.substring(2, this.jjtext.length-2);
+        var token= this.jjtext.substring(2, this.jjtext.length-2);
 
-        if( this.defs.atIdsFinal.indexOf(id) < 0 || id === this.defs.atIds.OK ){
+        if( !this.bl.isFinal(token) || token === "OK" ){
+
                 this.jjval= this.jjtext;
                 return "UNPARSED";
         }
 
-        this.jjval= id;
+        this.jjval= token;
 
         return "FINAL";
 

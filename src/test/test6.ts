@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -26,38 +23,44 @@ atMessages = atMessagesParser([
     "IMEI: 353284020952548\r\n",
     "+GCAP: +CGSM,+DS,+ES"
   ].join("") + "\r\n",
+  '\r\n^BOOT:37478870,0,0,0,77\r\n',
   "\r\nOK\r\n",
   '\r\n+CMT: ,13\r\n0891683108608805F9240D91683109\r\n'
 ].join(""));
 
-expect= 
+expect =
 `[
   {
-    "id": "OK",
     "raw": "\\r\\nOK\\r\\n",
+    "id": "OK",
     "isFinal": true
   },
   {
-    "id": "+CPIN",
     "raw": "\\r\\n+CPIN: SIM PIN\\r\\n",
+    "id": "P_CPIN_READ",
     "pinState": "SIM PIN"
   },
   {
-    "id": "OK",
     "raw": "\\r\\nOK\\r\\n",
+    "id": "OK",
     "isFinal": true
   },
   {
     "raw": "\\r\\nManufacturer: huawei\\r\\nModel: K3520\\r\\nRevision: 11.314.12.02.00\\r\\nIMEI: 353284020952548\\r\\n+GCAP: +CGSM,+DS,+ES\\r\\n"
   },
   {
-    "id": "OK",
+    "raw": "\\r\\n^BOOT:37478870,0,0,0,77\\r\\n",
+    "id": "CX_BOOT_URC",
+    "isUnsolicited": true
+  },
+  {
     "raw": "\\r\\nOK\\r\\n",
+    "id": "OK",
     "isFinal": true
   },
   {
-    "id": "+CMT",
     "raw": "\\r\\n+CMT: ,13\\r\\n0891683108608805F9240D91683109\\r\\n",
+    "id": "P_CMT_URC",
     "isUnsolicited": true,
     "length": 13,
     "pdu": "0891683108608805F9240D91683109"

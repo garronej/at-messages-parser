@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -37,12 +34,12 @@ atMessages= atMessagesParser([
 expect =
 `[
   {
-    "id": "AT LIST",
     "raw": "\\r\\n+CME ERROR: 25+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n\\r\\n",
+    "id": "LIST",
     "atMessages": [
       {
-        "id": "+CNUM",
         "raw": "+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n",
+        "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651906",
         "numberingPlanId": 1,
@@ -50,8 +47,8 @@ expect =
         "numberingPlanIdName": "ISDN_OR_TELEPHONY",
         "typeOfNumberName": "INTERNATIONAL_NUMBER",
         "error": {
-          "id": "+CME ERROR",
           "raw": "+CME ERROR: 25",
+          "id": "P_CME_ERROR",
           "isError": true,
           "code": 25,
           "verbose": "invalid characters in text string"
@@ -60,17 +57,16 @@ expect =
     ]
   },
   {
-    "id": "OK",
-    "raw": "\\r\\nOK\\r\\n",
-    "isFinal": true
+    "raw": "OK",
+    "id": "\\r\\nOK\\r\\n"
   },
   {
-    "id": "AT LIST",
     "raw": "\\r\\n+CME ERROR: invalid characters in text string+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n\\r\\n",
+    "id": "LIST",
     "atMessages": [
       {
-        "id": "+CNUM",
         "raw": "+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n",
+        "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651906",
         "numberingPlanId": 1,
@@ -78,8 +74,8 @@ expect =
         "numberingPlanIdName": "ISDN_OR_TELEPHONY",
         "typeOfNumberName": "INTERNATIONAL_NUMBER",
         "error": {
-          "id": "+CME ERROR",
           "raw": "+CME ERROR: invalid characters in text string",
+          "id": "P_CME_ERROR",
           "isError": true,
           "verbose": "invalid characters in text string",
           "code": 25
@@ -88,17 +84,16 @@ expect =
     ]
   },
   {
-    "id": "OK",
-    "raw": "\\r\\nOK\\r\\n",
-    "isFinal": true
+    "raw": "OK",
+    "id": "\\r\\nOK\\r\\n"
   },
   {
-    "id": "AT LIST",
     "raw": "\\r\\nERROR+CNUM: \\"\\",\\"+33671651907\\",145\\r\\n\\r\\n",
+    "id": "LIST",
     "atMessages": [
       {
-        "id": "+CNUM",
         "raw": "+CNUM: \\"\\",\\"+33671651907\\",145\\r\\n",
+        "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651907",
         "numberingPlanId": 1,
@@ -106,25 +101,24 @@ expect =
         "numberingPlanIdName": "ISDN_OR_TELEPHONY",
         "typeOfNumberName": "INTERNATIONAL_NUMBER",
         "error": {
-          "id": "ERROR",
           "raw": "ERROR",
+          "id": "ERROR",
           "isError": true
         }
       }
     ]
   },
   {
-    "id": "OK",
-    "raw": "\\r\\nOK\\r\\n",
-    "isFinal": true
+    "raw": "OK",
+    "id": "\\r\\nOK\\r\\n"
   },
   {
-    "id": "AT LIST",
     "raw": "\\r\\n+CNUM: \\"\\",\\"+33606894175\\",145\\r\\n+CME ERROR: 25+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n+CNUM: \\"Donn�es\\",\\"\\",0\\r\\n+CNUM: \\"Fax\\",\\"\\",0\\r\\n\\r\\n",
+    "id": "LIST",
     "atMessages": [
       {
-        "id": "+CNUM",
         "raw": "+CNUM: \\"\\",\\"+33606894175\\",145\\r\\n",
+        "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33606894175",
         "numberingPlanId": 1,
@@ -133,8 +127,8 @@ expect =
         "typeOfNumberName": "INTERNATIONAL_NUMBER"
       },
       {
-        "id": "+CNUM",
         "raw": "+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n",
+        "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651906",
         "numberingPlanId": 1,
@@ -142,16 +136,16 @@ expect =
         "numberingPlanIdName": "ISDN_OR_TELEPHONY",
         "typeOfNumberName": "INTERNATIONAL_NUMBER",
         "error": {
-          "id": "+CME ERROR",
           "raw": "+CME ERROR: 25",
+          "id": "P_CME_ERROR",
           "isError": true,
           "code": 25,
           "verbose": "invalid characters in text string"
         }
       },
       {
-        "id": "+CNUM",
         "raw": "+CNUM: \\"Donn�es\\",\\"\\",0\\r\\n",
+        "id": "P_CNUM_EXEC",
         "alpha": "Donn�es",
         "number": "",
         "numberingPlanId": 0,
@@ -160,8 +154,8 @@ expect =
         "typeOfNumberName": "UNKNOWN"
       },
       {
-        "id": "+CNUM",
         "raw": "+CNUM: \\"Fax\\",\\"\\",0\\r\\n",
+        "id": "P_CNUM_EXEC",
         "alpha": "Fax",
         "number": "",
         "numberingPlanId": 0,
@@ -172,11 +166,11 @@ expect =
     ]
   },
   {
-    "id": "OK",
-    "raw": "\\r\\nOK\\r\\n",
-    "isFinal": true
+    "raw": "OK",
+    "id": "\\r\\nOK\\r\\n"
   }
 ]`;
+
 
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);

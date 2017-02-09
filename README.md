@@ -14,6 +14,7 @@ Note: AT+CPBR will be parsed correctly only if you read one entry at the time.
 (e.g. response to AT+CPBR=0,250\r will not be parsed, but AT+CPBR=4,4\r will)
 
 
+
 #Technical specifications
 
 This module have been build according to this specification document:

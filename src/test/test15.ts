@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -18,11 +15,11 @@ atMessages = atMessagesParser([
   '\r\n^BOOT:37478870,0,0,0,77\r\n'
 ].join(""));
 
-expect = 
+expect =
 `[
   {
-    "id": "^BOOT",
     "raw": "\\r\\n^BOOT:37478870,0,0,0,77\\r\\n",
+    "id": "CX_BOOT_URC",
     "isUnsolicited": true
   }
 ]`;

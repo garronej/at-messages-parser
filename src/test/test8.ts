@@ -2,10 +2,7 @@ require("colors");
 
 import {
         atMessagesParser,
-        atIds,
-        AtMessage,
-        AtMessageList,
-        AtImps
+        AtMessage
 } from "../lib/index";
 
 let atMessages: AtMessage[];
@@ -19,14 +16,14 @@ atMessages = atMessagesParser([
   '\r\nOK\r\n'
 ].join(""));
 
-expect=
+expect = 
 `[
   {
     "raw": "\\r\\n+CPBS: (\\"SM\\",\\"EN\\",\\"ON\\")\\r\\n"
   },
   {
-    "id": "OK",
     "raw": "\\r\\nOK\\r\\n",
+    "id": "OK",
     "isFinal": true
   }
 ]`;
