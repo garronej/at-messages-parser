@@ -16,17 +16,17 @@ atMessages = atMessagesParser([
         '\r\n+CDS: 12\r\n0891683108608805509134430000\r\n',
 ].join(""));
 
-expect = 
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n+CMT: ,13\\r\\n0891683108608805F9240D91683109\\r\\n",
+    "raw": "\r\n+CMT: ,13\r\n0891683108608805F9240D91683109\r\n",
     "id": "P_CMT_URC",
     "isUnsolicited": true,
     "length": 13,
     "pdu": "0891683108608805F9240D91683109"
   },
   {
-    "raw": "\\r\\n+CDS: 12\\r\\n0891683108608805509134430000\\r\\n",
+    "raw": "\r\n+CDS: 12\r\n0891683108608805509134430000\r\n",
     "id": "P_CDS_URC",
     "isUnsolicited": true,
     "length": 12,

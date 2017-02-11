@@ -18,10 +18,10 @@ atMessages= atMessagesParser([
   '\r\n+CME ERROR: operation not allowed\r\n',
 ].join(""));
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n+CMS ERROR: 301\\r\\n",
+    "raw": "\r\n+CMS ERROR: 301\r\n",
     "id": "P_CMS_ERROR",
     "isFinal": true,
     "isError": true,
@@ -29,7 +29,7 @@ expect =
     "verbose": "SMS service of ME reserved"
   },
   {
-    "raw": "\\r\\n+CME ERROR: 3\\r\\n",
+    "raw": "\r\n+CME ERROR: 3\r\n",
     "id": "P_CME_ERROR",
     "isFinal": true,
     "isError": true,
@@ -37,7 +37,7 @@ expect =
     "verbose": "operation not allowed"
   },
   {
-    "raw": "\\r\\n+CMS ERROR: SMS service of ME reserved\\r\\n",
+    "raw": "\r\n+CMS ERROR: SMS service of ME reserved\r\n",
     "id": "P_CMS_ERROR",
     "isFinal": true,
     "isError": true,
@@ -45,7 +45,7 @@ expect =
     "code": 301
   },
   {
-    "raw": "\\r\\n+CME ERROR: operation not allowed\\r\\n",
+    "raw": "\r\n+CME ERROR: operation not allowed\r\n",
     "id": "P_CME_ERROR",
     "isFinal": true,
     "isError": true,

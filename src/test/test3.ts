@@ -31,31 +31,31 @@ atMessages = atMessagesParser([
   '\r\nOK\r\n'
 ].join(""));
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n+CPIN: SIM PIN\\r\\n",
+    "raw": "\r\n+CPIN: SIM PIN\r\n",
     "id": "P_CPIN_READ",
     "pinState": "SIM PIN"
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   },
   {
-    "raw": "\\r\\n+CMEE: 1\\r\\n",
+    "raw": "\r\n+CMEE: 1\r\n",
     "id": "P_CMEE_READ",
     "reportMode": 1,
     "reportModeName": "DEBUG_INFO_CODE"
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   },
   {
-    "raw": "\\r\\n^CPIN: READY,,10,3,10,3\\r\\n",
+    "raw": "\r\n^CPIN: READY,,10,3,10,3\r\n",
     "id": "CX_CPIN_READ",
     "pinState": "READY",
     "pukTimes": 10,
@@ -64,12 +64,12 @@ expect =
     "pin2Times": 3
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   },
   {
-    "raw": "\\r\\n^SYSINFO:2,3,0,5,1,1,0\\r\\n",
+    "raw": "\r\n^SYSINFO:2,3,0,5,1,1,0\r\n",
     "id": "CX_SYSINFO_EXEC",
     "serviceStatus": 2,
     "serviceDomain": 3,
@@ -85,34 +85,34 @@ expect =
     "simStateName": "VALID_SIM"
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   },
   {
-    "raw": "\\r\\n+CMGS: 135\\r\\n",
+    "raw": "\r\n+CMGS: 135\r\n",
     "id": "P_CMGS_SET",
     "mr": 135
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   },
   {
-    "raw": "\\r\\n+CPBS: \\"SM\\",3,50\\r\\n",
+    "raw": "\r\n+CPBS: \"SM\",3,50\r\n",
     "id": "P_CPBS_READ",
     "storage": "SM",
     "used": 3,
     "total": 50
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   },
   {
-    "raw": "\\r\\n+CPBR: 34,\\"+33678047133\\",145,\\"Sabine\\"\\r\\n",
+    "raw": "\r\n+CPBR: 34,\"+33678047133\",145,\"Sabine\"\r\n",
     "id": "P_CPBR_EXEC",
     "index": 34,
     "number": "+33678047133",
@@ -123,12 +123,12 @@ expect =
     "typeOfNumberName": "INTERNATIONAL_NUMBER"
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   },
   {
-    "raw": "\\r\\n+CPBR: (1-250),24,30\\r\\n",
+    "raw": "\r\n+CPBR: (1-250),24,30\r\n",
     "id": "P_CPBR_TEST",
     "range": [
       1,
@@ -138,7 +138,7 @@ expect =
     "tLength": 30
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   }

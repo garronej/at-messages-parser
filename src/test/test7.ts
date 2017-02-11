@@ -22,51 +22,51 @@ atMessages = atMessagesParser([
   '\r\nTOO MANY PARAMETERS\r\n'
 ].join(""));
 
-expect=
+expect= String.raw
 `[
   {
-    "raw": "\\r\\nERROR\\r\\n",
+    "raw": "\r\nERROR\r\n",
     "id": "ERROR",
     "isFinal": true,
     "isError": true
   },
   {
-    "raw": "\\r\\nCONNECT\\r\\n",
+    "raw": "\r\nCONNECT\r\n",
     "id": "CONNECT",
     "isFinal": true
   },
   {
-    "raw": "\\r\\nNO CARRIER\\r\\n",
+    "raw": "\r\nNO CARRIER\r\n",
     "id": "NO_CARRIER",
     "isFinal": true,
     "isError": true
   },
   {
-    "raw": "\\r\\nNO DIALTONE\\r\\n",
+    "raw": "\r\nNO DIALTONE\r\n",
     "id": "NO_DIALTONE",
     "isFinal": true,
     "isError": true
   },
   {
-    "raw": "\\r\\nBUSY\\r\\n",
+    "raw": "\r\nBUSY\r\n",
     "id": "BUSY",
     "isFinal": true,
     "isError": true
   },
   {
-    "raw": "\\r\\nNO ANSWER\\r\\n",
+    "raw": "\r\nNO ANSWER\r\n",
     "id": "NO_ANSWER",
     "isFinal": true,
     "isError": true
   },
   {
-    "raw": "\\r\\nCOMMAND NOT SUPPORT\\r\\n",
+    "raw": "\r\nCOMMAND NOT SUPPORT\r\n",
     "id": "COMMAND_NOT_SUPPORT",
     "isFinal": true,
     "isError": true
   },
   {
-    "raw": "\\r\\nTOO MANY PARAMETERS\\r\\n",
+    "raw": "\r\nTOO MANY PARAMETERS\r\n",
     "id": "TOO_MANY_PARAMETERS",
     "isFinal": true,
     "isError": true

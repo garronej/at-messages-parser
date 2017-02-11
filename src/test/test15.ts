@@ -15,10 +15,10 @@ atMessages = atMessagesParser([
   '\r\n^BOOT:37478870,0,0,0,77\r\n'
 ].join(""));
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n^BOOT:37478870,0,0,0,77\\r\\n",
+    "raw": "\r\n^BOOT:37478870,0,0,0,77\r\n",
     "id": "CX_BOOT_URC",
     "isUnsolicited": true
   }

@@ -16,13 +16,13 @@ atMessages = atMessagesParser([
   '\r\nOK\r\n'
 ].join(""));
 
-expect = 
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n+CPBS: (\\"SM\\",\\"EN\\",\\"ON\\")\\r\\n"
+    "raw": "\r\n+CPBS: (\"SM\",\"EN\",\"ON\")\r\n"
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   }

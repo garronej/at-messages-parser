@@ -19,10 +19,10 @@ atMessages = atMessagesParser([
         '\r\n+CMTI: "SM",26\r\n'
 ].join(""));
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n^SYSINFO:2,3,0,5,1,,4\\r\\n",
+    "raw": "\r\n^SYSINFO:2,3,0,5,1,,4\r\n",
     "id": "CX_SYSINFO_EXEC",
     "serviceStatus": 2,
     "serviceDomain": 3,
@@ -37,19 +37,19 @@ expect =
     "simStateName": "VALID_SIM"
   },
   {
-    "raw": "\\r\\n+CMTI: \\"SM\\",26\\r\\n",
+    "raw": "\r\n+CMTI: \"SM\",26\r\n",
     "id": "P_CMTI_URC",
     "isUnsolicited": true,
     "mem": "SM",
     "index": 26
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   },
   {
-    "raw": "\\r\\n+CMTI: \\"SM\\",26\\r\\n",
+    "raw": "\r\n+CMTI: \"SM\",26\r\n",
     "id": "P_CMTI_URC",
     "isUnsolicited": true,
     "mem": "SM",

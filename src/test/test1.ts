@@ -21,24 +21,24 @@ atMessages = atMessagesParser([
         '\r\n^MODE: 3,4\r\n'
 ].join(""));
 
-expect = 
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n+CMTI: \\"SM\\",26\\r\\n",
+    "raw": "\r\n+CMTI: \"SM\",26\r\n",
     "id": "P_CMTI_URC",
     "isUnsolicited": true,
     "mem": "SM",
     "index": 26
   },
   {
-    "raw": "\\r\\n+CDSI: \\"SM\\",0\\r\\n",
+    "raw": "\r\n+CDSI: \"SM\",0\r\n",
     "id": "P_CDSI_URC",
     "isUnsolicited": true,
     "mem": "SM",
     "index": 0
   },
   {
-    "raw": "\\r\\n^SIMST: 255,1\\r\\n",
+    "raw": "\r\n^SIMST: 255,1\r\n",
     "id": "CX_SIMST_URC",
     "isUnsolicited": true,
     "simState": 255,
@@ -46,14 +46,14 @@ expect =
     "lock": true
   },
   {
-    "raw": "\\r\\n^SRVST: 0\\r\\n",
+    "raw": "\r\n^SRVST: 0\r\n",
     "id": "CX_SRVST_URC",
     "isUnsolicited": true,
     "serviceStatus": 0,
     "serviceStatusName": "NO_SERVICES"
   },
   {
-    "raw": "\\r\\n^MODE: 3,4\\r\\n",
+    "raw": "\r\n^MODE: 3,4\r\n",
     "id": "CX_MODE_URC",
     "isUnsolicited": true,
     "sysMode": 3,

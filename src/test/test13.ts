@@ -24,13 +24,13 @@ atMessages = atMessagesParser([
         "\r\nOK\r\n"
 ].join(""));
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\nManufacturer: huawei\\r\\nModel: K3520\\r\\nRevision: 11.314.12.02.00\\r\\nIMEI: 353284020952548\\r\\n+GCAP: +CGSM,+DS,+ES\\r\\n"
+    "raw": "\r\nManufacturer: huawei\r\nModel: K3520\r\nRevision: 11.314.12.02.00\r\nIMEI: 353284020952548\r\n+GCAP: +CGSM,+DS,+ES\r\n"
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   }

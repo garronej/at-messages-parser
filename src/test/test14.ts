@@ -16,14 +16,14 @@ atMessages = atMessagesParser([
         '\r\nOK\r\n'
 ].join(""));
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "ATE0\\r",
+    "raw": "ATE0\r",
     "id": "ECHO"
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   }
@@ -37,10 +37,10 @@ console.assert(expect === JSON.stringify(atMessages, null, 2),
 
 atMessages = atMessagesParser('ATE0\r');
 
-expect = 
+expect = String.raw
 `[
   {
-    "raw": "ATE0\\r",
+    "raw": "ATE0\r",
     "id": "ECHO"
   }
 ]`;
@@ -58,10 +58,10 @@ atMessages = atMessagesParser([
 ].join(""));
 
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n^SIMST: 255,1\\r\\n",
+    "raw": "\r\n^SIMST: 255,1\r\n",
     "id": "CX_SIMST_URC",
     "isUnsolicited": true,
     "simState": 255,
@@ -69,18 +69,18 @@ expect =
     "lock": true
   },
   {
-    "raw": "ATE0\\r",
+    "raw": "ATE0\r",
     "id": "ECHO"
   },
   {
-    "raw": "\\r\\n+CDS: 12\\r\\n0891683108608805509134430000\\r\\n",
+    "raw": "\r\n+CDS: 12\r\n0891683108608805509134430000\r\n",
     "id": "P_CDS_URC",
     "isUnsolicited": true,
     "length": 12,
     "pdu": "0891683108608805509134430000"
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   }
@@ -96,10 +96,10 @@ atMessages = atMessagesParser([
   '\r\n+CDS: 12\r\n0891683108608805509134430000\r\n',
 ].join(""));
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n^SIMST: 255,1\\r\\n",
+    "raw": "\r\n^SIMST: 255,1\r\n",
     "id": "CX_SIMST_URC",
     "isUnsolicited": true,
     "simState": 255,
@@ -107,11 +107,11 @@ expect =
     "lock": true
   },
   {
-    "raw": "\\r\\n",
+    "raw": "\r\n",
     "id": "ECHO"
   },
   {
-    "raw": "\\r\\n+CDS: 12\\r\\n0891683108608805509134430000\\r\\n",
+    "raw": "\r\n+CDS: 12\r\n0891683108608805509134430000\r\n",
     "id": "P_CDS_URC",
     "isUnsolicited": true,
     "length": 12,
@@ -127,10 +127,10 @@ console.assert(expect === JSON.stringify(atMessages, null, 2),
 atMessages= atMessagesParser("\r\n");
 
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n",
+    "raw": "\r\n",
     "id": "ECHO"
   }
 ]`;
@@ -141,10 +141,10 @@ console.assert(expect === JSON.stringify(atMessages, null, 2),
 
 atMessages= atMessagesParser("\r\n> ");
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n> ",
+    "raw": "\r\n> ",
     "id": "INVITE",
     "isFinal": true
   }

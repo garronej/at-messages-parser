@@ -20,10 +20,10 @@ atMessages = atMessagesParser([
   '\r\nOK\r\n'
 ].join(""));
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n^SYSINFO:2,3,0,5,1,,4\\r\\n",
+    "raw": "\r\n^SYSINFO:2,3,0,5,1,,4\r\n",
     "id": "CX_SYSINFO_EXEC",
     "serviceStatus": 2,
     "serviceDomain": 3,
@@ -38,19 +38,19 @@ expect =
     "simStateName": "VALID_SIM"
   },
   {
-    "raw": "\\r\\n+CDS: 12\\r\\n0891683108608805509134430000\\r\\n",
+    "raw": "\r\n+CDS: 12\r\n0891683108608805509134430000\r\n",
     "id": "P_CDS_URC",
     "isUnsolicited": true,
     "length": 12,
     "pdu": "0891683108608805509134430000"
   },
   {
-    "raw": "\\r\\n^BOOT:37478870,0,0,0,77\\r\\n",
+    "raw": "\r\n^BOOT:37478870,0,0,0,77\r\n",
     "id": "CX_BOOT_URC",
     "isUnsolicited": true
   },
   {
-    "raw": "\\r\\nOK\\r\\n",
+    "raw": "\r\nOK\r\n",
     "id": "OK",
     "isFinal": true
   }

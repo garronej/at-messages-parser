@@ -31,14 +31,14 @@ atMessages= atMessagesParser([
         "\r\nOK\r\n"
 ].join(""));
 
-expect =
+expect = String.raw
 `[
   {
-    "raw": "\\r\\n+CME ERROR: 25+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n\\r\\n",
+    "raw": "\r\n+CME ERROR: 25+CNUM: \"\",\"+33671651906\",145\r\n\r\n",
     "id": "LIST",
     "atMessages": [
       {
-        "raw": "+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n",
+        "raw": "+CNUM: \"\",\"+33671651906\",145\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651906",
@@ -58,14 +58,14 @@ expect =
   },
   {
     "raw": "OK",
-    "id": "\\r\\nOK\\r\\n"
+    "id": "\r\nOK\r\n"
   },
   {
-    "raw": "\\r\\n+CME ERROR: invalid characters in text string+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n\\r\\n",
+    "raw": "\r\n+CME ERROR: invalid characters in text string+CNUM: \"\",\"+33671651906\",145\r\n\r\n",
     "id": "LIST",
     "atMessages": [
       {
-        "raw": "+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n",
+        "raw": "+CNUM: \"\",\"+33671651906\",145\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651906",
@@ -85,14 +85,14 @@ expect =
   },
   {
     "raw": "OK",
-    "id": "\\r\\nOK\\r\\n"
+    "id": "\r\nOK\r\n"
   },
   {
-    "raw": "\\r\\nERROR+CNUM: \\"\\",\\"+33671651907\\",145\\r\\n\\r\\n",
+    "raw": "\r\nERROR+CNUM: \"\",\"+33671651907\",145\r\n\r\n",
     "id": "LIST",
     "atMessages": [
       {
-        "raw": "+CNUM: \\"\\",\\"+33671651907\\",145\\r\\n",
+        "raw": "+CNUM: \"\",\"+33671651907\",145\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651907",
@@ -110,14 +110,14 @@ expect =
   },
   {
     "raw": "OK",
-    "id": "\\r\\nOK\\r\\n"
+    "id": "\r\nOK\r\n"
   },
   {
-    "raw": "\\r\\n+CNUM: \\"\\",\\"+33606894175\\",145\\r\\n+CME ERROR: 25+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n+CNUM: \\"Donn�es\\",\\"\\",0\\r\\n+CNUM: \\"Fax\\",\\"\\",0\\r\\n\\r\\n",
+    "raw": "\r\n+CNUM: \"\",\"+33606894175\",145\r\n+CME ERROR: 25+CNUM: \"\",\"+33671651906\",145\r\n+CNUM: \"Donn�es\",\"\",0\r\n+CNUM: \"Fax\",\"\",0\r\n\r\n",
     "id": "LIST",
     "atMessages": [
       {
-        "raw": "+CNUM: \\"\\",\\"+33606894175\\",145\\r\\n",
+        "raw": "+CNUM: \"\",\"+33606894175\",145\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33606894175",
@@ -127,7 +127,7 @@ expect =
         "typeOfNumberName": "INTERNATIONAL_NUMBER"
       },
       {
-        "raw": "+CNUM: \\"\\",\\"+33671651906\\",145\\r\\n",
+        "raw": "+CNUM: \"\",\"+33671651906\",145\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651906",
@@ -144,7 +144,7 @@ expect =
         }
       },
       {
-        "raw": "+CNUM: \\"Donn�es\\",\\"\\",0\\r\\n",
+        "raw": "+CNUM: \"Donn�es\",\"\",0\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "Donn�es",
         "number": "",
@@ -154,7 +154,7 @@ expect =
         "typeOfNumberName": "UNKNOWN"
       },
       {
-        "raw": "+CNUM: \\"Fax\\",\\"\\",0\\r\\n",
+        "raw": "+CNUM: \"Fax\",\"\",0\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "Fax",
         "number": "",
@@ -167,7 +167,7 @@ expect =
   },
   {
     "raw": "OK",
-    "id": "\\r\\nOK\\r\\n"
+    "id": "\r\nOK\r\n"
   }
 ]`;
 
