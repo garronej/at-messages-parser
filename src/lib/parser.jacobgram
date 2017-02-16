@@ -21,8 +21,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
     let pdu= full_raw_token_rest_pdu_ok[4]
     let ok= full_raw_token_rest_pdu_ok[5];
     
-    let AtImps= this.bl.AtImps;
-    let AtMessage= this.bl.AtMessage;
+    let AtImps= this.bl.AtImps, AtMessage= this.bl.AtMessage;
     
     let atMessage;
     let match;
@@ -329,7 +328,7 @@ ListCNUM= 'START_LIST_CNUM' ListRawCNUM 'END_LIST_CNUM' function(_, listRawCNUM)
 
     this.atMessages.push(new AtMessageList(raw, atMessages));
 
-    this.atMessages.push(new AtMessage(this.bl.atIdDict.OK, "\r\nOK\r\n"));
+    this.atMessages.push(new AtMessage("\r\nOK\r\n", this.bl.atIdDict.OK));
 
 };
 

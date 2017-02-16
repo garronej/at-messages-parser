@@ -57,8 +57,9 @@ expect = String.raw
     ]
   },
   {
-    "raw": "OK",
-    "id": "\r\nOK\r\n"
+    "raw": "\r\nOK\r\n",
+    "id": "OK",
+    "isFinal": true
   },
   {
     "raw": "\r\n+CME ERROR: invalid characters in text string+CNUM: \"\",\"+33671651906\",145\r\n\r\n",
@@ -84,8 +85,9 @@ expect = String.raw
     ]
   },
   {
-    "raw": "OK",
-    "id": "\r\nOK\r\n"
+    "raw": "\r\nOK\r\n",
+    "id": "OK",
+    "isFinal": true
   },
   {
     "raw": "\r\nERROR+CNUM: \"\",\"+33671651907\",145\r\n\r\n",
@@ -109,8 +111,9 @@ expect = String.raw
     ]
   },
   {
-    "raw": "OK",
-    "id": "\r\nOK\r\n"
+    "raw": "\r\nOK\r\n",
+    "id": "OK",
+    "isFinal": true
   },
   {
     "raw": "\r\n+CNUM: \"\",\"+33606894175\",145\r\n+CME ERROR: 25+CNUM: \"\",\"+33671651906\",145\r\n+CNUM: \"Donn�es\",\"\",0\r\n+CNUM: \"Fax\",\"\",0\r\n\r\n",
@@ -166,8 +169,9 @@ expect = String.raw
     ]
   },
   {
-    "raw": "OK",
-    "id": "\r\nOK\r\n"
+    "raw": "\r\nOK\r\n",
+    "id": "OK",
+    "isFinal": true
   }
 ]`;
 
