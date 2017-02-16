@@ -38,7 +38,7 @@ jspm_packages
 
 out
 
-./src/lib/businessLogic/generated
+src/lib/businessLogic/generated
 
 .vscode
 
