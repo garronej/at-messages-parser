@@ -45,7 +45,7 @@ export class CX_SRVST_URC extends AtMessage {
 export class P_CME_ERROR extends AtMessage {
 
     public readonly verbose: string;
-    public code?: number;
+    public readonly code: number;
 
     constructor(raw: string,
         info: number | string) {
@@ -69,7 +69,7 @@ export class P_CME_ERROR extends AtMessage {
 
 export class P_CMS_ERROR extends AtMessage {
     public readonly verbose: string;
-    public code?: number;
+    public readonly code: number;
 
     constructor(raw: string,
         info: number | string) {

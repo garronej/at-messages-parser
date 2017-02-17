@@ -22,7 +22,7 @@ export function getCmeErrorCode(verbose: string): number {
 
     }
     
-    return undefined;
+    return NaN;
 
 }
 
@@ -47,7 +47,7 @@ export function getCmsErrorCode(verbose: string): number{
 
     }
 
-    return undefined;
+    return NaN;
 
 }
 
@@ -56,11 +56,13 @@ export function getCmsErrorVerbose(errorNo: number): string {
     if (128 <= errorNo && errorNo <= 255) return cmsErrorDictionary["128-255"];
     if (512 <= errorNo) return cmsErrorDictionary["512.."];
 
-    let out: string = undefined;
+    let out: string | undefined;
 
     out = cmsErrorDictionary[errorNo];
 
-    if (out === undefined) return "reserved"
-    else return out
+    if (out === undefined)
+        return "reserved"
+    else
+        return out
 }
 

@@ -179,12 +179,14 @@ function reorder(
 
         })(rawAtMessages);
 
-        let mapPositionAtMessage = {};
+        let mapPositionAtMessage: { 
+                [pos: number]: bl.AtMessage; 
+        } = {};
 
         for (let i = 0; i < atMessages.length; i++)
                 mapPositionAtMessage[strMap.extract(atMessages[i].raw)] = atMessages[i];
 
-        let atMessagesSorted = [];
+        let atMessagesSorted: bl.AtMessage[] = [];
 
         for (let i of Object.keys(mapPositionAtMessage).sort(function (a, b) {
                 return parseInt(a) < parseInt(b) ? -1 : 1;
