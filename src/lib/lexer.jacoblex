@@ -202,6 +202,14 @@
                 return "CM_ERROR";
 
         }
+
+        if( this.jjtext === "\r\nERROR\r\n" ){
+
+                this.jjval= this.jjtext;
+
+                return "ERROR";
+
+        }
         
         var token= this.jjtext.substring(2, this.jjtext.length-2);
 

@@ -296,7 +296,7 @@ ListCNUM= 'START_LIST_CNUM' ListRawCNUM 'END_LIST_CNUM' function(_, listRawCNUM)
         let token= "ERROR";
         let info;
 
-        if( match= rawError.match(/^(\+CM[ES]\ ERROR):\ ?(.+)$/) ){
+        if( match= rawError.match(/^(\+CME\ ERROR):\ ?(.+)$/) ){
 
             token= match[1];
 
@@ -310,15 +310,14 @@ ListCNUM= 'START_LIST_CNUM' ListRawCNUM 'END_LIST_CNUM' function(_, listRawCNUM)
             case "+CME ERROR":
                 error = new AtImps.P_CME_ERROR(rawError, info);
                 break;
-            case "+CMS ERROR":
-                error = new AtImps.P_CMS_ERROR(rawError, info);
-                break;
             case "ERROR":
-                error= new AtMessage(rawError, this.bl.atIdDict.ERROR);
+                error= new AtImps.ERROR(rawError);
                 break;
         }
 
         delete error.isFinal;
+
+        atMessageCNUM.raw= error.raw + atMessageCNUM.raw;
 
         atMessageCNUM.error= error;
 
@@ -350,6 +349,9 @@ Final= 'FINAL' function(token){
         "\r\n"+token+"\r\n", 
         this.bl.tokenToId(token)
     ));
+} | 'ERROR' function(raw){
+
+    this.atMessages.push(new this.bl.AtImps.ERROR(raw));
 
 } | 'CM_ERROR' function(raw){
     "use strict";

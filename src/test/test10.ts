@@ -15,6 +15,7 @@ atMessages= atMessagesParser([
         '\r\n+CME ERROR: 25',
         '+CNUM: "","+33671651906",145\r\n\r\n',
         '\r\nOK\r\n',
+        '\r\n^MODE: 3,4\r\n',
         '\r\n+CME ERROR: invalid characters in text string',
         '+CNUM: "","+33671651906",145\r\n\r\n',
         '\r\nOK\r\n',
@@ -38,7 +39,7 @@ expect = String.raw
     "id": "LIST",
     "atMessages": [
       {
-        "raw": "+CNUM: \"\",\"+33671651906\",145\r\n",
+        "raw": "+CME ERROR: 25+CNUM: \"\",\"+33671651906\",145\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651906",
@@ -62,11 +63,20 @@ expect = String.raw
     "isFinal": true
   },
   {
+    "raw": "\r\n^MODE: 3,4\r\n",
+    "id": "CX_MODE_URC",
+    "isUnsolicited": true,
+    "sysMode": 3,
+    "sysSubMode": 4,
+    "sysModeName": "GSM_GPRS",
+    "sysSubModeName": "WCDMA"
+  },
+  {
     "raw": "\r\n+CME ERROR: invalid characters in text string+CNUM: \"\",\"+33671651906\",145\r\n\r\n",
     "id": "LIST",
     "atMessages": [
       {
-        "raw": "+CNUM: \"\",\"+33671651906\",145\r\n",
+        "raw": "+CME ERROR: invalid characters in text string+CNUM: \"\",\"+33671651906\",145\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651906",
@@ -94,7 +104,7 @@ expect = String.raw
     "id": "LIST",
     "atMessages": [
       {
-        "raw": "+CNUM: \"\",\"+33671651907\",145\r\n",
+        "raw": "ERROR+CNUM: \"\",\"+33671651907\",145\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651907",
@@ -130,7 +140,7 @@ expect = String.raw
         "typeOfNumberName": "INTERNATIONAL_NUMBER"
       },
       {
-        "raw": "+CNUM: \"\",\"+33671651906\",145\r\n",
+        "raw": "+CME ERROR: 25+CNUM: \"\",\"+33671651906\",145\r\n",
         "id": "P_CNUM_EXEC",
         "alpha": "",
         "number": "+33671651906",
@@ -174,7 +184,6 @@ expect = String.raw
     "isFinal": true
   }
 ]`;
-
 
 console.assert(expect === JSON.stringify(atMessages, null, 2),
   `Fail test ${test}`.red);

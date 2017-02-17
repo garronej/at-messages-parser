@@ -148,6 +148,7 @@ export class P_CNUM_EXEC extends AtMessage {
     public readonly typeOfNumberName: string;
     public readonly numberingPlanId: en.NumberingPlanIdentification;
     public readonly numberingPlanIdName: string;
+    public error: ERROR | P_CME_ERROR;
 
     constructor(raw: string,
         public readonly alpha: string,
@@ -323,7 +324,13 @@ export class P_CPBS_READ extends AtMessage {
 
 export class CONNECT extends AtMessage {
     constructor(raw: string,
-        public readonly baudRate: number){
-            super(raw);
-        }
+        public readonly baudRate: number) {
+        super(raw);
+    }
+}
+
+export class ERROR extends AtMessage {
+    constructor(raw: string) {
+        super(raw);
+    }
 }
