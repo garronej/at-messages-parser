@@ -172,7 +172,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
             );
             break;
         case "+CPBR":
-            if( match= rest.match(/^:\ ?([0-9]+),"([^"]*)",([0-9]+),"([^"]*)"$/) ){
+            if( match= rest.match(/^:\ ?([0-9]+),"([^"]*)",([0-9]+),"(.*)"$/) ){
                 atMessage= new AtImps.P_CPBR_EXEC(
                     raw,
                     parseInt(match[1]),
@@ -280,7 +280,7 @@ ListCNUM= 'START_LIST_CNUM' ListRawCNUM 'END_LIST_CNUM' function(_, listRawCNUM)
         let rawError= split[0];
         let rest= split[1];
 
-        let match= rest.match(/^:\ ?"([^"]*)","([^"]*)",([0-9]+)/);
+        let match= rest.match(/^:\ ?"(.*)","([^"]*)",([0-9]+)/);
 
         let atMessageCNUM= new AtImps.P_CNUM_EXEC("+CNUM"+rest,
             match[1],

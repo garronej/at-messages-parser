@@ -25,7 +25,7 @@ atMessages= atMessagesParser([
                 '\r\n',
                 '+CNUM: "","+33606894175",145\r\n',
                 '+CME ERROR: 25+CNUM: "","+33671651906",145\r\n',
-                '+CNUM: "Donn�es","",0\r\n',
+                '+CNUM: "Do"nn�es","",0\r\n',
                 '+CNUM: "Fax","",0\r\n',
                 '\r\n'
         ].join(""),
@@ -126,7 +126,7 @@ expect = String.raw
     "isFinal": true
   },
   {
-    "raw": "\r\n+CNUM: \"\",\"+33606894175\",145\r\n+CME ERROR: 25+CNUM: \"\",\"+33671651906\",145\r\n+CNUM: \"Donn�es\",\"\",0\r\n+CNUM: \"Fax\",\"\",0\r\n\r\n",
+    "raw": "\r\n+CNUM: \"\",\"+33606894175\",145\r\n+CME ERROR: 25+CNUM: \"\",\"+33671651906\",145\r\n+CNUM: \"Do\"nn�es\",\"\",0\r\n+CNUM: \"Fax\",\"\",0\r\n\r\n",
     "id": "LIST",
     "atMessages": [
       {
@@ -157,9 +157,9 @@ expect = String.raw
         }
       },
       {
-        "raw": "+CNUM: \"Donn�es\",\"\",0\r\n",
+        "raw": "+CNUM: \"Do\"nn�es\",\"\",0\r\n",
         "id": "P_CNUM_EXEC",
-        "alpha": "Donn�es",
+        "alpha": "Do\"nn�es",
         "number": "",
         "numberingPlanId": 0,
         "typeOfNumber": 0,
