@@ -10,7 +10,7 @@ let unsoTokens = [
         "^NWTIME" , "^SYSSTART" , "^ORIG" , "^THERM" , "^CONF" , "^CONN" , 
         "^CEND" , "^SMMEMFULL" , "^IPDATA" , "^IPSTATE" , "^TIMESETRULT" , 
         "^DATASETRULT" , "^XDSTATUS" , "^POSITION" , "^POSEND" , "^WNINV" , 
-        "^FOTASTATE" , "^FWLSTATE" , "^NDISEND" , "^NDISSTAT" 
+        "^FOTASTATE" , "^FWLSTATE" , "^NDISEND" , "^NDISSTAT", "+CREG"
 ];
 
 let unsoTokensPdu = [
