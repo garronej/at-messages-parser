@@ -13,13 +13,15 @@ export class AtMessage {
         public isUnsolicited?: boolean;
         public isFinal?: boolean;
         public isError?: boolean;
-        public readonly id: AtId;
+        public readonly id: AtId | undefined;
 
         constructor(
                 public readonly raw: string,
                 id?: AtId
         ) {
                 this.id = atIdDict[this["constructor"]["name"]] || id;
+
+                if( !this.id ) return;
 
                 if (isUnso(this.id)) this.isUnsolicited = true;
                 if (isFinal(this.id)) this.isFinal = true;
@@ -42,8 +44,6 @@ export function isUnso(token: string): boolean;
 export function isUnso(id: AtId): boolean;
 export function isUnso(x): any {
 
-        if( !x ) return false;
-
         let token: string;
 
         if (atIdDict[x]) token = idToToken(x);
@@ -56,8 +56,6 @@ export function isUnso(x): any {
 export function isFinal(token: string): boolean;
 export function isFinal(id: AtId): boolean;
 export function isFinal(x): any {
-
-        if( !x ) return false;
 
         let token: string;
 
@@ -73,12 +71,9 @@ export function isFinal(x): any {
 
 function isError(id: AtId): boolean {
 
-        if( !id ) return false;
-
         let token = idToToken(id);
 
         return errorTokens.indexOf(token) >= 0;
-
 
 };
 
