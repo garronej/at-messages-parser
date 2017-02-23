@@ -42,6 +42,28 @@ export function atMessagesParser(rawAtMessages: string): bl.AtMessage[] {
                 "FINAL"
         ]) {
 
+                if (phase === "RESP" && output.leftToParse) {
+
+                        let match: RegExpMatchArray | null;
+
+                        match = output.leftToParse.match(/^((?:AT.*|A\/)\r)/);
+                        if (!match) match = output.leftToParse.match(/^((?:[a-fA-F0-9]|\r\n)+)(?:$|\r\n\+CMGS)/);
+
+                        if (match) {
+
+                                let atMessage = new bl.AtMessage(match[1], bl.atIdDict.ECHO);
+                                output.leftToParse = output.leftToParse.substring(atMessage.raw.length, output.leftToParse.length);
+                                output.atMessages.push(atMessage);
+
+                        }
+
+                        if (output.leftToParse === "\r\n> ") {
+                                output.atMessages.push(new bl.AtMessage(output.leftToParse, bl.atIdDict.INVITE));
+                                output.leftToParse= "";
+                        }
+
+                }
+
 
                 if (!output.leftToParse) break;
 
@@ -58,18 +80,6 @@ export function atMessagesParser(rawAtMessages: string): bl.AtMessage[] {
                 parser.parse(lexer, output);
 
 
-                if (phase === "RESP") {
-
-                        if (output.leftToParse === "\r\n") {
-
-                                output.atMessages.push(new bl.AtMessage("\r\n", bl.atIdDict.ECHO));
-
-                                output.leftToParse = "";
-
-                        }
-
-
-                }
 
                 /*
                 console.log(`End ${phase}`.blue);
