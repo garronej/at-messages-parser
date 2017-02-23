@@ -9,6 +9,14 @@ Instruction= Message | ListCMGL | ListCNUM | Final
 
     this.leftToParse+= unparsed;
 
+} | 'ECHO' function(raw){
+
+    this.atMessages.push(new this.bl.AtMessage(raw, this.bl.atIdDict.ECHO));
+
+} | 'INVITE' function(raw){
+
+    this.atMessages.push(new this.bl.AtMessage(raw, this.bl.atIdDict.INVITE));
+
 };
 
 Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {

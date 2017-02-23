@@ -101,6 +101,30 @@
 
 }
 
+<RESP> AT.*\r {
+
+        this.jjval= this.jjtext;
+
+        return "ECHO";
+
+}
+
+<RESP> [a-fA-F0-9]+\u001A {
+
+        this.jjval= this.jjtext;
+
+        return "ECHO";
+
+}
+
+<RESP> \r\n>\s {
+
+        this.jjval= this.jjtext;
+
+        return "INVITE";
+
+}
+
 
 
 <LIST_CMGL> (\r|\n|.) {

@@ -9,7 +9,6 @@ AtMessage an continue parsing.
 
 This library is easier to use with TypeScript but is also usable in raw JavaScript.
 
-Note: You have to turn off the echo to use this library ( e.g. run ATE0\r )
 Note: AT+CPBR will be parsed correctly only if you read one entry at the time.
 (e.g. response to AT+CPBR=0,250\r will not be parsed, but AT+CPBR=4,4\r will)
 Note: This parser will only work for for GSM modem in PDU mode (not text mode)

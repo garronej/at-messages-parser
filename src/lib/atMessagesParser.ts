@@ -42,45 +42,6 @@ export function atMessagesParser(rawAtMessages: string): bl.AtMessage[] {
                 "FINAL"
         ]) {
 
-                if (phase === "RESP") {
-
-                        switch (output.leftToParse) {
-                                case "\r\n":
-                                        output.atMessages.push(new bl.AtMessage(
-                                                output.leftToParse,
-                                                bl.atIdDict.ECHO
-                                        ));
-                                        output.leftToParse = "";
-                                        break;
-                                case "ATE0\r\r\nOK\r\n":
-                                        output.atMessages.push(new bl.AtMessage(
-                                                "ATE0\r",
-                                                bl.atIdDict.ECHO,
-                                        ));
-                                        output.atMessages.push(new bl.AtMessage(
-                                                "\r\nOK\r\n",
-                                                bl.atIdDict.OK
-                                        ));
-                                        output.leftToParse = "";
-                                        break;
-                                case "ATE0\r":
-                                        output.atMessages.push(new bl.AtMessage(
-                                                output.leftToParse,
-                                                bl.atIdDict.ECHO
-                                        ));
-                                        output.leftToParse = "";
-                                        break;
-                                case "\r\n> ":
-                                        output.atMessages.push(new bl.AtMessage(
-                                                output.leftToParse,
-                                                bl.atIdDict.INVITE
-                                        ));
-                                        output.leftToParse = "";
-                                        break;
-                                default:
-                        }
-
-                }
 
                 if (!output.leftToParse) break;
 
@@ -95,6 +56,20 @@ export function atMessagesParser(rawAtMessages: string): bl.AtMessage[] {
                 lexer.pushState(phase);
 
                 parser.parse(lexer, output);
+
+
+                if (phase === "RESP") {
+
+                        if (output.leftToParse === "\r\n") {
+
+                                output.atMessages.push(new bl.AtMessage("\r\n", bl.atIdDict.ECHO));
+
+                                output.leftToParse = "";
+
+                        }
+
+
+                }
 
                 /*
                 console.log(`End ${phase}`.blue);
@@ -179,8 +154,8 @@ function reorder(
 
         })(rawAtMessages);
 
-        let mapPositionAtMessage: { 
-                [pos: number]: bl.AtMessage; 
+        let mapPositionAtMessage: {
+                [pos: number]: bl.AtMessage;
         } = {};
 
         for (let i = 0; i < atMessages.length; i++)
