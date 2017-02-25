@@ -9,7 +9,7 @@ if (n) {
 
 } else {
 
-    for (let i = 1; i <= 19; i++) {
+    for (let i = 1; i <= 22; i++) {
 
         try {
             require("./test" + i);
