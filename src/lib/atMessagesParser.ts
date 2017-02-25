@@ -22,16 +22,63 @@ const Parser = require("./Parser");
 require("colors");
 
 
+export let serialPortAtParser = (() => {
+
+        const parseErrorDelay = 10000;
+
+        let rawAtMessagesBuffer = "";
+        let timer: NodeJS.Timer;
+
+        return function (emitter: NodeJS.EventEmitter, buffer: Buffer): void {
+
+                rawAtMessagesBuffer += buffer.toString("utf8");
+
+                let atMessages: bl.AtMessage[];
+
+                try {
+
+                        atMessages = atMessagesParser(rawAtMessagesBuffer);
+
+                } catch (error) {
+
+                        let parserError = error as AtMessagesParserError;
+
+                        if (!timer)
+                                timer = setTimeout(() => {
+                                        emitter.emit("data", null, rawAtMessagesBuffer);
+                                        rawAtMessagesBuffer= "";
+                                }, parseErrorDelay);
+
+                        atMessages = parserError.urcMessages;
+
+                        rawAtMessagesBuffer = parserError.leftToParse;
+
+                }
+
+                if (timer) clearTimeout(timer);
+
+                rawAtMessagesBuffer = "";
+
+                for( let atMessage of atMessages)
+                        emitter.emit("data", atMessage, "");
+
+
+        };
+
+
+})();
+
+
 export class AtMessagesParserError extends Error {
 
-    constructor(public readonly rawAtMessages: string,
-        public readonly originalError: Error,
-        public readonly urcMessages: bl.AtMessage[],
-        public readonly leftToParse: string
+        constructor(public readonly rawAtMessages: string,
+                public readonly originalError: Error,
+                public readonly urcMessages: bl.AtMessage[],
+                public readonly leftToParse: string
         ) {
-        super(AtMessagesParserError.name);
-        Object.setPrototypeOf(this, AtMessagesParserError.prototype)
-    }
+                super(AtMessagesParserError.name);
+                Object.setPrototypeOf(this, AtMessagesParserError.prototype)
+        }
 
 }
 
@@ -180,7 +227,7 @@ function reorder(
 
 
                                         for (let j = 0; j < str.length; j++)
-                                                delete this[mapIndex[i+j]];
+                                                delete this[mapIndex[i + j]];
 
 
                                         return mapIndex[i];
@@ -188,7 +235,7 @@ function reorder(
                                 }
 
                                 throw new Error(`Reorder error: ${JSON.stringify(str)} not found`);
-                                
+
 
                         }
                 });
@@ -207,7 +254,7 @@ function reorder(
         for (let atMessage of atMessages)
                 mapPositionAtMessage[strMap.extract(atMessage.raw)] = atMessage;
 
-        console.assert(Object.keys(strMap).length ===0 );
+        console.assert(Object.keys(strMap).length === 0);
 
         let atMessagesSorted: bl.AtMessage[] = [];
 
@@ -215,7 +262,7 @@ function reorder(
                 return parseInt(a) < parseInt(b) ? -1 : 1;
         })) atMessagesSorted.push(mapPositionAtMessage[i]);
 
-        console.assert( atMessagesSorted.length === atMessages.length );
+        console.assert(atMessagesSorted.length === atMessages.length);
 
         return atMessagesSorted;
 
