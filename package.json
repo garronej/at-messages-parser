@@ -25,6 +25,7 @@
     "@types/node": "^4.0.0",
     "colors": "^1.1.2",
     "jacob": "Canna71/Jacob",
+    "ts-events-extended": "garronej/ts-events-extended",
     "typescript": "^2.1.4"
   },
   "devDependencies": {}

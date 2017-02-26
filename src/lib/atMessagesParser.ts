@@ -7,6 +7,8 @@ import {
         tokenToId
 } from "./businessLogic/AtMessage";
 
+import { SyncEvent } from "ts-events-extended";
+
 Object.assign(bl, {
         "isUnso": isUnso,
         "isFinal": isFinal,
@@ -22,16 +24,22 @@ const Parser = require("./Parser");
 require("colors");
 
 
-export let serialPortAtParser = (() => {
+export function getSerialPortParser(){
 
         const parseErrorDelay = 10000;
 
         let rawAtMessagesBuffer = "";
         let timer: NodeJS.Timer;
+        let evtRawData= new SyncEvent<string>();
 
-        return function (emitter: NodeJS.EventEmitter, buffer: Buffer): void {
+        type Main= (emitter: NodeJS.EventEmitter, buffer: Buffer)=> void;
+        type Flush= ()=> string;
+
+        let out: Main= function (emitter, buffer): void {
 
                 rawAtMessagesBuffer += buffer.toString("utf8");
+
+                evtRawData.post(rawAtMessagesBuffer);
 
                 let atMessages: bl.AtMessage[];
 
@@ -65,8 +73,21 @@ export let serialPortAtParser = (() => {
 
         };
 
+        (out as any).flush= function(){
+                let out= rawAtMessagesBuffer;
+                rawAtMessagesBuffer="";
+                if( timer ) clearTimeout(timer);
+                return out;
+        } as Flush;
 
-})();
+        Object.defineProperty(out, "evtRawData", {
+                get() { return evtRawData; }
+        });
+
+        return out as Main & { flush: Flush; evtRawData: typeof evtRawData };
+
+
+}
 
 
 export class AtMessagesParserError extends Error {
