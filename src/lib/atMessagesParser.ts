@@ -9,12 +9,7 @@ import {
 
 import { SyncEvent } from "ts-events-extended";
 
-Object.assign(bl, {
-        "isUnso": isUnso,
-        "isFinal": isFinal,
-        "hasPdu": hasPdu,
-        "tokenToId": tokenToId
-});
+Object.assign(bl, { isUnso, isFinal, hasPdu, tokenToId });
 
 
 const Lexer = require("./Lexer");
@@ -24,9 +19,9 @@ const Parser = require("./Parser");
 require("colors");
 
 
-export function getSerialPortParser(){
+export function getSerialPortParser(delayBeforeFlush?: number){
 
-        const parseErrorDelay = 10000;
+        const delay= (typeof delayBeforeFlush === "number")?delayBeforeFlush:10000;
 
         let rawAtMessagesBuffer = "";
         let timer: NodeJS.Timer;
@@ -37,10 +32,13 @@ export function getSerialPortParser(){
 
         let out: Main= function (emitter, buffer): void {
 
-                rawAtMessagesBuffer += buffer.toString("utf8");
+                let bufferString= buffer.toString("utf8");
 
-                evtRawData.post(rawAtMessagesBuffer);
+                evtRawData.post(bufferString);
 
+                rawAtMessagesBuffer += bufferString;
+
+                let parserError: AtMessagesParserError | undefined = undefined;
                 let atMessages: bl.AtMessage[];
 
                 try {
@@ -49,13 +47,13 @@ export function getSerialPortParser(){
 
                 } catch (error) {
 
-                        let parserError = error as AtMessagesParserError;
+                        parserError = error as AtMessagesParserError;
 
                         if (!timer)
                                 timer = setTimeout(() => {
                                         emitter.emit("data", null, rawAtMessagesBuffer);
                                         rawAtMessagesBuffer= "";
-                                }, parseErrorDelay);
+                                }, delay);
 
                         atMessages = parserError.urcMessages;
 
@@ -63,13 +61,13 @@ export function getSerialPortParser(){
 
                 }
 
-                if (timer) clearTimeout(timer);
-
-                rawAtMessagesBuffer = "";
+                if (!parserError ){
+                        rawAtMessagesBuffer = "";
+                         if( timer) clearTimeout(timer);
+                }
 
                 for( let atMessage of atMessages)
                         emitter.emit("data", atMessage, "");
-
 
         };
 
