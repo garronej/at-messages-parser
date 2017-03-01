@@ -7,7 +7,11 @@ import {
         tokenToId
 } from "./businessLogic/AtMessage";
 
+import { ObjectExt } from "object-extended";
+
+
 import { SyncEvent } from "ts-events-extended";
+
 
 Object.assign(bl, { isUnso, isFinal, hasPdu, tokenToId });
 
@@ -230,15 +234,11 @@ function reorder(
 
                 Object.defineProperty(out, "extract", {
                         "enumerable": false,
-                        value(str) {
+                        value(str): number {
 
-                                let mapIndex = Object.keys(this).sort((a, b) => {
-                                        return parseInt(a) < parseInt(b) ? -1 : 1;
-                                });
+                                let mapIndex= ObjectExt.intKeysSorted(this);
 
-                                mapRun: for (let iStr in mapIndex) {
-
-                                        let i = parseInt(iStr);
+                                mapRun: for (let i=0; i< mapIndex.length; i++) {
 
                                         for (let j = 0; j < str.length; j++)
                                                 if (this[mapIndex[i + j]] !== str[j])
@@ -247,7 +247,6 @@ function reorder(
 
                                         for (let j = 0; j < str.length; j++)
                                                 delete this[mapIndex[i + j]];
-
 
                                         return mapIndex[i];
 
@@ -277,9 +276,8 @@ function reorder(
 
         let atMessagesSorted: bl.AtMessage[] = [];
 
-        for (let i of Object.keys(mapPositionAtMessage).sort(function (a, b) {
-                return parseInt(a) < parseInt(b) ? -1 : 1;
-        })) atMessagesSorted.push(mapPositionAtMessage[i]);
+        for( let i of ObjectExt.intKeysSorted(mapPositionAtMessage))
+                atMessagesSorted.push(mapPositionAtMessage[i]);
 
         console.assert(atMessagesSorted.length === atMessages.length);
 
