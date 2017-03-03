@@ -28,7 +28,7 @@ export function getSerialPortParser(delayBeforeFlush?: number){
         const delay= (typeof delayBeforeFlush === "number")?delayBeforeFlush:10000;
 
         let rawAtMessagesBuffer = "";
-        let timer: NodeJS.Timer;
+        let timer: NodeJS.Timer | null= null;
         let evtRawData= new SyncEvent<string>();
 
         type Main= (emitter: NodeJS.EventEmitter, buffer: Buffer)=> void;
@@ -55,8 +55,9 @@ export function getSerialPortParser(delayBeforeFlush?: number){
 
                         if (!timer)
                                 timer = setTimeout(() => {
+                                        timer = null;
                                         emitter.emit("data", null, rawAtMessagesBuffer);
-                                        rawAtMessagesBuffer= "";
+                                        rawAtMessagesBuffer = "";
                                 }, delay);
 
                         atMessages = parserError.urcMessages;
@@ -65,20 +66,23 @@ export function getSerialPortParser(delayBeforeFlush?: number){
 
                 }
 
-                if (!parserError ){
+                if (!parserError) {
                         rawAtMessagesBuffer = "";
-                         if( timer) clearTimeout(timer);
+                        if (timer) {
+                                clearTimeout(timer);
+                                timer = null;
+                        }
                 }
 
-                for( let atMessage of atMessages)
+                for (let atMessage of atMessages)
                         emitter.emit("data", atMessage, "");
 
         };
 
-        (out as any).flush= function(){
-                let out= rawAtMessagesBuffer;
-                rawAtMessagesBuffer="";
-                if( timer ) clearTimeout(timer);
+        (out as any).flush = function () {
+                let out = rawAtMessagesBuffer;
+                rawAtMessagesBuffer = "";
+                if (timer) clearTimeout(timer);
                 return out;
         } as Flush;
 
@@ -236,9 +240,9 @@ function reorder(
                         "enumerable": false,
                         value(str): number {
 
-                                let mapIndex= ObjectExt.intKeysSorted(this);
+                                let mapIndex = ObjectExt.intKeysSorted(this);
 
-                                mapRun: for (let i=0; i< mapIndex.length; i++) {
+                                mapRun: for (let i = 0; i < mapIndex.length; i++) {
 
                                         for (let j = 0; j < str.length; j++)
                                                 if (this[mapIndex[i + j]] !== str[j])
@@ -276,7 +280,7 @@ function reorder(
 
         let atMessagesSorted: bl.AtMessage[] = [];
 
-        for( let i of ObjectExt.intKeysSorted(mapPositionAtMessage))
+        for (let i of ObjectExt.intKeysSorted(mapPositionAtMessage))
                 atMessagesSorted.push(mapPositionAtMessage[i]);
 
         console.assert(atMessagesSorted.length === atMessages.length);
