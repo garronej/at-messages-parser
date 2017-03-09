@@ -42,7 +42,7 @@ export class AtMessageList extends AtMessage {
 
 export function isUnso(token: string): boolean;
 export function isUnso(id: AtId): boolean;
-export function isUnso(x): any {
+export function isUnso(x): boolean {
 
         let token: string;
 
@@ -125,19 +125,3 @@ export function tokenToId(
         return atIdDict[id];
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -12,6 +12,14 @@
         return "UNPARSED";
 }
 
+<UNSO> \r\nRING\r\n {
+
+        this.jjval= ["\r\nRING\r\n", "\r\nRING\r\n", "RING", "", "", ""];
+
+        return "MESSAGE";
+
+}
+
 <UNSO> \r\n(\+|\^)[A-Z]+ {
 
         //console.log("MESSAGE UNSO", JSON.stringify(this.jjtext));
@@ -39,6 +47,8 @@
 
 
 }
+
+
 
 <UNSO_END_PDU> .*\r\n[a-fA-F0-9]+\r\n {
 
