@@ -200,6 +200,14 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
                 [parseInt(match[1]), parseInt(match[2])]
             );
             break;
+        case "^ICCID":
+            match= rest.match(/^:\ ?"([a-zA-Z0-9]{19,20})"$/);
+            if( !match ) break;
+            atMessage= new AtImps.CX_ICCID_SET(
+                raw,
+                match[1]
+            );
+            break;
         default: 
             if( this.bl.isUnso(token) )
                 atMessage= new AtMessage(raw, this.bl.tokenToId(token));

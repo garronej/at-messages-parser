@@ -322,6 +322,14 @@ export class P_CPBS_READ extends AtMessage {
     }
 }
 
+export class CX_ICCID_SET extends AtMessage {
+    constructor(raw: string,
+        public readonly iccid: string
+    ){
+        super(raw);
+    }
+}
+
 export class CONNECT extends AtMessage {
     constructor(raw: string,
         public readonly baudRate: number) {
@@ -334,3 +342,4 @@ export class ERROR extends AtMessage {
         super(raw);
     }
 }
+
