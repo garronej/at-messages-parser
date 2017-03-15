@@ -22,7 +22,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
     let pdu= full_raw_token_rest_pdu_ok[4]
     let ok= full_raw_token_rest_pdu_ok[5];
     
-    let AtImps= this.bl.AtImps, AtMessage= this.bl.AtMessage;
+    let AtMessage= this.AtMessage;
     
     let atMessage;
     let match;
@@ -30,7 +30,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "+CMTI":
             match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
             if( !match ) break;
-            atMessage = new AtImps.P_CMTI_URC(
+            atMessage = new AtMessage.P_CMTI_URC(
                 raw,
                 match[1],
                 parseInt(match[2])
@@ -39,7 +39,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "+CDSI":
             match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
             if( !match ) break;
-            atMessage = new AtImps.P_CDSI_URC(
+            atMessage = new AtMessage.P_CDSI_URC(
                 raw,
                 match[1],
                 parseInt(match[2])
@@ -50,7 +50,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
             if( !match ) break;
             var lock= undefined;
             if( match[2] !== undefined ) lock= (match[2] === "1")
-                atMessage = new AtImps.CX_SIMST_URC(
+                atMessage = new AtMessage.CX_SIMST_URC(
                     raw,
                     parseInt(match[1]),
                     lock
@@ -59,7 +59,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "^SRVST":
             match= rest.match(/^:\ ?([0-9]+)$/);
             if( !match ) break;
-            atMessage = new AtImps.CX_SRVST_URC(
+            atMessage = new AtMessage.CX_SRVST_URC(
                 raw,
                 parseInt(match[1])
             );
@@ -67,7 +67,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "^MODE":
             match= rest.match(/^:\ ?([0-9]+),([0-9]+)$/);
             if( !match ) break;
-            atMessage= new AtImps.CX_MODE_URC(
+            atMessage= new AtMessage.CX_MODE_URC(
                 raw,
                 parseInt(match[1]),
                 parseInt(match[2])
@@ -76,7 +76,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "+CMT":
             match= rest.match(/^:\ ?(?:.+)?,([0-9]+)$/);
             if( !match ) break;
-            atMessage = new AtImps.P_CMT_URC(
+            atMessage = new AtMessage.P_CMT_URC(
                 raw,
                 parseInt(match[1]),
                 pdu
@@ -85,7 +85,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "+CDS":
             match= rest.match(/^:\ ?([0-9]+)$/);
             if( !match ) break;
-            atMessage = new AtImps.P_CDS_URC(
+            atMessage = new AtMessage.P_CDS_URC(
                 raw,
                 parseInt(match[1]),
                 pdu
@@ -94,7 +94,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "+CMGR":
             match= rest.match(/^:\ ?([0-9]+),[0-9]*,([0-9]+)$/);
             if( !match ) break;
-            atMessage = new AtImps.P_CMGR_SET(
+            atMessage = new AtMessage.P_CMGR_SET(
                 raw,
                 parseInt(match[1]),
                 parseInt(match[2]),
@@ -104,7 +104,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "+CPIN":
             match= rest.match(/^:\ ?([\ A-Z]+)$/);
             if( !match ) break;
-            atMessage = new AtImps.P_CPIN_READ(
+            atMessage = new AtMessage.P_CPIN_READ(
                 raw,
                 match[1]
             );
@@ -112,7 +112,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "+CMEE":
             match= rest.match(/^:\ ?([0-9]+)$/);
             if( !match ) break;
-            atMessage = new AtImps.P_CMEE_READ(
+            atMessage = new AtMessage.P_CMEE_READ(
                 raw,
                 parseInt(match[1])
             );
@@ -122,7 +122,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
             if( !match ) break;
             var times= undefined;
             if( match[2] !== "" ) times= parseInt(match[2]);
-            atMessage = new AtImps.CX_CPIN_READ(
+            atMessage = new AtMessage.CX_CPIN_READ(
                 raw,
                 match[1],
                 times,
@@ -139,7 +139,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
             if( match[6] !== undefined ) cardLock= ( match[6] === "1" );
             var sysSubMode= undefined;
             if( match[7] !== undefined ) sysSubMode= parseInt(match[7]);
-            atMessage = new AtImps.CX_SYSINFO_EXEC(
+            atMessage = new AtMessage.CX_SYSINFO_EXEC(
                 raw,
                 parseInt(match[1]),
                 parseInt(match[2]),
@@ -153,7 +153,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "+CMGS":
             match= rest.match(/^:\ ?([0-9]+)(?:,.*)?/);
             if( !match ) break;
-            atMessage = new AtImps.P_CMGS_SET(
+            atMessage = new AtMessage.P_CMGS_SET(
                 raw,
                 parseInt(match[1])
             );
@@ -165,7 +165,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
             if( match[2] !== undefined ) used= parseInt(match[2]);
             var total= undefined;
             if( match[3] !== undefined ) total= parseInt(match[3]);
-            atMessage= new AtImps.P_CPBS_READ(
+            atMessage= new AtMessage.P_CPBS_READ(
                 raw,
                 match[1],
                 used,
@@ -174,7 +174,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
             break;
         case "+CPBR":
             if( match= rest.match(/^:\ ?([0-9]+),"([^"]*)",([0-9]+),"(.*)"$/) ){
-                atMessage= new AtImps.P_CPBR_EXEC(
+                atMessage= new AtMessage.P_CPBR_EXEC(
                     raw,
                     parseInt(match[1]),
                     match[2],
@@ -184,7 +184,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
                 break;
             }
             if( match= rest.match(/:\ ?\(([0-9]+)-([0-9]+)\),([0-9]+),([0-9]+)/) ){
-                atMessage= new AtImps.P_CPBR_TEST(
+                atMessage= new AtMessage.P_CPBR_TEST(
                     raw,
                     [ parseInt(match[1]), parseInt(match[2]) ],
                     parseInt(match[3]),
@@ -195,7 +195,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "+CMGL":
             match= rest.match(/^:\ ?\(([0-9]+)-([0-9]+)\)$/);
             if( !match ) break;
-            atMessage= new AtImps.P_CMGL_TEST(
+            atMessage= new AtMessage.P_CMGL_TEST(
                 raw,
                 [parseInt(match[1]), parseInt(match[2])]
             );
@@ -203,21 +203,21 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
         case "^ICCID":
             match= rest.match(/^:\ ?"([a-zA-Z0-9]{19,20})"$/);
             if( !match ) break;
-            atMessage= new AtImps.CX_ICCID_SET(
+            atMessage= new AtMessage.CX_ICCID_SET(
                 raw,
                 match[1]
             );
             break;
         default: 
-            if( this.bl.isUnso(token) )
-                atMessage= new AtMessage(raw, this.bl.tokenToId(token));
+            if( AtMessage.isUnso(token) )
+                atMessage= new AtMessage(raw, AtMessage.tokenToId(token));
     }
     
     if( !atMessage ) return this.leftToParse+= full;
     
     this.atMessages.push(atMessage);
     
-    if( ok ) this.atMessages.push(new AtMessage(ok, this.bl.atIdDict.OK));
+    if( ok ) this.atMessages.push(new AtMessage("\r\nOK\r\n", "OK"));
 
 };
 
@@ -226,9 +226,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
 ListCMGL= ListRawCMGL 'END_LIST_CMGL' function(listRawCMGL) {
     "use strict";
 
-    let AtMessage= this.bl.AtMessage;
-    let AtMessageList= this.bl.AtMessageList;
-    let AtImps= this.bl.AtImps;
+    let AtMessage= this.AtMessage;
 
     let atMessages= [];
     let regExp= /^\r\n\+CMGL:\ ?([0-9]+),([0-9]+),(?:[0-9]+)?,([0-9]+)\r\n([a-fA-F0-9]+)$/;
@@ -240,7 +238,7 @@ ListCMGL= ListRawCMGL 'END_LIST_CMGL' function(listRawCMGL) {
 
         let match= rawCMGL.match(regExp);
 
-        atMessages.push(new AtImps.P_CMGL_SET(rawCMGL,
+        atMessages.push(new AtMessage.P_CMGL_SET(rawCMGL,
            parseInt(match[1]),
            parseInt(match[2]),
            parseInt(match[3]),
@@ -251,8 +249,8 @@ ListCMGL= ListRawCMGL 'END_LIST_CMGL' function(listRawCMGL) {
 
     raw+="\r\n";
 
-    this.atMessages.push(new AtMessageList(raw, atMessages));
-    this.atMessages.push(new AtMessage("\r\nOK\r\n", this.bl.atIdDict.OK));
+    this.atMessages.push(new AtMessage.LIST(raw, atMessages));
+    this.atMessages.push(new AtMessage("\r\nOK\r\n", "OK"));
 
 };
 
@@ -272,9 +270,7 @@ ListRawCMGL= ListRawCMGL 'CMGL' function(listRaw, raw){
 ListCNUM= 'START_LIST_CNUM' ListRawCNUM 'END_LIST_CNUM' function(_, listRawCNUM){
     "use strict";
 
-    let AtMessage= this.bl.AtMessage;
-    let AtMessageList= this.bl.AtMessageList;
-    let AtImps= this.bl.AtImps;
+    let AtMessage= this.AtMessage;
 
     let atMessages= [];
 
@@ -291,7 +287,7 @@ ListCNUM= 'START_LIST_CNUM' ListRawCNUM 'END_LIST_CNUM' function(_, listRawCNUM)
 
         let match= rest.match(/^:\ ?"(.*)","([^"]*)",([0-9]+)/);
 
-        let atMessageCNUM= new AtImps.P_CNUM_EXEC("+CNUM"+rest,
+        let atMessageCNUM= new AtMessage.P_CNUM_EXEC("+CNUM"+rest,
             match[1],
             match[2],
             parseInt(match[3])
@@ -317,10 +313,10 @@ ListCNUM= 'START_LIST_CNUM' ListRawCNUM 'END_LIST_CNUM' function(_, listRawCNUM)
 
         switch (token) {
             case "+CME ERROR":
-                error = new AtImps.P_CME_ERROR(rawError, info);
+                error = new AtMessage.P_CME_ERROR(rawError, info);
                 break;
             case "ERROR":
-                error= new AtImps.ERROR(rawError);
+                error= new AtMessage.ERROR(rawError);
                 break;
         }
 
@@ -334,9 +330,9 @@ ListCNUM= 'START_LIST_CNUM' ListRawCNUM 'END_LIST_CNUM' function(_, listRawCNUM)
 
     raw+= "\r\n";
 
-    this.atMessages.push(new AtMessageList(raw, atMessages));
+    this.atMessages.push(new AtMessage.LIST(raw, atMessages));
 
-    this.atMessages.push(new AtMessage("\r\nOK\r\n", this.bl.atIdDict.OK));
+    this.atMessages.push(new AtMessage("\r\nOK\r\n", "OK"));
 
 };
 
@@ -354,18 +350,18 @@ ListRawCNUM= ListRawCNUM 'CNUM' function(listRaw, raw){
 
 Final= 'FINAL' function(token){
 
-    this.atMessages.push(new this.bl.AtMessage(
+    this.atMessages.push(new this.AtMessage(
         "\r\n"+token+"\r\n", 
-        this.bl.tokenToId(token)
+        this.AtMessage.tokenToId(token)
     ));
 } | 'ERROR' function(raw){
 
-    this.atMessages.push(new this.bl.AtImps.ERROR(raw));
+    this.atMessages.push(new this.AtMessage.ERROR(raw));
 
 } | 'CM_ERROR' function(raw){
     "use strict";
 
-    let AtImps= this.bl.AtImps;
+    let AtMessage= this.AtMessage;
 
     let atMessage;
 
@@ -378,10 +374,10 @@ Final= 'FINAL' function(token){
 
     switch (token) {
         case "+CME ERROR":
-            atMessage = new AtImps.P_CME_ERROR(raw, info);
+            atMessage = new AtMessage.P_CME_ERROR(raw, info);
             break;
         case "+CMS ERROR":
-            atMessage = new AtImps.P_CMS_ERROR(raw, info);
+            atMessage = new AtMessage.P_CMS_ERROR(raw, info);
             break;
     }
 
@@ -391,7 +387,7 @@ Final= 'FINAL' function(token){
 
     var match= raw.match(/^\r\nCONNECT\ ?([0-9]+)\r\n$/);
 
-    this.atMessages.push(new this.bl.AtImps.CONNECT(
+    this.atMessages.push(new this.AtMessage.CONNECT(
         raw, 
         parseInt(match[1])
     ));

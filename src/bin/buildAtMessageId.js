@@ -18,8 +18,6 @@ let unsoTokensPdu = [
     "+CMT", "+CDS"
 ];
 
-//TODO RING
-
 let finalTokens = [ "INVITE", "OK", "CONNECT" ];
 
 let errorTokens = [
@@ -29,7 +27,7 @@ let errorTokens = [
 
 let ids = (() => {
 
-    let out = [ "ECHO", "LIST"];
+    let out = [ "ECHO" ];
 
     for (let token of unsoTokens.concat(unsoTokensPdu)) {
 
@@ -56,7 +54,7 @@ let ids = (() => {
     let implementedIds = (() => {
 
         let _AtMessImps_ts = fs.readFileSync(
-            path.join(__dirname , "AtMessageImplementations.ts"),
+            path.join(__dirname, "..", "lib" , "AtMessage.ts"),
             { "encoding": "utf8" }
         );
 
@@ -123,7 +121,7 @@ let _AtMessageId_ts = (() => {
 
 })();
 
-let outDir = path.join(__dirname, "generated");
+const outDir = path.join(__dirname, "..", "lib", "generated");
 
 if (!fs.existsSync(outDir))
     fs.mkdirSync(outDir);
@@ -132,9 +130,4 @@ fs.writeFileSync(
     path.join(outDir, "AtMessageId.ts"),
     _AtMessageId_ts,
     { "encoding": "utf8", "flag": "w" }
-);
-
-let source = fs.readFileSync(
-    path.join(__dirname, "AtMessageImplementations.ts"),
-    { "encoding": "utf8" }
 );

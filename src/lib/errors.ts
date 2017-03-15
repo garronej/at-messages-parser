@@ -3,7 +3,7 @@ import * as path from "path";
 
 let cmeErrorDictionary = JSON.parse(
     readFileSync(
-        path.join(__dirname, "..", "..", "..", "res", "cmeErrorDictionary.json"),
+        path.join(__dirname, "..", "..", "res", "cmeErrorDictionary.json"),
         { "encoding": "utf8" }
     )
 );
@@ -29,7 +29,7 @@ export function getCmeErrorCode(verbose: string): number {
 
 let cmsErrorDictionary = JSON.parse(
     readFileSync(
-        path.join(__dirname, "..", "..", "..", "res", "cmsErrorDictionary.json"),
+        path.join(__dirname, "..", "..", "res", "cmsErrorDictionary.json"),
         { "encoding": "utf8" }
     )
 );

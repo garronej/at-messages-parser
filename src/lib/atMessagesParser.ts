@@ -1,27 +1,11 @@
-import * as bl from "./businessLogic/index";
-
-import {
-        isUnso,
-        isFinal,
-        hasPdu,
-        tokenToId
-} from "./businessLogic/AtMessage";
-
-import { ObjectExt } from "object-extended";
-
-
+import { AtMessage } from "./AtMessage";
 import { SyncEvent } from "ts-events-extended";
-
-
-Object.assign(bl, { isUnso, isFinal, hasPdu, tokenToId });
-
+import { StringExtractor } from "./StringExtractor";
+import { TrackableMap } from "trackable-map";
+require("colors");
 
 const Lexer = require("./Lexer");
 const Parser = require("./Parser");
-
-
-require("colors");
-
 
 export function getSerialPortParser(delayBeforeFlush?: number){
 
@@ -43,7 +27,7 @@ export function getSerialPortParser(delayBeforeFlush?: number){
                 rawAtMessagesBuffer += bufferString;
 
                 let parserError: AtMessagesParserError | undefined = undefined;
-                let atMessages: bl.AtMessage[];
+                let atMessages: AtMessage[];
 
                 try {
 
@@ -100,29 +84,30 @@ export class AtMessagesParserError extends Error {
 
         constructor(public readonly rawAtMessages: string,
                 public readonly originalError: Error,
-                public readonly urcMessages: bl.AtMessage[],
+                public readonly urcMessages: AtMessage[],
                 public readonly leftToParse: string
         ) {
                 super(AtMessagesParserError.name);
-                Object.setPrototypeOf(this, AtMessagesParserError.prototype)
+                Object.setPrototypeOf(this, new.target.prototype)
         }
 
 }
 
-export function atMessagesParser(rawAtMessages: string): bl.AtMessage[] {
+export function atMessagesParser(rawAtMessages: string): AtMessage[] {
 
         let leftToParseAfterUrc = rawAtMessages;
 
         let output = {
                 "leftToParse": rawAtMessages,
-                "atMessages": [] as bl.AtMessage[],
-                "bl": bl
+                "atMessages": [] as AtMessage[],
+                "AtMessage": AtMessage
         };
+
 
         try {
 
                 if (rawAtMessages === "\r\nOK\r\n")
-                        return [new bl.AtMessage("\r\nOK\r\n", bl.atIdDict.OK)];
+                        return [new AtMessage("\r\nOK\r\n", "OK")];
 
                 let parser = new Parser();
 
@@ -140,18 +125,25 @@ export function atMessagesParser(rawAtMessages: string): bl.AtMessage[] {
                                 let match: RegExpMatchArray | null;
 
                                 match = output.leftToParse.match(/^((?:AT.*|A\/)\r)/);
-                                if (!match) match = output.leftToParse.match(/^((?:[a-fA-F0-9]|\r\n)+)(?:$|\r\n\+CMGS)/);
+                                if (!match) match = output.leftToParse.match(
+                                        /^((?:[a-fA-F0-9]|\r\n)+)(?:$|\r\n\+CMGS)/
+                                );
 
                                 if (match) {
 
-                                        let atMessage = new bl.AtMessage(match[1], bl.atIdDict.ECHO);
-                                        output.leftToParse = output.leftToParse.substring(atMessage.raw.length, output.leftToParse.length);
+                                        let atMessage = new AtMessage(match[1], "ECHO");
+                                        output.leftToParse = output.leftToParse.substring(
+                                                atMessage.raw.length,
+                                                output.leftToParse.length
+                                        );
                                         output.atMessages.push(atMessage);
 
                                 }
 
                                 if (output.leftToParse === "\r\n> ") {
-                                        output.atMessages.push(new bl.AtMessage(output.leftToParse, bl.atIdDict.INVITE));
+                                        output.atMessages.push(
+                                                new AtMessage(output.leftToParse, "INVITE")
+                                        );
                                         output.leftToParse = "";
                                 }
 
@@ -162,7 +154,7 @@ export function atMessagesParser(rawAtMessages: string): bl.AtMessage[] {
 
                         let lexer = new Lexer();
 
-                        lexer.bl = bl;
+                        lexer.AtMessage = AtMessage;
 
                         lexer.setInput(output.leftToParse);
 
@@ -189,99 +181,58 @@ export function atMessagesParser(rawAtMessages: string): bl.AtMessage[] {
                 for (let i = 0; i < split.length - 1; i++) {
 
                         let raw = split[i];
-                        output.atMessages.push(new bl.AtMessage(
-                                "\r\nOK\r\n",
-                                bl.atIdDict.OK
-                        ));
+                        output.atMessages.push(new AtMessage("\r\nOK\r\n", "OK"));
 
                         if (!raw) continue;
-                        else {
-                                if (!raw.match(/^\r\n(?:\r|\n|.)+\r\n$/))
-                                        throw new Error("Malformed");
 
-                                output.atMessages.push(new bl.AtMessage(raw));
+                        if (!raw.match(/^\r\n(?:\r|\n|.)+\r\n$/))
+                                throw new Error("Malformed");
 
-                        }
+                        output.atMessages.push(new AtMessage(raw));
+
 
                 }
-
 
                 return reorder(rawAtMessages, output.atMessages);
 
         } catch (originalError) {
 
-                let urcMessages: bl.AtMessage[] = [];
+                let urcMessages: AtMessage[] = [];
 
                 for (let atMessage of output.atMessages)
                         if (atMessage.isUnsolicited)
                                 urcMessages.push(atMessage);
 
-                throw new AtMessagesParserError(rawAtMessages, originalError, urcMessages, leftToParseAfterUrc);
+                throw new AtMessagesParserError(
+                        rawAtMessages,
+                        originalError,
+                        urcMessages,
+                        leftToParseAfterUrc
+                );
 
         }
 
 }
 
 
-
 function reorder(
         rawAtMessages: string,
-        atMessages: bl.AtMessage[]
-): bl.AtMessage[] {
+        atMessages: AtMessage[]
+): AtMessage[] {
 
-        let strMap: {
-                [position: number]: string,
-                extract: (str: string) => number
-        } = ((str: string) => {
+        let stringExtractor = new StringExtractor(rawAtMessages);
 
-                let out = {} as any;
-
-                Object.defineProperty(out, "extract", {
-                        "enumerable": false,
-                        value(str): number {
-
-                                let mapIndex = ObjectExt.intKeysSorted(this);
-
-                                mapRun: for (let i = 0; i < mapIndex.length; i++) {
-
-                                        for (let j = 0; j < str.length; j++)
-                                                if (this[mapIndex[i + j]] !== str[j])
-                                                        continue mapRun;
-
-
-                                        for (let j = 0; j < str.length; j++)
-                                                delete this[mapIndex[i + j]];
-
-                                        return mapIndex[i];
-
-                                }
-
-                                throw new Error(`Reorder error: ${JSON.stringify(str)} not found`);
-
-
-                        }
-                });
-
-                for (let i = 0; i < str.length; i++)
-                        out[i] = str[i];
-
-                return out;
-
-        })(rawAtMessages);
-
-        let mapPositionAtMessage: {
-                [pos: number]: bl.AtMessage;
-        } = {};
+        let messageByPosition = new TrackableMap<number, AtMessage>();
 
         for (let atMessage of atMessages)
-                mapPositionAtMessage[strMap.extract(atMessage.raw)] = atMessage;
+                messageByPosition.set(
+                        stringExtractor.extract(atMessage.raw),
+                        atMessage
+                );
 
-        console.assert(Object.keys(strMap).length === 0);
+        console.assert(stringExtractor.state === "");
 
-        let atMessagesSorted: bl.AtMessage[] = [];
-
-        for (let i of ObjectExt.intKeysSorted(mapPositionAtMessage))
-                atMessagesSorted.push(mapPositionAtMessage[i]);
+        let atMessagesSorted = messageByPosition.valuesAsArraySortedByKey();
 
         console.assert(atMessagesSorted.length === atMessages.length);
 

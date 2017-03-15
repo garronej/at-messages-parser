@@ -28,14 +28,14 @@
         
         var token= match[1];
 
-        if( !this.bl.isUnso(token) ){
+        if( !this.AtMessage.isUnso(token) ){
                 this.jjval= this.jjtext;
                 return "UNPARSED";
         }
 
         this.jjtextPrev= this.jjtext;
 
-        if( this.bl.hasPdu(token) ){
+        if( this.AtMessage.hasPdu(token) ){
 
                 this.pushState("UNSO_END_PDU");
 
@@ -224,7 +224,7 @@
         
         var token= this.jjtext.substring(2, this.jjtext.length-2);
 
-        if( !this.bl.isFinal(token) || token === "OK" ){
+        if( !this.AtMessage.isFinal(token) || token === "OK" ){
 
                 this.jjval= this.jjtext;
                 return "UNPARSED";

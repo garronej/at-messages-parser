@@ -1,6 +1,6 @@
 {
   "name": "at-messages-parser",
-  "version": "0.15.1",
+  "version": "0.16.0",
   "description": "A library for parsing AT output",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
   "scripts": {
     "postinstall": "npm run build",
     "build": "npm run build-ids && npm run tsc && npm run jacob",
-    "build-ids": "node ./src/lib/businessLogic/buildAtMessageId",
+    "build-ids": "node ./src/bin/buildAtMessageId",
     "tsc": "./node_modules/.bin/tsc -p ./tsconfig.json",
     "jacob": "npm run jacoblex && npm run jacobgram",
     "jacoblex": "./node_modules/.bin/jacob -t ./src/lib/lexer.jacoblex -l ./out/lib/Lexer.js",
@@ -25,7 +25,7 @@
     "@types/node": "^4.0.0",
     "colors": "^1.1.2",
     "jacob": "Canna71/Jacob",
-    "object-extended": "github:garronej/object-extended",
+    "trackable-map": "garronej/trackable-map",
     "ts-events-extended": "garronej/ts-events-extended",
     "typescript": "^2.1.4"
   },
