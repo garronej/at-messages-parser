@@ -573,7 +573,17 @@ export namespace AtMessage {
         export class P_CLAC_EXEC extends AtMessage {
                 constructor(raw: string,
                         public readonly supportedCommands: string[]
-                ){
+                ) {
+                        super(raw);
+                }
+        }
+
+        export class P_CRSM_SET extends AtMessage {
+                constructor(raw: string,
+                        public readonly sw1: number,
+                        public readonly sw2: number,
+                        public readonly response: string | undefined
+                ) {
                         super(raw);
                 }
         }
