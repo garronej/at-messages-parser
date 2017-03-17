@@ -570,6 +570,14 @@ export namespace AtMessage {
                 }
         }
 
+        export class P_CLAC_EXEC extends AtMessage {
+                constructor(raw: string,
+                        public readonly supportedCommands: string[]
+                ){
+                        super(raw);
+                }
+        }
+
         export class CONNECT extends AtMessage {
                 constructor(raw: string,
                         public readonly baudRate: number) {

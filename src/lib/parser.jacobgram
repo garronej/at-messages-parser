@@ -208,6 +208,25 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
                 match[1]
             );
             break;
+        case "+CLAC":
+            match= rest.match(/^:(.*)$/);
+            if( !match ) break;
+            atMessage= new AtMessage.P_CLAC_EXEC(
+                raw,
+                (function(){
+                    "use strict";
+
+                    let arr= match[1].replace(/\ /g, "").split(",");
+
+                    let pop= arr.pop();
+
+                    if( pop ) arr.push(pop);
+
+                    return arr;
+
+                })()
+            );
+            break;
         default: 
             if( AtMessage.isUnso(token) )
                 atMessage= new AtMessage(raw, AtMessage.tokenToId(token));
