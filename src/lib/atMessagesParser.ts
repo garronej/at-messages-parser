@@ -2,7 +2,6 @@ import { AtMessage } from "./AtMessage";
 import { SyncEvent } from "ts-events-extended";
 import { StringExtractor } from "./StringExtractor";
 import { TrackableMap } from "trackable-map";
-require("colors");
 
 const Lexer = require("./Lexer");
 const Parser = require("./Parser");

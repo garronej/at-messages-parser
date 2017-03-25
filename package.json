@@ -1,33 +1,33 @@
 {
   "name": "at-messages-parser",
-  "version": "0.16.1",
+  "version": "0.16.2",
   "description": "A library for parsing AT output",
   "repository": {
     "type": "git",
     "url": "git://github.com/garronej/at-messages-parser.git"
   },
-  "main": "./out/lib/index.js",
-  "types": "./out/lib/index.d.ts",
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "scripts": {
-    "postinstall": "npm run build",
     "build": "npm run build-ids && npm run tsc && npm run jacob",
     "build-ids": "node ./src/bin/buildAtMessageId",
     "tsc": "./node_modules/.bin/tsc -p ./tsconfig.json",
     "jacob": "npm run jacoblex && npm run jacobgram",
-    "jacoblex": "./node_modules/.bin/jacob -t ./src/lib/lexer.jacoblex -l ./out/lib/Lexer.js",
-    "jacobgram": "./node_modules/.bin/jacob -g ./src/lib/parser.jacobgram -p ./out/lib/Parser.js",
-    "test": "node ./out/test/index"
+    "jacoblex": "./node_modules/.bin/jacob -t ./src/lib/lexer.jacoblex -l ./dist/lib/Lexer.js",
+    "jacobgram": "./node_modules/.bin/jacob -g ./src/lib/parser.jacobgram -p ./dist/lib/Parser.js",
+    "test": "node ./dist/test/index"
   },
   "author": "Joseph Garrone",
   "license": "MIT",
   "dependencies": {
-    "@types/colors": "^1.1.1",
-    "@types/node": "^4.0.0",
-    "colors": "^1.1.2",
-    "jacob": "Canna71/Jacob",
     "trackable-map": "garronej/trackable-map",
-    "ts-events-extended": "garronej/ts-events-extended",
-    "typescript": "^2.1.4"
+    "ts-events-extended": "garronej/ts-events-extended"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "typescript": "^2.1.4",
+    "jacob": "Canna71/Jacob",
+    "colors": "^1.1.2",
+    "@types/colors": "^1.1.1",
+    "@types/node": "^4.0.0"
+  }
 }
