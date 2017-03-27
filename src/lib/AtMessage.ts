@@ -570,6 +570,16 @@ export namespace AtMessage {
                 }
         }
 
+        export class CX_SPN_SET extends AtMessage {
+                constructor(raw: string,
+                        public readonly p1: number,
+                        public readonly p2: number,
+                        public readonly serviceProviderName: string
+                ){
+                        super(raw);
+                }
+        }
+
         export class P_CLAC_EXEC extends AtMessage {
                 constructor(raw: string,
                         public readonly supportedCommands: string[]

@@ -92,6 +92,7 @@ export declare namespace AtMessage {
         "P_CMGS_SET": AtId;
         "P_CPBS_READ": AtId;
         "CX_ICCID_SET": AtId;
+        "CX_SPN_SET": AtId;
         "P_CLAC_EXEC": AtId;
         "P_CRSM_SET": AtId;
     };
@@ -328,6 +329,12 @@ export declare namespace AtMessage {
     class CX_ICCID_SET extends AtMessage {
         readonly iccid: string;
         constructor(raw: string, iccid: string);
+    }
+    class CX_SPN_SET extends AtMessage {
+        readonly p1: number;
+        readonly p2: number;
+        readonly serviceProviderName: string;
+        constructor(raw: string, p1: number, p2: number, serviceProviderName: string);
     }
     class P_CLAC_EXEC extends AtMessage {
         readonly supportedCommands: string[];

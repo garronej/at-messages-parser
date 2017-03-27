@@ -495,6 +495,18 @@ exports.AtMessage = AtMessage;
         return CX_ICCID_SET;
     }(AtMessage));
     AtMessage.CX_ICCID_SET = CX_ICCID_SET;
+    var CX_SPN_SET = (function (_super) {
+        __extends(CX_SPN_SET, _super);
+        function CX_SPN_SET(raw, p1, p2, serviceProviderName) {
+            var _this = _super.call(this, raw) || this;
+            _this.p1 = p1;
+            _this.p2 = p2;
+            _this.serviceProviderName = serviceProviderName;
+            return _this;
+        }
+        return CX_SPN_SET;
+    }(AtMessage));
+    AtMessage.CX_SPN_SET = CX_SPN_SET;
     var P_CLAC_EXEC = (function (_super) {
         __extends(P_CLAC_EXEC, _super);
         function P_CLAC_EXEC(raw, supportedCommands) {

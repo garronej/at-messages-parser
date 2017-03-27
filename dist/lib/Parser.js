@@ -234,6 +234,16 @@ this.actions=[,,,,,,,function (unparsed){
                 match[3]
             );
             break;
+        case "^SPN":
+            match= rest.match(/^:\ ?([0-9]+),([0-9]+),(.*)$/);
+            if( !match ) break;
+            atMessage= new AtMessage.CX_SPN_SET(
+                raw,
+                parseInt(match[1]),
+                parseInt(match[2]),
+                match[3]
+            );
+            break;
         default: 
             if( AtMessage.isUnso(token) )
                 atMessage= new AtMessage(raw, AtMessage.tokenToId(token));
