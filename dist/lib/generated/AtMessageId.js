@@ -144,6 +144,8 @@ exports.atIdDict = {
     "CX_ICCID_SET": "CX_ICCID_SET",
     "CX_SPN_SET": "CX_SPN_SET",
     "P_CLAC_EXEC": "P_CLAC_EXEC",
-    "P_CRSM_SET": "P_CRSM_SET"
+    "P_CRSM_SET": "P_CRSM_SET",
+    "P_CPMS_SET": "P_CPMS_SET",
+    "P_CPMS_READ": "P_CPMS_READ"
 };
 //# sourceMappingURL=AtMessageId.js.map

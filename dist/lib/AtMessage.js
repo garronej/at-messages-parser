@@ -529,6 +529,51 @@ exports.AtMessage = AtMessage;
         return P_CRSM_SET;
     }(AtMessage));
     AtMessage.P_CRSM_SET = P_CRSM_SET;
+    var P_CPMS_SET = (function (_super) {
+        __extends(P_CPMS_SET, _super);
+        function P_CPMS_SET(raw, used1, total1, used2, total2, used3, total3) {
+            var _this = _super.call(this, raw) || this;
+            _this.readingAndDeleting = {
+                "used": used1,
+                "capacity": total1
+            };
+            _this.writingAndSending = {
+                "used": used2,
+                "capacity": total2
+            };
+            _this.receiving = {
+                "used": used3,
+                "capacity": total3
+            };
+            return _this;
+        }
+        return P_CPMS_SET;
+    }(AtMessage));
+    AtMessage.P_CPMS_SET = P_CPMS_SET;
+    var P_CPMS_READ = (function (_super) {
+        __extends(P_CPMS_READ, _super);
+        function P_CPMS_READ(raw, mem1, used1, total1, mem2, used2, total2, mem3, used3, total3) {
+            var _this = _super.call(this, raw) || this;
+            _this.readingAndDeleting = {
+                "mem": mem1,
+                "used": used1,
+                "capacity": total1
+            };
+            _this.writingAndSending = {
+                "mem": mem2,
+                "used": used2,
+                "capacity": total2
+            };
+            _this.receiving = {
+                "mem": mem3,
+                "used": used3,
+                "capacity": total3
+            };
+            return _this;
+        }
+        return P_CPMS_READ;
+    }(AtMessage));
+    AtMessage.P_CPMS_READ = P_CPMS_READ;
     var CONNECT = (function (_super) {
         __extends(CONNECT, _super);
         function CONNECT(raw, baudRate) {

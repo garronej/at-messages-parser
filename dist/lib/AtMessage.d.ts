@@ -95,6 +95,8 @@ export declare namespace AtMessage {
         "CX_SPN_SET": AtId;
         "P_CLAC_EXEC": AtId;
         "P_CRSM_SET": AtId;
+        "P_CPMS_SET": AtId;
+        "P_CPMS_READ": AtId;
     };
     type MemStorage = "SM" | "ME" | "ON" | "EN" | "FD";
     type LockedPinState = "SIM PIN" | "SIM PUK" | "SIM PIN2" | "SIM PUK2";
@@ -345,6 +347,28 @@ export declare namespace AtMessage {
         readonly sw2: number;
         readonly response: string | undefined;
         constructor(raw: string, sw1: number, sw2: number, response: string | undefined);
+    }
+    type MemStorageInfo = {
+        used: number;
+        capacity: number;
+    };
+    class P_CPMS_SET extends AtMessage {
+        readonly readingAndDeleting: MemStorageInfo;
+        readonly writingAndSending: MemStorageInfo;
+        readonly receiving: MemStorageInfo;
+        constructor(raw: string, used1: number, total1: number, used2: number, total2: number, used3: number, total3: number);
+    }
+    class P_CPMS_READ extends AtMessage {
+        readonly readingAndDeleting: {
+            mem: MemStorage;
+        } & MemStorageInfo;
+        readonly writingAndSending: {
+            mem: MemStorage;
+        } & MemStorageInfo;
+        readonly receiving: {
+            mem: MemStorage;
+        } & MemStorageInfo;
+        constructor(raw: string, mem1: MemStorage, used1: number, total1: number, mem2: MemStorage, used2: number, total2: number, mem3: MemStorage, used3: number, total3: number);
     }
     class CONNECT extends AtMessage {
         readonly baudRate: number;

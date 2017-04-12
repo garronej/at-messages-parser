@@ -598,6 +598,84 @@ export namespace AtMessage {
                 }
         }
 
+        export type MemStorageInfo= {
+                used: number;
+                capacity: number;
+        };
+
+        export class P_CPMS_SET extends AtMessage {
+
+                public readonly readingAndDeleting: MemStorageInfo;
+                public readonly writingAndSending: MemStorageInfo;
+                public readonly receiving: MemStorageInfo;
+
+                constructor(raw: string,
+                        used1: number,
+                        total1: number,
+                        used2: number,
+                        total2: number,
+                        used3: number,
+                        total3: number
+                ){
+                        super(raw);
+
+                        this.readingAndDeleting= { 
+                                "used": used1, 
+                                "capacity": total1 
+                        };
+                        this.writingAndSending= {
+                                "used": used2, 
+                                "capacity": total2 
+                        };
+                        this.receiving= {
+                                "used": used3, 
+                                "capacity": total3
+                        };
+
+                }
+
+        }
+
+        export class P_CPMS_READ extends AtMessage {
+
+                public readonly readingAndDeleting: { mem: MemStorage } & MemStorageInfo;
+                public readonly writingAndSending: { mem: MemStorage } & MemStorageInfo;
+                public readonly receiving: { mem: MemStorage } & MemStorageInfo;
+
+                constructor(raw: string,
+                        mem1: MemStorage,
+                        used1: number,
+                        total1: number,
+                        mem2: MemStorage,
+                        used2: number,
+                        total2: number,
+                        mem3: MemStorage,
+                        used3: number,
+                        total3: number
+                ){
+                        super(raw);
+
+                        this.readingAndDeleting= { 
+                                "mem": mem1, 
+                                "used": used1, 
+                                "capacity": total1 
+                        };
+                        this.writingAndSending= {
+                                "mem": mem2, 
+                                "used": used2, 
+                                "capacity": total2 
+                        };
+                        this.receiving= {
+                                "mem": mem3, 
+                                "used": used3, 
+                                "capacity": total3 
+                        };
+
+                }
+                        
+                        
+        }
+
         export class CONNECT extends AtMessage {
                 constructor(raw: string,
                         public readonly baudRate: number) {

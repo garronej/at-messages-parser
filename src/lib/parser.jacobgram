@@ -192,6 +192,34 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
                 );
                 break;
             }
+        case "+CPMS":
+            if( match= rest.match(/^:\ ?([0-9]+),([0-9]+),([0-9]+),([0-9]+),([0-9]+),([0-9]+)$/) ){
+                atMessage= new AtMessage.P_CPMS_SET(
+                    raw,
+                    parseInt(match[1]),
+                    parseInt(match[2]),
+                    parseInt(match[3]),
+                    parseInt(match[4]),
+                    parseInt(match[5]),
+                    parseInt(match[6])
+                );
+                break;
+            }
+            if( match= rest.match(/^:\ ?"([^"]+)",([0-9]+),([0-9]+),"([^"]+)",([0-9]+),([0-9]+),"([^"]+)",([0-9]+),([0-9]+)$/) ){
+                atMessage= new AtMessage.P_CPMS_READ(
+                    raw,
+                    match[1],
+                    parseInt(match[2]),
+                    parseInt(match[3]),
+                    match[4],
+                    parseInt(match[5]),
+                    parseInt(match[6]),
+                    match[7],
+                    parseInt(match[8]),
+                    parseInt(match[9])
+                );
+                break;
+            }
         case "+CMGL":
             match= rest.match(/^:\ ?\(([0-9]+)-([0-9]+)\)$/);
             if( !match ) break;
