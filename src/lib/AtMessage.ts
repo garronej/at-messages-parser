@@ -552,6 +552,14 @@ export namespace AtMessage {
                 }
         }
 
+
+        export class P_CMSS_EXEC extends AtMessage {
+                constructor(raw: string,
+                        public readonly mr: number) {
+                        super(raw);
+                }
+        }
+
         export class P_CPBS_READ extends AtMessage {
                 constructor(raw: string,
                         public readonly storage: MemStorage,

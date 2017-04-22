@@ -148,9 +148,17 @@ this.actions=[,,,,,,,function (unparsed){
             );
             break;
         case "+CMGS":
-            match= rest.match(/^:\ ?([0-9]+)(?:,.*)?/);
+            match= rest.match(/^:\ ?([0-9]+)(?:,.*)?$/);
             if( !match ) break;
             atMessage = new AtMessage.P_CMGS_SET(
+                raw,
+                parseInt(match[1])
+            );
+            break;
+        case "+CMSS":
+            match= rest.match(/^:\ ?([0-9]+)(?:,.*)?$/);
+            if( !match ) break;
+            atMessage = new AtMessage.P_CMSS_EXEC(
                 raw,
                 parseInt(match[1])
             );

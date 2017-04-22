@@ -90,6 +90,7 @@ export declare namespace AtMessage {
         "P_CMGL_SET": AtId;
         "P_CMGL_TEST": AtId;
         "P_CMGS_SET": AtId;
+        "P_CMSS_EXEC": AtId;
         "P_CPBS_READ": AtId;
         "CX_ICCID_SET": AtId;
         "CX_SPN_SET": AtId;
@@ -320,6 +321,10 @@ export declare namespace AtMessage {
         constructor(raw: string, range: [MessageStat, MessageStat]);
     }
     class P_CMGS_SET extends AtMessage {
+        readonly mr: number;
+        constructor(raw: string, mr: number);
+    }
+    class P_CMSS_EXEC extends AtMessage {
         readonly mr: number;
         constructor(raw: string, mr: number);
     }

@@ -140,6 +140,7 @@ exports.atIdDict = {
     "P_CMGL_SET": "P_CMGL_SET",
     "P_CMGL_TEST": "P_CMGL_TEST",
     "P_CMGS_SET": "P_CMGS_SET",
+    "P_CMSS_EXEC": "P_CMSS_EXEC",
     "P_CPBS_READ": "P_CPBS_READ",
     "CX_ICCID_SET": "CX_ICCID_SET",
     "CX_SPN_SET": "CX_SPN_SET",

@@ -473,6 +473,16 @@ exports.AtMessage = AtMessage;
         return P_CMGS_SET;
     }(AtMessage));
     AtMessage.P_CMGS_SET = P_CMGS_SET;
+    var P_CMSS_EXEC = (function (_super) {
+        __extends(P_CMSS_EXEC, _super);
+        function P_CMSS_EXEC(raw, mr) {
+            var _this = _super.call(this, raw) || this;
+            _this.mr = mr;
+            return _this;
+        }
+        return P_CMSS_EXEC;
+    }(AtMessage));
+    AtMessage.P_CMSS_EXEC = P_CMSS_EXEC;
     var P_CPBS_READ = (function (_super) {
         __extends(P_CPBS_READ, _super);
         function P_CPBS_READ(raw, storage, used, total) {
