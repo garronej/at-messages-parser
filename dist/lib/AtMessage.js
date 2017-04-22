@@ -574,6 +574,16 @@ exports.AtMessage = AtMessage;
         return P_CPMS_READ;
     }(AtMessage));
     AtMessage.P_CPMS_READ = P_CPMS_READ;
+    var P_CMGW_EXEC = (function (_super) {
+        __extends(P_CMGW_EXEC, _super);
+        function P_CMGW_EXEC(raw, index) {
+            var _this = _super.call(this, raw) || this;
+            _this.index = index;
+            return _this;
+        }
+        return P_CMGW_EXEC;
+    }(AtMessage));
+    AtMessage.P_CMGW_EXEC = P_CMGW_EXEC;
     var CONNECT = (function (_super) {
         __extends(CONNECT, _super);
         function CONNECT(raw, baudRate) {

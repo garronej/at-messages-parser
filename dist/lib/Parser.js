@@ -272,6 +272,14 @@ this.actions=[,,,,,,,function (unparsed){
                 match[3]
             );
             break;
+        case "+CMGW":
+            match= rest.match(/^: ?([0-9]+)$/);
+            if( !match ) break;
+            atMessage= new AtMessage.P_CMGW_EXEC(
+                raw,
+                parseInt(match[1])
+            );
+            break;
         default: 
             if( AtMessage.isUnso(token) )
                 atMessage= new AtMessage(raw, AtMessage.tokenToId(token));

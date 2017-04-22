@@ -144,7 +144,8 @@ export type AtId =
     "P_CLAC_EXEC" |
     "P_CRSM_SET" |
     "P_CPMS_SET" |
-    "P_CPMS_READ" 
+    "P_CPMS_READ" |
+    "P_CMGW_EXEC" 
 ;
 export let atIdDict = {
     "ECHO": "ECHO" as AtId,
@@ -225,5 +226,6 @@ export let atIdDict = {
     "P_CLAC_EXEC": "P_CLAC_EXEC" as AtId,
     "P_CRSM_SET": "P_CRSM_SET" as AtId,
     "P_CPMS_SET": "P_CPMS_SET" as AtId,
-    "P_CPMS_READ": "P_CPMS_READ" as AtId
+    "P_CPMS_READ": "P_CPMS_READ" as AtId,
+    "P_CMGW_EXEC": "P_CMGW_EXEC" as AtId
 };

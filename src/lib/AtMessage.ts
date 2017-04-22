@@ -676,6 +676,14 @@ export namespace AtMessage {
                         
         }
 
+        export class P_CMGW_EXEC extends AtMessage {
+                constructor(raw: string,
+                        public readonly index: number
+                ){
+                        super(raw);
+                }
+        }
+
         export class CONNECT extends AtMessage {
                 constructor(raw: string,
                         public readonly baudRate: number) {

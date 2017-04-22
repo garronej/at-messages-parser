@@ -97,6 +97,7 @@ export declare namespace AtMessage {
         "P_CRSM_SET": AtId;
         "P_CPMS_SET": AtId;
         "P_CPMS_READ": AtId;
+        "P_CMGW_EXEC": AtId;
     };
     type MemStorage = "SM" | "ME" | "ON" | "EN" | "FD";
     type LockedPinState = "SIM PIN" | "SIM PUK" | "SIM PIN2" | "SIM PUK2";
@@ -369,6 +370,10 @@ export declare namespace AtMessage {
             mem: MemStorage;
         } & MemStorageInfo;
         constructor(raw: string, mem1: MemStorage, used1: number, total1: number, mem2: MemStorage, used2: number, total2: number, mem3: MemStorage, used3: number, total3: number);
+    }
+    class P_CMGW_EXEC extends AtMessage {
+        readonly index: number;
+        constructor(raw: string, index: number);
     }
     class CONNECT extends AtMessage {
         readonly baudRate: number;
