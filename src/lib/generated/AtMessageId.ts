@@ -132,6 +132,7 @@ export type AtId =
     "P_CNUM_EXEC" |
     "P_CPBR_EXEC" |
     "P_CPBR_TEST" |
+    "CX_CVOICE_READ" |
     "P_CPIN_READ" |
     "CX_CPIN_READ" |
     "CX_SYSINFO_EXEC" |
@@ -215,6 +216,7 @@ export let atIdDict = {
     "P_CNUM_EXEC": "P_CNUM_EXEC" as AtId,
     "P_CPBR_EXEC": "P_CPBR_EXEC" as AtId,
     "P_CPBR_TEST": "P_CPBR_TEST" as AtId,
+    "CX_CVOICE_READ": "CX_CVOICE_READ" as AtId,
     "P_CPIN_READ": "P_CPIN_READ" as AtId,
     "CX_CPIN_READ": "CX_CPIN_READ" as AtId,
     "CX_SYSINFO_EXEC": "CX_SYSINFO_EXEC" as AtId,

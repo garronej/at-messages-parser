@@ -1,7 +1,7 @@
 {
   "name": "at-messages-parser",
-  "version": "0.16.6",
-  "description": "A library for parsing AT output",
+  "version": "1.0.0",
+  "description": "A node sertialport parser for AT message",
   "repository": {
     "type": "git",
     "url": "git://github.com/garronej/at-messages-parser.git"

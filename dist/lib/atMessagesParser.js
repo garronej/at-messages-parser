@@ -66,7 +66,7 @@ function getSerialPortParser(delayBeforeFlush) {
     return out;
 }
 exports.getSerialPortParser = getSerialPortParser;
-var AtMessagesParserError = (function (_super) {
+var AtMessagesParserError = /** @class */ (function (_super) {
     __extends(AtMessagesParserError, _super);
     function AtMessagesParserError(rawAtMessages, originalError, urcMessages, leftToParse) {
         var _newTarget = this.constructor;

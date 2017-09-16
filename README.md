@@ -8,9 +8,6 @@ so the relevant information can be extracted easily.
 When the parser does not recognize the message it transform it in generic
 AtMessage an continue parsing.
 
-
-
-
 Note: AT+CPBR will be parsed correctly only if you read one entry at the time.
 (e.g. response to AT+CPBR=0,250\r will not be parsed, but AT+CPBR=4,4\r will)
 Note: This parser will only work for for GSM modem in PDU mode (not text mode)
@@ -25,15 +22,3 @@ https://www.paoli.cz/out/media/HUAWEI_MU609_HSPA_LGA_Modul_AT_Command_Interface_
 #Install 
 
 npm install garronej/at-messages-parser
-
-#Usage
-
-./example/sample.ts
-
-```` JavaScript
-````
-
-#Example
-
-````JavaScript
-````

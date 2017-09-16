@@ -84,6 +84,7 @@ export declare namespace AtMessage {
         "P_CNUM_EXEC": AtId;
         "P_CPBR_EXEC": AtId;
         "P_CPBR_TEST": AtId;
+        "CX_CVOICE_READ": AtId;
         "P_CPIN_READ": AtId;
         "CX_CPIN_READ": AtId;
         "CX_SYSINFO_EXEC": AtId;
@@ -271,6 +272,10 @@ export declare namespace AtMessage {
         readonly nLength: number;
         readonly tLength: number;
         constructor(raw: string, range: [number, number], nLength: number, tLength: number);
+    }
+    class CX_CVOICE_READ extends AtMessage {
+        readonly isEnabled: boolean;
+        constructor(raw: string, isEnabled: boolean);
     }
     class P_CPIN_READ extends AtMessage {
         readonly pinState: PinState;

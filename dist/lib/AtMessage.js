@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var AtMessageId_1 = require("./generated/AtMessageId");
 var errors = require("./errors");
-var AtMessage = (function () {
+var AtMessage = /** @class */ (function () {
     function AtMessage(raw, id) {
         var _newTarget = this.constructor;
         this.raw = raw;
@@ -178,7 +178,7 @@ exports.AtMessage = AtMessage;
         NumberingPlanIdentification[NumberingPlanIdentification["RESERVED_FOR_EXTENSION"] = 15] = "RESERVED_FOR_EXTENSION";
     })(NumberingPlanIdentification = AtMessage.NumberingPlanIdentification || (AtMessage.NumberingPlanIdentification = {}));
     /* END ENUM */
-    var LIST = (function (_super) {
+    var LIST = /** @class */ (function (_super) {
         __extends(LIST, _super);
         function LIST(raw, atMessages) {
             var _this = _super.call(this, raw, AtMessage.idDict.LIST) || this;
@@ -188,7 +188,7 @@ exports.AtMessage = AtMessage;
         return LIST;
     }(AtMessage));
     AtMessage.LIST = LIST;
-    var P_CMEE_READ = (function (_super) {
+    var P_CMEE_READ = /** @class */ (function (_super) {
         __extends(P_CMEE_READ, _super);
         function P_CMEE_READ(raw, reportMode) {
             var _this = _super.call(this, raw) || this;
@@ -199,7 +199,7 @@ exports.AtMessage = AtMessage;
         return P_CMEE_READ;
     }(AtMessage));
     AtMessage.P_CMEE_READ = P_CMEE_READ;
-    var CX_SIMST_URC = (function (_super) {
+    var CX_SIMST_URC = /** @class */ (function (_super) {
         __extends(CX_SIMST_URC, _super);
         function CX_SIMST_URC(raw, simState, lock) {
             var _this = _super.call(this, raw) || this;
@@ -212,7 +212,7 @@ exports.AtMessage = AtMessage;
         return CX_SIMST_URC;
     }(AtMessage));
     AtMessage.CX_SIMST_URC = CX_SIMST_URC;
-    var CX_SRVST_URC = (function (_super) {
+    var CX_SRVST_URC = /** @class */ (function (_super) {
         __extends(CX_SRVST_URC, _super);
         function CX_SRVST_URC(raw, serviceStatus) {
             var _this = _super.call(this, raw) || this;
@@ -223,7 +223,7 @@ exports.AtMessage = AtMessage;
         return CX_SRVST_URC;
     }(AtMessage));
     AtMessage.CX_SRVST_URC = CX_SRVST_URC;
-    var P_CME_ERROR = (function (_super) {
+    var P_CME_ERROR = /** @class */ (function (_super) {
         __extends(P_CME_ERROR, _super);
         function P_CME_ERROR(raw, info) {
             var _this = _super.call(this, raw) || this;
@@ -244,7 +244,7 @@ exports.AtMessage = AtMessage;
         return P_CME_ERROR;
     }(AtMessage));
     AtMessage.P_CME_ERROR = P_CME_ERROR;
-    var P_CMS_ERROR = (function (_super) {
+    var P_CMS_ERROR = /** @class */ (function (_super) {
         __extends(P_CMS_ERROR, _super);
         function P_CMS_ERROR(raw, info) {
             var _this = _super.call(this, raw) || this;
@@ -265,7 +265,7 @@ exports.AtMessage = AtMessage;
         return P_CMS_ERROR;
     }(AtMessage));
     AtMessage.P_CMS_ERROR = P_CMS_ERROR;
-    var P_CMGR_SET = (function (_super) {
+    var P_CMGR_SET = /** @class */ (function (_super) {
         __extends(P_CMGR_SET, _super);
         function P_CMGR_SET(raw, stat, length, pdu) {
             var _this = _super.call(this, raw) || this;
@@ -278,7 +278,7 @@ exports.AtMessage = AtMessage;
         return P_CMGR_SET;
     }(AtMessage));
     AtMessage.P_CMGR_SET = P_CMGR_SET;
-    var P_CMTI_URC = (function (_super) {
+    var P_CMTI_URC = /** @class */ (function (_super) {
         __extends(P_CMTI_URC, _super);
         function P_CMTI_URC(raw, mem, index) {
             var _this = _super.call(this, raw) || this;
@@ -289,7 +289,7 @@ exports.AtMessage = AtMessage;
         return P_CMTI_URC;
     }(AtMessage));
     AtMessage.P_CMTI_URC = P_CMTI_URC;
-    var P_CMT_URC = (function (_super) {
+    var P_CMT_URC = /** @class */ (function (_super) {
         __extends(P_CMT_URC, _super);
         function P_CMT_URC(raw, length, pdu) {
             var _this = _super.call(this, raw) || this;
@@ -300,7 +300,7 @@ exports.AtMessage = AtMessage;
         return P_CMT_URC;
     }(AtMessage));
     AtMessage.P_CMT_URC = P_CMT_URC;
-    var P_CDSI_URC = (function (_super) {
+    var P_CDSI_URC = /** @class */ (function (_super) {
         __extends(P_CDSI_URC, _super);
         function P_CDSI_URC(raw, mem, index) {
             var _this = _super.call(this, raw) || this;
@@ -311,7 +311,7 @@ exports.AtMessage = AtMessage;
         return P_CDSI_URC;
     }(AtMessage));
     AtMessage.P_CDSI_URC = P_CDSI_URC;
-    var P_CDS_URC = (function (_super) {
+    var P_CDS_URC = /** @class */ (function (_super) {
         __extends(P_CDS_URC, _super);
         function P_CDS_URC(raw, length, pdu) {
             var _this = _super.call(this, raw) || this;
@@ -322,7 +322,7 @@ exports.AtMessage = AtMessage;
         return P_CDS_URC;
     }(AtMessage));
     AtMessage.P_CDS_URC = P_CDS_URC;
-    var P_CNUM_EXEC = (function (_super) {
+    var P_CNUM_EXEC = /** @class */ (function (_super) {
         __extends(P_CNUM_EXEC, _super);
         function P_CNUM_EXEC(raw, alpha, number, type) {
             var _this = _super.call(this, raw) || this;
@@ -351,7 +351,7 @@ exports.AtMessage = AtMessage;
             chunk = getBit(str, i) + chunk;
         return parseInt(chunk, 2);
     }
-    var P_CPBR_EXEC = (function (_super) {
+    var P_CPBR_EXEC = /** @class */ (function (_super) {
         __extends(P_CPBR_EXEC, _super);
         function P_CPBR_EXEC(raw, index, number, type, text) {
             var _this = _super.call(this, raw) || this;
@@ -367,7 +367,7 @@ exports.AtMessage = AtMessage;
         return P_CPBR_EXEC;
     }(AtMessage));
     AtMessage.P_CPBR_EXEC = P_CPBR_EXEC;
-    var P_CPBR_TEST = (function (_super) {
+    var P_CPBR_TEST = /** @class */ (function (_super) {
         __extends(P_CPBR_TEST, _super);
         function P_CPBR_TEST(raw, range, nLength, tLength) {
             var _this = _super.call(this, raw) || this;
@@ -379,7 +379,17 @@ exports.AtMessage = AtMessage;
         return P_CPBR_TEST;
     }(AtMessage));
     AtMessage.P_CPBR_TEST = P_CPBR_TEST;
-    var P_CPIN_READ = (function (_super) {
+    var CX_CVOICE_READ = /** @class */ (function (_super) {
+        __extends(CX_CVOICE_READ, _super);
+        function CX_CVOICE_READ(raw, isEnabled) {
+            var _this = _super.call(this, raw) || this;
+            _this.isEnabled = isEnabled;
+            return _this;
+        }
+        return CX_CVOICE_READ;
+    }(AtMessage));
+    AtMessage.CX_CVOICE_READ = CX_CVOICE_READ;
+    var P_CPIN_READ = /** @class */ (function (_super) {
         __extends(P_CPIN_READ, _super);
         function P_CPIN_READ(raw, pinState) {
             var _this = _super.call(this, raw) || this;
@@ -389,7 +399,7 @@ exports.AtMessage = AtMessage;
         return P_CPIN_READ;
     }(AtMessage));
     AtMessage.P_CPIN_READ = P_CPIN_READ;
-    var CX_CPIN_READ = (function (_super) {
+    var CX_CPIN_READ = /** @class */ (function (_super) {
         __extends(CX_CPIN_READ, _super);
         function CX_CPIN_READ(raw, pinState, times, pukTimes, pinTimes, puk2Times, pin2Times) {
             var _this = _super.call(this, raw) || this;
@@ -404,7 +414,7 @@ exports.AtMessage = AtMessage;
         return CX_CPIN_READ;
     }(AtMessage));
     AtMessage.CX_CPIN_READ = CX_CPIN_READ;
-    var CX_SYSINFO_EXEC = (function (_super) {
+    var CX_SYSINFO_EXEC = /** @class */ (function (_super) {
         __extends(CX_SYSINFO_EXEC, _super);
         function CX_SYSINFO_EXEC(raw, serviceStatus, serviceDomain, isRoaming, sysMode, simState, cardLock, sysSubMode) {
             var _this = _super.call(this, raw) || this;
@@ -426,7 +436,7 @@ exports.AtMessage = AtMessage;
         return CX_SYSINFO_EXEC;
     }(AtMessage));
     AtMessage.CX_SYSINFO_EXEC = CX_SYSINFO_EXEC;
-    var CX_MODE_URC = (function (_super) {
+    var CX_MODE_URC = /** @class */ (function (_super) {
         __extends(CX_MODE_URC, _super);
         function CX_MODE_URC(raw, sysMode, sysSubMode) {
             var _this = _super.call(this, raw) || this;
@@ -439,7 +449,7 @@ exports.AtMessage = AtMessage;
         return CX_MODE_URC;
     }(AtMessage));
     AtMessage.CX_MODE_URC = CX_MODE_URC;
-    var P_CMGL_SET = (function (_super) {
+    var P_CMGL_SET = /** @class */ (function (_super) {
         __extends(P_CMGL_SET, _super);
         function P_CMGL_SET(raw, index, stat, length, pdu) {
             var _this = _super.call(this, raw) || this;
@@ -453,7 +463,7 @@ exports.AtMessage = AtMessage;
         return P_CMGL_SET;
     }(AtMessage));
     AtMessage.P_CMGL_SET = P_CMGL_SET;
-    var P_CMGL_TEST = (function (_super) {
+    var P_CMGL_TEST = /** @class */ (function (_super) {
         __extends(P_CMGL_TEST, _super);
         function P_CMGL_TEST(raw, range) {
             var _this = _super.call(this, raw) || this;
@@ -463,7 +473,7 @@ exports.AtMessage = AtMessage;
         return P_CMGL_TEST;
     }(AtMessage));
     AtMessage.P_CMGL_TEST = P_CMGL_TEST;
-    var P_CMGS_SET = (function (_super) {
+    var P_CMGS_SET = /** @class */ (function (_super) {
         __extends(P_CMGS_SET, _super);
         function P_CMGS_SET(raw, mr) {
             var _this = _super.call(this, raw) || this;
@@ -473,7 +483,7 @@ exports.AtMessage = AtMessage;
         return P_CMGS_SET;
     }(AtMessage));
     AtMessage.P_CMGS_SET = P_CMGS_SET;
-    var P_CMSS_EXEC = (function (_super) {
+    var P_CMSS_EXEC = /** @class */ (function (_super) {
         __extends(P_CMSS_EXEC, _super);
         function P_CMSS_EXEC(raw, mr) {
             var _this = _super.call(this, raw) || this;
@@ -483,7 +493,7 @@ exports.AtMessage = AtMessage;
         return P_CMSS_EXEC;
     }(AtMessage));
     AtMessage.P_CMSS_EXEC = P_CMSS_EXEC;
-    var P_CPBS_READ = (function (_super) {
+    var P_CPBS_READ = /** @class */ (function (_super) {
         __extends(P_CPBS_READ, _super);
         function P_CPBS_READ(raw, storage, used, total) {
             var _this = _super.call(this, raw) || this;
@@ -495,7 +505,7 @@ exports.AtMessage = AtMessage;
         return P_CPBS_READ;
     }(AtMessage));
     AtMessage.P_CPBS_READ = P_CPBS_READ;
-    var CX_ICCID_SET = (function (_super) {
+    var CX_ICCID_SET = /** @class */ (function (_super) {
         __extends(CX_ICCID_SET, _super);
         function CX_ICCID_SET(raw, iccid) {
             var _this = _super.call(this, raw) || this;
@@ -505,7 +515,7 @@ exports.AtMessage = AtMessage;
         return CX_ICCID_SET;
     }(AtMessage));
     AtMessage.CX_ICCID_SET = CX_ICCID_SET;
-    var CX_SPN_SET = (function (_super) {
+    var CX_SPN_SET = /** @class */ (function (_super) {
         __extends(CX_SPN_SET, _super);
         function CX_SPN_SET(raw, p1, p2, serviceProviderName) {
             var _this = _super.call(this, raw) || this;
@@ -517,7 +527,7 @@ exports.AtMessage = AtMessage;
         return CX_SPN_SET;
     }(AtMessage));
     AtMessage.CX_SPN_SET = CX_SPN_SET;
-    var P_CLAC_EXEC = (function (_super) {
+    var P_CLAC_EXEC = /** @class */ (function (_super) {
         __extends(P_CLAC_EXEC, _super);
         function P_CLAC_EXEC(raw, supportedCommands) {
             var _this = _super.call(this, raw) || this;
@@ -527,7 +537,7 @@ exports.AtMessage = AtMessage;
         return P_CLAC_EXEC;
     }(AtMessage));
     AtMessage.P_CLAC_EXEC = P_CLAC_EXEC;
-    var P_CRSM_SET = (function (_super) {
+    var P_CRSM_SET = /** @class */ (function (_super) {
         __extends(P_CRSM_SET, _super);
         function P_CRSM_SET(raw, sw1, sw2, response) {
             var _this = _super.call(this, raw) || this;
@@ -539,7 +549,7 @@ exports.AtMessage = AtMessage;
         return P_CRSM_SET;
     }(AtMessage));
     AtMessage.P_CRSM_SET = P_CRSM_SET;
-    var P_CPMS_SET = (function (_super) {
+    var P_CPMS_SET = /** @class */ (function (_super) {
         __extends(P_CPMS_SET, _super);
         function P_CPMS_SET(raw, used1, total1, used2, total2, used3, total3) {
             var _this = _super.call(this, raw) || this;
@@ -560,7 +570,7 @@ exports.AtMessage = AtMessage;
         return P_CPMS_SET;
     }(AtMessage));
     AtMessage.P_CPMS_SET = P_CPMS_SET;
-    var P_CPMS_READ = (function (_super) {
+    var P_CPMS_READ = /** @class */ (function (_super) {
         __extends(P_CPMS_READ, _super);
         function P_CPMS_READ(raw, mem1, used1, total1, mem2, used2, total2, mem3, used3, total3) {
             var _this = _super.call(this, raw) || this;
@@ -584,7 +594,7 @@ exports.AtMessage = AtMessage;
         return P_CPMS_READ;
     }(AtMessage));
     AtMessage.P_CPMS_READ = P_CPMS_READ;
-    var P_CMGW_EXEC = (function (_super) {
+    var P_CMGW_EXEC = /** @class */ (function (_super) {
         __extends(P_CMGW_EXEC, _super);
         function P_CMGW_EXEC(raw, index) {
             var _this = _super.call(this, raw) || this;
@@ -594,7 +604,7 @@ exports.AtMessage = AtMessage;
         return P_CMGW_EXEC;
     }(AtMessage));
     AtMessage.P_CMGW_EXEC = P_CMGW_EXEC;
-    var CONNECT = (function (_super) {
+    var CONNECT = /** @class */ (function (_super) {
         __extends(CONNECT, _super);
         function CONNECT(raw, baudRate) {
             var _this = _super.call(this, raw) || this;
@@ -604,7 +614,7 @@ exports.AtMessage = AtMessage;
         return CONNECT;
     }(AtMessage));
     AtMessage.CONNECT = CONNECT;
-    var ERROR = (function (_super) {
+    var ERROR = /** @class */ (function (_super) {
         __extends(ERROR, _super);
         function ERROR(raw) {
             return _super.call(this, raw) || this;

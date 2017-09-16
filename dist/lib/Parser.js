@@ -177,6 +177,14 @@ this.actions=[,,,,,,,function (unparsed){
                 total
             );
             break;
+        case "^CVOICE":
+            match= rest.match(/^:\ ?([0-9]+)/);
+            if( !match ) break;
+            atMessage= new AtMessage.CX_CVOICE_READ(
+                raw,
+                match[1] === "0"
+            );
+            break;
         case "+CPBR":
             if( match= rest.match(/^:\ ?([0-9]+),"([^"]*)",([0-9]+),"(.*)"$/) ){
                 atMessage= new AtMessage.P_CPBR_EXEC(

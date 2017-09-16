@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var trackable_map_1 = require("trackable-map");
-var StringExtractor = (function () {
+var StringExtractor = /** @class */ (function () {
     function StringExtractor(source) {
         this.source = source;
         this.map = new trackable_map_1.TrackableMap();

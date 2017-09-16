@@ -406,6 +406,7 @@ export namespace AtMessage {
                 }
         }
 
+
         function getBits(bits: number, to: number, from: number): number {
 
                 let getBit = (str: string, i: number): string => {
@@ -453,6 +454,13 @@ export namespace AtMessage {
                         public readonly nLength: number,
                         public readonly tLength: number
                 ) {
+                        super(raw);
+                }
+        }
+
+        export class CX_CVOICE_READ extends AtMessage {
+                constructor(raw: string,
+                        public readonly isEnabled: boolean) {
                         super(raw);
                 }
         }
@@ -583,7 +591,7 @@ export namespace AtMessage {
                         public readonly p1: number,
                         public readonly p2: number,
                         public readonly serviceProviderName: string
-                ){
+                ) {
                         super(raw);
                 }
         }
@@ -606,7 +614,7 @@ export namespace AtMessage {
                 }
         }
 
-        export type MemStorageInfo= {
+        export type MemStorageInfo = {
                 used: number;
                 capacity: number;
         };
@@ -624,19 +632,19 @@ export namespace AtMessage {
                         total2: number,
                         used3: number,
                         total3: number
-                ){
+                ) {
                         super(raw);
 
-                        this.readingAndDeleting= { 
-                                "used": used1, 
-                                "capacity": total1 
+                        this.readingAndDeleting = {
+                                "used": used1,
+                                "capacity": total1
                         };
-                        this.writingAndSending= {
-                                "used": used2, 
-                                "capacity": total2 
+                        this.writingAndSending = {
+                                "used": used2,
+                                "capacity": total2
                         };
-                        this.receiving= {
-                                "used": used3, 
+                        this.receiving = {
+                                "used": used3,
                                 "capacity": total3
                         };
 
@@ -660,34 +668,34 @@ export namespace AtMessage {
                         mem3: MemStorage,
                         used3: number,
                         total3: number
-                ){
+                ) {
                         super(raw);
 
-                        this.readingAndDeleting= { 
-                                "mem": mem1, 
-                                "used": used1, 
-                                "capacity": total1 
+                        this.readingAndDeleting = {
+                                "mem": mem1,
+                                "used": used1,
+                                "capacity": total1
                         };
-                        this.writingAndSending= {
-                                "mem": mem2, 
-                                "used": used2, 
-                                "capacity": total2 
+                        this.writingAndSending = {
+                                "mem": mem2,
+                                "used": used2,
+                                "capacity": total2
                         };
-                        this.receiving= {
-                                "mem": mem3, 
-                                "used": used3, 
-                                "capacity": total3 
+                        this.receiving = {
+                                "mem": mem3,
+                                "used": used3,
+                                "capacity": total3
                         };
 
                 }
-                        
-                        
+
+
         }
 
         export class P_CMGW_EXEC extends AtMessage {
                 constructor(raw: string,
                         public readonly index: number
-                ){
+                ) {
                         super(raw);
                 }
         }
