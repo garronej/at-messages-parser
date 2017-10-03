@@ -9,7 +9,11 @@ if (n) {
 
 } else {
 
-    for (let i = 1; i <= 37; i++) {
+    let n= 38;
+
+    console.log(`Running ${n} tests`);
+
+    for (let i = 1; i <= n; i++) {
 
         try {
             require("./test" + i);

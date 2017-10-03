@@ -4,7 +4,7 @@ var trackable_map_1 = require("trackable-map");
 var StringExtractor = /** @class */ (function () {
     function StringExtractor(source) {
         this.source = source;
-        this.map = new trackable_map_1.TrackableMap();
+        this.map = new trackable_map_1.MapExtended();
         for (var i = 0; i < source.length; i++)
             this.map.set(i, source[i]);
     }
@@ -35,18 +35,4 @@ var StringExtractor = /** @class */ (function () {
     return StringExtractor;
 }());
 exports.StringExtractor = StringExtractor;
-//Test
-var stringExtractor = new StringExtractor("aaabbbccc");
-console.assert(stringExtractor.extract("bbb") === 3);
-console.assert(stringExtractor.state === "aaaccc");
-console.assert(stringExtractor.extract("c") === 6);
-try {
-    stringExtractor.extract("aacccc");
-}
-catch (error) {
-    console.assert(error.message === 'StringExtractor error: "aacccc" not found in "aaacc"');
-}
-console.assert(stringExtractor.state === "aaacc");
-console.assert(stringExtractor.extract("aaacc") === 0);
-console.assert(stringExtractor.state === "");
 //# sourceMappingURL=StringExtractor.js.map
