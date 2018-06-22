@@ -8,7 +8,7 @@
                 "declaration": true,
                 "outDir": "./dist",
                 "strictNullChecks": true,
-                "sourceMap": true,
+                "sourceMap": false,
                 "newLine": "LF"
         },
         "filesGlob": [

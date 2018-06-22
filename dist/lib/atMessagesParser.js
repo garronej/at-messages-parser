@@ -168,4 +168,3 @@ function reorder(rawAtMessages, atMessages) {
     console.assert(atMessagesSorted.length === atMessages.length);
     return atMessagesSorted;
 }
-//# sourceMappingURL=atMessagesParser.js.map

@@ -35,4 +35,3 @@ var StringExtractor = /** @class */ (function () {
     return StringExtractor;
 }());
 exports.StringExtractor = StringExtractor;
-//# sourceMappingURL=StringExtractor.js.map
