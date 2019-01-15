@@ -28,7 +28,7 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
     let match;
     switch (token) {
         case "+CMTI":
-            match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
+            match= rest.match(/^:\ ?"([A-Z]{2})",(\-?[0-9]+)$/);
             if( !match ) break;
             atMessage = new AtMessage.P_CMTI_URC(
                 raw,

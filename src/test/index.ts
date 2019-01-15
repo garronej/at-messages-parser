@@ -1,5 +1,4 @@
-
-require("colors");
+import "colors";
 
 let n = process.argv[2];
 
@@ -9,7 +8,7 @@ if (n) {
 
 } else {
 
-    let n= 38;
+    let n= 39;
 
     console.log(`Running ${n} tests`);
 

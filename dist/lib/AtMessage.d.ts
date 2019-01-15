@@ -12,8 +12,8 @@ export declare class AtMessage {
     static isFinal(id: AtMessage.Id): boolean;
     static hasPdu(unsoToken: string): boolean;
     static tokenToId(token: string, type?: "READ" | "EXEC" | "SET"): AtMessage.Id;
-    private static isError(id);
-    private static idToToken(id);
+    private static isError;
+    private static idToToken;
 }
 export declare namespace AtMessage {
     type Id = AtId;
@@ -109,14 +109,14 @@ export declare namespace AtMessage {
         RESTRICTED_SERVICES = 1,
         VALID_SERVICES = 2,
         RESTRICTED_REGIONAL_SERVICES = 3,
-        POWER_SAVING_OR_HIBERNATE_STATE = 4,
+        POWER_SAVING_OR_HIBERNATE_STATE = 4
     }
     enum ServiceDomain {
         NO_SERVICES = 0,
         ONLY_CS_SERVICES = 1,
         ONLY_PS_SERVICES = 2,
         PS_AND_CS_SERVICES = 3,
-        CS_AND_PS_NOT_REGISTERED_SEARCHING = 4,
+        CS_AND_PS_NOT_REGISTERED_SEARCHING = 4
     }
     enum SysMode {
         NO_SERVICES = 0,
@@ -128,7 +128,7 @@ export declare namespace AtMessage {
         GPS = 6,
         GSM_WCDMA = 7,
         CDMA_HDR_HYBRID = 8,
-        TD_SCDMA = 15,
+        TD_SCDMA = 15
     }
     enum SysSubMode {
         NO_SERVICES = 0,
@@ -149,7 +149,7 @@ export declare namespace AtMessage {
         ONE_X_EVDV = 15,
         TREE_X_RTT = 16,
         HSPA_P_64QAM = 17,
-        HSPA_P_MIMO = 18,
+        HSPA_P_MIMO = 18
     }
     enum SimState {
         INVALID_SIM = 0,
@@ -158,19 +158,19 @@ export declare namespace AtMessage {
         INVALID_SIM_PS = 3,
         INVALID_SIM_PS_CS = 4,
         ROM_SIM = 240,
-        NO_SIM = 255,
+        NO_SIM = 255
     }
     enum ReportMode {
         NO_DEBUG_INFO = 0,
         DEBUG_INFO_CODE = 1,
-        DEBUG_INFO_VERBOSE = 2,
+        DEBUG_INFO_VERBOSE = 2
     }
     enum MessageStat {
         REC_UNREAD = 0,
         REC_READ = 1,
         STO_UNSENT = 2,
         STO_SENT = 3,
-        ALL = 4,
+        ALL = 4
     }
     enum TypeOfNumber {
         UNKNOWN = 0,
@@ -178,7 +178,7 @@ export declare namespace AtMessage {
         NATIONAL_NUMBER = 2,
         NETWORK_SPECIFIC = 3,
         DEDICATED_ACCESS_AKA_SHORT_CODE = 4,
-        RESERVED_FOR_EXTENSION = 7,
+        RESERVED_FOR_EXTENSION = 7
     }
     enum NumberingPlanIdentification {
         UNKNOWN = 0,
@@ -188,7 +188,7 @@ export declare namespace AtMessage {
         NATIONAL = 8,
         PRIVATE = 9,
         RESERVED_FOR_CTS = 11,
-        RESERVED_FOR_EXTENSION = 15,
+        RESERVED_FOR_EXTENSION = 15
     }
     class LIST extends AtMessage {
         readonly atMessages: AtMessage[];

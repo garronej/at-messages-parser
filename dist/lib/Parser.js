@@ -25,7 +25,7 @@ this.actions=[,,,,,,,function (unparsed){
     let match;
     switch (token) {
         case "+CMTI":
-            match= rest.match(/^:\ ?"([A-Z]{2})",([0-9]+)$/);
+            match= rest.match(/^:\ ?"([A-Z]{2})",(\-?[0-9]+)$/);
             if( !match ) break;
             atMessage = new AtMessage.P_CMTI_URC(
                 raw,
