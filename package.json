@@ -1,6 +1,6 @@
 {
   "name": "at-messages-parser",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A node sertialport parser for AT message",
   "repository": {
     "type": "git",

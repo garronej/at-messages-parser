@@ -8,7 +8,7 @@ if (n) {
 
 } else {
 
-    let n= 39;
+    let n= 40;
 
     console.log(`Running ${n} tests`);
 

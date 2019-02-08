@@ -43,6 +43,20 @@ export let unsoTokens = [
     "^NDISEND",
     "^NDISSTAT",
     "+CREG",
+    "^STIN",
+    "+CGREG",
+    "^LOCCHD",
+    "^SIMFILEREFRES",
+    "^DATAVALIDIT",
+    "^WPDCP",
+    "^WPDDL",
+    "^WPDOP",
+    "^CTZV",
+    "^RFSWITCH",
+    "+CBM",
+    "^OTACMSG",
+    "^DSDORMANT",
+    "^ECLSTAT",
     "RING"
 ];
 export let unsoTokensPdu = [
@@ -111,6 +125,20 @@ export type AtId =
     "CX_NDISEND_URC" |
     "CX_NDISSTAT_URC" |
     "P_CREG_URC" |
+    "CX_STIN_URC" |
+    "P_CGREG_URC" |
+    "CX_LOCCHD_URC" |
+    "CX_SIMFILEREFRES_URC" |
+    "CX_DATAVALIDIT_URC" |
+    "CX_WPDCP_URC" |
+    "CX_WPDDL_URC" |
+    "CX_WPDOP_URC" |
+    "CX_CTZV_URC" |
+    "CX_RFSWITCH_URC" |
+    "P_CBM_URC" |
+    "CX_OTACMSG_URC" |
+    "CX_DSDORMANT_URC" |
+    "CX_ECLSTAT_URC" |
     "RING_URC" |
     "P_CMT_URC" |
     "P_CDS_URC" |
@@ -195,6 +223,20 @@ export let atIdDict = {
     "CX_NDISEND_URC": "CX_NDISEND_URC" as AtId,
     "CX_NDISSTAT_URC": "CX_NDISSTAT_URC" as AtId,
     "P_CREG_URC": "P_CREG_URC" as AtId,
+    "CX_STIN_URC": "CX_STIN_URC" as AtId,
+    "P_CGREG_URC": "P_CGREG_URC" as AtId,
+    "CX_LOCCHD_URC": "CX_LOCCHD_URC" as AtId,
+    "CX_SIMFILEREFRES_URC": "CX_SIMFILEREFRES_URC" as AtId,
+    "CX_DATAVALIDIT_URC": "CX_DATAVALIDIT_URC" as AtId,
+    "CX_WPDCP_URC": "CX_WPDCP_URC" as AtId,
+    "CX_WPDDL_URC": "CX_WPDDL_URC" as AtId,
+    "CX_WPDOP_URC": "CX_WPDOP_URC" as AtId,
+    "CX_CTZV_URC": "CX_CTZV_URC" as AtId,
+    "CX_RFSWITCH_URC": "CX_RFSWITCH_URC" as AtId,
+    "P_CBM_URC": "P_CBM_URC" as AtId,
+    "CX_OTACMSG_URC": "CX_OTACMSG_URC" as AtId,
+    "CX_DSDORMANT_URC": "CX_DSDORMANT_URC" as AtId,
+    "CX_ECLSTAT_URC": "CX_ECLSTAT_URC" as AtId,
     "RING_URC": "RING_URC" as AtId,
     "P_CMT_URC": "P_CMT_URC" as AtId,
     "P_CDS_URC": "P_CDS_URC" as AtId,

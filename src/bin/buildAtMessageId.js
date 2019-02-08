@@ -11,6 +11,9 @@ let unsoTokens = [
         "^CEND" , "^SMMEMFULL" , "^IPDATA" , "^IPSTATE" , "^TIMESETRULT" , 
         "^DATASETRULT" , "^XDSTATUS" , "^POSITION" , "^POSEND" , "^WNINV" , 
         "^FOTASTATE" , "^FWLSTATE" , "^NDISEND" , "^NDISSTAT", "+CREG",
+        "^STIN", "+CGREG", "^LOCCHD", "^SIMFILEREFRES", "^DATAVALIDIT",
+        "^WPDCP","^WPDDL", "^WPDOP", "^CTZV", "^RFSWITCH", "+CBM",
+        "^OTACMSG", "^DSDORMANT", "^ECLSTAT",
         "RING"
 ];
 
