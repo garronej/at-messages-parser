@@ -156,6 +156,7 @@ export type AtId =
     "P_CMS_ERROR" |
     "LIST" |
     "P_CMEE_READ" |
+    "P_CREG_READ" |
     "P_CMGR_SET" |
     "P_CNUM_EXEC" |
     "P_CPBR_EXEC" |
@@ -254,6 +255,7 @@ export let atIdDict = {
     "P_CMS_ERROR": "P_CMS_ERROR" as AtId,
     "LIST": "LIST" as AtId,
     "P_CMEE_READ": "P_CMEE_READ" as AtId,
+    "P_CREG_READ": "P_CREG_READ" as AtId,
     "P_CMGR_SET": "P_CMGR_SET" as AtId,
     "P_CNUM_EXEC": "P_CNUM_EXEC" as AtId,
     "P_CPBR_EXEC": "P_CPBR_EXEC" as AtId,

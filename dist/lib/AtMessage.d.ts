@@ -1,7 +1,7 @@
 import { AtId } from "./generated/AtMessageId";
 export declare class AtMessage {
     readonly raw: string;
-    isUnsolicited?: boolean;
+    isUnsolicited?: true;
     isFinal?: boolean;
     isError?: boolean;
     readonly id: AtMessage.Id | undefined;
@@ -94,6 +94,7 @@ export declare namespace AtMessage {
         "P_CMS_ERROR": AtId;
         "LIST": AtId;
         "P_CMEE_READ": AtId;
+        "P_CREG_READ": AtId;
         "P_CMGR_SET": AtId;
         "P_CNUM_EXEC": AtId;
         "P_CPBR_EXEC": AtId;
@@ -115,6 +116,14 @@ export declare namespace AtMessage {
         "P_CPMS_READ": AtId;
         "P_CMGW_EXEC": AtId;
     };
+    enum NetworkRegistrationState {
+        NOT_REGISTERED_AND_NOT_SEARCHING = 0,
+        REGISTERED_HOME_NETWORK = 1,
+        NOT_REGISTERED_BUT_SEARCHING = 2,
+        REGISTRATION_DENIED = 3,
+        UNKNOWN = 4,
+        REGISTERED_ROAMING = 5
+    }
     type MemStorage = "SM" | "ME" | "ON" | "EN" | "FD";
     type LockedPinState = "SIM PIN" | "SIM PUK" | "SIM PIN2" | "SIM PUK2";
     type PinState = LockedPinState | "READY";
@@ -212,6 +221,16 @@ export declare namespace AtMessage {
         readonly reportMode: ReportMode;
         readonly reportModeName: string;
         constructor(raw: string, reportMode: ReportMode);
+    }
+    class P_CREG_READ extends AtMessage {
+        readonly stat: NetworkRegistrationState;
+        readonly statName: string;
+        constructor(raw: string, stat: NetworkRegistrationState);
+    }
+    class P_CREG_URC extends AtMessage {
+        readonly stat: NetworkRegistrationState;
+        readonly statName: string;
+        constructor(raw: string, stat: NetworkRegistrationState);
     }
     class CX_SIMST_URC extends AtMessage {
         readonly simState: SimState;

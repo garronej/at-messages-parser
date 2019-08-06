@@ -11,7 +11,7 @@ import * as errors from "./errors";
 
 export class AtMessage {
 
-        public isUnsolicited?: boolean;
+        public isUnsolicited?: true;
         public isFinal?: boolean;
         public isError?: boolean;
         public readonly id: AtMessage.Id | undefined;
@@ -129,6 +129,16 @@ export namespace AtMessage {
 
 
         /* ENUM  */
+
+        //NOTE: +CREG URC <stat>
+        export enum NetworkRegistrationState {
+                NOT_REGISTERED_AND_NOT_SEARCHING = 0,
+                REGISTERED_HOME_NETWORK = 1,
+                NOT_REGISTERED_BUT_SEARCHING = 2,
+                REGISTRATION_DENIED = 3,
+                UNKNOWN = 4,
+                REGISTERED_ROAMING = 5
+        }
 
         export type MemStorage = "SM" | "ME" | "ON" | "EN" | "FD";
 
@@ -252,6 +262,42 @@ export namespace AtMessage {
 
                         this.reportModeName = ReportMode[reportMode];
                 }
+        }
+
+        export class P_CREG_READ extends AtMessage {
+
+                public readonly statName: string;
+
+                constructor(
+                        raw: string, 
+                        public readonly stat: NetworkRegistrationState
+                ) {
+
+                        super(raw);
+
+                        this.statName = NetworkRegistrationState[stat];
+
+                        delete this.isUnsolicited;
+
+                }
+
+        }
+
+        export class P_CREG_URC extends AtMessage {
+
+                public readonly statName: string;
+
+                constructor(
+                        raw: string,
+                        public readonly stat: NetworkRegistrationState
+                ) {
+
+                        super(raw);
+
+                        this.statName = NetworkRegistrationState[stat];
+
+                }
+
         }
 
         export class CX_SIMST_URC extends AtMessage {

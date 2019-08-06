@@ -81,6 +81,17 @@ var AtMessage = /** @class */ (function () {
 exports.AtMessage = AtMessage;
 (function (AtMessage) {
     AtMessage.idDict = AtMessageId_1.atIdDict;
+    /* ENUM  */
+    //NOTE: +CREG URC <stat>
+    var NetworkRegistrationState;
+    (function (NetworkRegistrationState) {
+        NetworkRegistrationState[NetworkRegistrationState["NOT_REGISTERED_AND_NOT_SEARCHING"] = 0] = "NOT_REGISTERED_AND_NOT_SEARCHING";
+        NetworkRegistrationState[NetworkRegistrationState["REGISTERED_HOME_NETWORK"] = 1] = "REGISTERED_HOME_NETWORK";
+        NetworkRegistrationState[NetworkRegistrationState["NOT_REGISTERED_BUT_SEARCHING"] = 2] = "NOT_REGISTERED_BUT_SEARCHING";
+        NetworkRegistrationState[NetworkRegistrationState["REGISTRATION_DENIED"] = 3] = "REGISTRATION_DENIED";
+        NetworkRegistrationState[NetworkRegistrationState["UNKNOWN"] = 4] = "UNKNOWN";
+        NetworkRegistrationState[NetworkRegistrationState["REGISTERED_ROAMING"] = 5] = "REGISTERED_ROAMING";
+    })(NetworkRegistrationState = AtMessage.NetworkRegistrationState || (AtMessage.NetworkRegistrationState = {}));
     var ServiceStatus;
     (function (ServiceStatus) {
         ServiceStatus[ServiceStatus["NO_SERVICES"] = 0] = "NO_SERVICES";
@@ -199,6 +210,29 @@ exports.AtMessage = AtMessage;
         return P_CMEE_READ;
     }(AtMessage));
     AtMessage.P_CMEE_READ = P_CMEE_READ;
+    var P_CREG_READ = /** @class */ (function (_super) {
+        __extends(P_CREG_READ, _super);
+        function P_CREG_READ(raw, stat) {
+            var _this = _super.call(this, raw) || this;
+            _this.stat = stat;
+            _this.statName = NetworkRegistrationState[stat];
+            delete _this.isUnsolicited;
+            return _this;
+        }
+        return P_CREG_READ;
+    }(AtMessage));
+    AtMessage.P_CREG_READ = P_CREG_READ;
+    var P_CREG_URC = /** @class */ (function (_super) {
+        __extends(P_CREG_URC, _super);
+        function P_CREG_URC(raw, stat) {
+            var _this = _super.call(this, raw) || this;
+            _this.stat = stat;
+            _this.statName = NetworkRegistrationState[stat];
+            return _this;
+        }
+        return P_CREG_URC;
+    }(AtMessage));
+    AtMessage.P_CREG_URC = P_CREG_URC;
     var CX_SIMST_URC = /** @class */ (function (_super) {
         __extends(CX_SIMST_URC, _super);
         function CX_SIMST_URC(raw, simState, lock) {

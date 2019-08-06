@@ -114,6 +114,26 @@ this.actions=[,,,,,,,function (unparsed){
                 parseInt(match[1])
             );
             break;
+        case "+CREG": {
+            match= rest.match(/^:\ ?(.*)$/);
+            if( !match ) break;
+            var list =match[1].split(",").map(str=> str.replace(/\s/g,""));
+            var isUrc;
+            if( [ 2, 5].indexOf(list.length) >= 0 ){
+                isUrc= false;
+            }else if( [1,3].indexOf(list.length) >= 0 ) {
+                isUrc= true;
+            }else if( list.length === 4 ){
+                isUrc= !list[1].match(/^[012345]$/);
+            }
+            var statStr= list[isUrc?0:1];
+            if( !statStr.match(/^[012345]$/) ) break;
+            var stat= parseInt(statStr);
+            atMessage= isUrc ? 
+                new AtMessage.P_CREG_URC( raw, stat):
+                new AtMessage.P_CREG_READ( raw, stat)
+                ;
+        } break;
         case "^CPIN":
             match= rest.match(/^:\ ?([\ A-Z]+),((?:[0-9]+)?),([0-9]+),([0-9]+),([0-9]+),([0-9]+)$/);
             if( !match ) break;
