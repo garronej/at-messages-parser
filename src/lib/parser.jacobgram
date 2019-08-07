@@ -64,12 +64,17 @@ Message= 'MESSAGE' function(full_raw_token_rest_pdu_ok) {
                 parseInt(match[1])
             );
             break;
-        case "^RSSI":{
-            match= rest.match(/^:\ ?([0-9]+)$/);
+        case "^RSSI":
+        case "+CSQ": {
+            match= rest.match(/^:\ ?([0-9]+)/);
             if( !match ) break;
             var rssi= parseInt(match[1]);
             if( !( (0 <= rssi && rssi <= 31) || rssi === 99) ) break;
-            atMessage= new AtMessage.CX_RSSI_URC(
+            atMessage= new AtMessage[
+                token === "^RSSI" ? 
+                    "CX_RSSI_URC":
+                    "P_CSQ_EXEC"
+            ](
                 raw,
                 rssi
             );

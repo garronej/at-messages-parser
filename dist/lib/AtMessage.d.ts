@@ -95,6 +95,7 @@ export declare namespace AtMessage {
         "LIST": AtId;
         "P_CMEE_READ": AtId;
         "P_CREG_READ": AtId;
+        "P_CSQ_EXEC": AtId;
         "P_CMGR_SET": AtId;
         "P_CNUM_EXEC": AtId;
         "P_CPBR_EXEC": AtId;
@@ -247,6 +248,11 @@ export declare namespace AtMessage {
         readonly rssi: number;
         readonly gsmOrUtranCellSignalStrength: "<=-113 dBm" | "-111 dBm" | "–109 dBm to –53 dBm" | "≥ –51 dBm" | "Unknown or undetectable";
         static getGsmOrUtranCellSignalStrengthFromRssi(rssi: number): typeof CX_RSSI_URC.prototype.gsmOrUtranCellSignalStrength;
+        constructor(raw: string, rssi: number);
+    }
+    class P_CSQ_EXEC extends AtMessage {
+        readonly rssi: number;
+        readonly gsmOrUtranCellSignalStrength: typeof CX_RSSI_URC.prototype.gsmOrUtranCellSignalStrength;
         constructor(raw: string, rssi: number);
     }
     class P_CME_ERROR extends AtMessage {

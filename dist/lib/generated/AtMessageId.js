@@ -159,6 +159,7 @@ exports.atIdDict = {
     "LIST": "LIST",
     "P_CMEE_READ": "P_CMEE_READ",
     "P_CREG_READ": "P_CREG_READ",
+    "P_CSQ_EXEC": "P_CSQ_EXEC",
     "P_CMGR_SET": "P_CMGR_SET",
     "P_CNUM_EXEC": "P_CNUM_EXEC",
     "P_CPBR_EXEC": "P_CPBR_EXEC",

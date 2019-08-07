@@ -262,7 +262,8 @@ exports.AtMessage = AtMessage;
         function CX_RSSI_URC(raw, rssi) {
             var _this = _super.call(this, raw) || this;
             _this.rssi = rssi;
-            _this.gsmOrUtranCellSignalStrength = CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
+            _this.gsmOrUtranCellSignalStrength =
+                CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
             return _this;
         }
         CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi = function (rssi) {
@@ -286,6 +287,18 @@ exports.AtMessage = AtMessage;
         return CX_RSSI_URC;
     }(AtMessage));
     AtMessage.CX_RSSI_URC = CX_RSSI_URC;
+    var P_CSQ_EXEC = /** @class */ (function (_super) {
+        __extends(P_CSQ_EXEC, _super);
+        function P_CSQ_EXEC(raw, rssi) {
+            var _this = _super.call(this, raw) || this;
+            _this.rssi = rssi;
+            _this.gsmOrUtranCellSignalStrength =
+                CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
+            return _this;
+        }
+        return P_CSQ_EXEC;
+    }(AtMessage));
+    AtMessage.P_CSQ_EXEC = P_CSQ_EXEC;
     var P_CME_ERROR = /** @class */ (function (_super) {
         __extends(P_CME_ERROR, _super);
         function P_CME_ERROR(raw, info) {

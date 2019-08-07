@@ -363,9 +363,28 @@ export namespace AtMessage {
                 ) {
                         super(raw);
 
-                        this.gsmOrUtranCellSignalStrength= CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
+                        this.gsmOrUtranCellSignalStrength= 
+                                CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
 
                 }
+        }
+
+        export class P_CSQ_EXEC extends AtMessage {
+
+                public readonly gsmOrUtranCellSignalStrength:
+                        typeof CX_RSSI_URC.prototype.gsmOrUtranCellSignalStrength;
+
+                constructor(
+                        raw: string,
+                        public readonly rssi: number
+                ){
+                        super(raw);
+
+                        this.gsmOrUtranCellSignalStrength= 
+                                CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
+
+                }
+
         }
 
         export class P_CME_ERROR extends AtMessage {
