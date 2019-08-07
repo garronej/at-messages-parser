@@ -61,6 +61,16 @@ this.actions=[,,,,,,,function (unparsed){
                 parseInt(match[1])
             );
             break;
+        case "^RSSI":{
+            match= rest.match(/^:\ ?([0-9]+)$/);
+            if( !match ) break;
+            var rssi= parseInt(match[1]);
+            if( !( (0 <= rssi && rssi <= 31) || rssi === 99) ) break;
+            atMessage= new AtMessage.CX_RSSI_URC(
+                raw,
+                rssi
+            );
+        } break; 
         case "^MODE":
             match= rest.match(/^:\ ?([0-9]+),([0-9]+)$/);
             if( !match ) break;

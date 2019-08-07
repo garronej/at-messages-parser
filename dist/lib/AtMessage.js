@@ -257,6 +257,35 @@ exports.AtMessage = AtMessage;
         return CX_SRVST_URC;
     }(AtMessage));
     AtMessage.CX_SRVST_URC = CX_SRVST_URC;
+    var CX_RSSI_URC = /** @class */ (function (_super) {
+        __extends(CX_RSSI_URC, _super);
+        function CX_RSSI_URC(raw, rssi) {
+            var _this = _super.call(this, raw) || this;
+            _this.rssi = rssi;
+            _this.gsmOrUtranCellSignalStrength = CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
+            return _this;
+        }
+        CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi = function (rssi) {
+            if (rssi === 0) {
+                return "<=-113 dBm";
+            }
+            else if (rssi === 1) {
+                return "-111 dBm";
+            }
+            else if (2 <= rssi && rssi <= 30) {
+                return "–109 dBm to –53 dBm";
+            }
+            else if (rssi === 31) {
+                return "≥ –51 dBm";
+            }
+            else if (rssi === 99) {
+                return "Unknown or undetectable";
+            }
+            throw new Error("never");
+        };
+        return CX_RSSI_URC;
+    }(AtMessage));
+    AtMessage.CX_RSSI_URC = CX_RSSI_URC;
     var P_CME_ERROR = /** @class */ (function (_super) {
         __extends(P_CME_ERROR, _super);
         function P_CME_ERROR(raw, info) {

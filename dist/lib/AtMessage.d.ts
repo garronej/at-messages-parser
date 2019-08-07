@@ -243,6 +243,12 @@ export declare namespace AtMessage {
         readonly serviceStatusName: string;
         constructor(raw: string, serviceStatus: ServiceStatus);
     }
+    class CX_RSSI_URC extends AtMessage {
+        readonly rssi: number;
+        readonly gsmOrUtranCellSignalStrength: "<=-113 dBm" | "-111 dBm" | "–109 dBm to –53 dBm" | "≥ –51 dBm" | "Unknown or undetectable";
+        static getGsmOrUtranCellSignalStrengthFromRssi(rssi: number): typeof CX_RSSI_URC.prototype.gsmOrUtranCellSignalStrength;
+        constructor(raw: string, rssi: number);
+    }
     class P_CME_ERROR extends AtMessage {
         readonly verbose: string;
         readonly code: number;
