@@ -27,35 +27,35 @@ expect = String.raw
     "id": "CX_RSSI_URC",
     "isUnsolicited": true,
     "rssi": 0,
-    "gsmOrUtranCellSignalStrength": "<=-113 dBm"
+    "gsmOrUtranCellSignalStrengthTier": "<=-113 dBm"
   },
   {
     "raw": "\r\n^RSSI: 1\r\n",
     "id": "CX_RSSI_URC",
     "isUnsolicited": true,
     "rssi": 1,
-    "gsmOrUtranCellSignalStrength": "-111 dBm"
+    "gsmOrUtranCellSignalStrengthTier": "-111 dBm"
   },
   {
     "raw": "\r\n^RSSI: 23\r\n",
     "id": "CX_RSSI_URC",
     "isUnsolicited": true,
     "rssi": 23,
-    "gsmOrUtranCellSignalStrength": "–109 dBm to –53 dBm"
+    "gsmOrUtranCellSignalStrengthTier": "–109 dBm to –53 dBm"
   },
   {
     "raw": "\r\n^RSSI: 31\r\n",
     "id": "CX_RSSI_URC",
     "isUnsolicited": true,
     "rssi": 31,
-    "gsmOrUtranCellSignalStrength": "≥ –51 dBm"
+    "gsmOrUtranCellSignalStrengthTier": "≥ –51 dBm"
   },
   {
     "raw": "\r\n^RSSI: 99\r\n",
     "id": "CX_RSSI_URC",
     "isUnsolicited": true,
     "rssi": 99,
-    "gsmOrUtranCellSignalStrength": "Unknown or undetectable"
+    "gsmOrUtranCellSignalStrengthTier": "Unknown or undetectable"
   }
 ]`;
 

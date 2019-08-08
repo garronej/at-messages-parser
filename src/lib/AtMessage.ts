@@ -242,6 +242,37 @@ export namespace AtMessage {
                 RESERVED_FOR_EXTENSION = 0b1111
         }
 
+        export type GsmOrUtranCellSignalStrengthTier =
+                "<=-113 dBm" |
+                "-111 dBm" |
+                "–109 dBm to –53 dBm" |
+                "≥ –51 dBm" |
+                "Unknown or undetectable"
+                ;
+
+        export namespace GsmOrUtranCellSignalStrengthTier {
+
+                export function getForRssi(rssi: number): GsmOrUtranCellSignalStrengthTier {
+
+                        if (rssi === 0) {
+                                return "<=-113 dBm";
+                        } else if (rssi === 1) {
+                                return "-111 dBm";
+                        } else if (2 <= rssi && rssi <= 30) {
+                                return "–109 dBm to –53 dBm";
+                        } else if (rssi === 31) {
+                                return "≥ –51 dBm";
+                        } else if (rssi === 99) {
+                                return "Unknown or undetectable";
+                        }
+
+                        throw new Error("never");
+
+                }
+
+        }
+
+
         /* END ENUM */
 
 
@@ -269,7 +300,7 @@ export namespace AtMessage {
                 public readonly statName: string;
 
                 constructor(
-                        raw: string, 
+                        raw: string,
                         public readonly stat: NetworkRegistrationState
                 ) {
 
@@ -330,32 +361,8 @@ export namespace AtMessage {
 
         export class CX_RSSI_URC extends AtMessage {
 
-                public readonly gsmOrUtranCellSignalStrength:
-                        "<=-113 dBm" |
-                        "-111 dBm" |
-                        "–109 dBm to –53 dBm" |
-                        "≥ –51 dBm" |
-                        "Unknown or undetectable"
-                        ;
 
-                public static getGsmOrUtranCellSignalStrengthFromRssi(
-                        rssi: number
-                ): typeof CX_RSSI_URC.prototype.gsmOrUtranCellSignalStrength {
-
-                        if( rssi === 0 ){
-                                return "<=-113 dBm";
-                        }else if(rssi === 1 ){
-                                return "-111 dBm";
-                        }else if( 2<= rssi  && rssi <= 30 ){
-                                return "–109 dBm to –53 dBm";
-                        }else if( rssi === 31 ){
-                                return "≥ –51 dBm";
-                        }else if( rssi === 99 ){
-                                return "Unknown or undetectable";
-                        }
-
-                        throw new Error("never");
-                }
+                public readonly gsmOrUtranCellSignalStrengthTier: GsmOrUtranCellSignalStrengthTier;
 
                 constructor(
                         raw: string,
@@ -363,25 +370,24 @@ export namespace AtMessage {
                 ) {
                         super(raw);
 
-                        this.gsmOrUtranCellSignalStrength= 
-                                CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
+                        this.gsmOrUtranCellSignalStrengthTier =
+                                GsmOrUtranCellSignalStrengthTier.getForRssi(rssi);
 
                 }
         }
 
         export class P_CSQ_EXEC extends AtMessage {
 
-                public readonly gsmOrUtranCellSignalStrength:
-                        typeof CX_RSSI_URC.prototype.gsmOrUtranCellSignalStrength;
+                public readonly gsmOrUtranCellSignalStrengthTier: GsmOrUtranCellSignalStrengthTier;
 
                 constructor(
                         raw: string,
                         public readonly rssi: number
-                ){
+                ) {
                         super(raw);
 
-                        this.gsmOrUtranCellSignalStrength= 
-                                CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
+                        this.gsmOrUtranCellSignalStrengthTier = 
+                                GsmOrUtranCellSignalStrengthTier.getForRssi(rssi);
 
                 }
 

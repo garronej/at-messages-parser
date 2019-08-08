@@ -188,6 +188,28 @@ exports.AtMessage = AtMessage;
         NumberingPlanIdentification[NumberingPlanIdentification["RESERVED_FOR_CTS"] = 11] = "RESERVED_FOR_CTS";
         NumberingPlanIdentification[NumberingPlanIdentification["RESERVED_FOR_EXTENSION"] = 15] = "RESERVED_FOR_EXTENSION";
     })(NumberingPlanIdentification = AtMessage.NumberingPlanIdentification || (AtMessage.NumberingPlanIdentification = {}));
+    var GsmOrUtranCellSignalStrengthTier;
+    (function (GsmOrUtranCellSignalStrengthTier) {
+        function getForRssi(rssi) {
+            if (rssi === 0) {
+                return "<=-113 dBm";
+            }
+            else if (rssi === 1) {
+                return "-111 dBm";
+            }
+            else if (2 <= rssi && rssi <= 30) {
+                return "–109 dBm to –53 dBm";
+            }
+            else if (rssi === 31) {
+                return "≥ –51 dBm";
+            }
+            else if (rssi === 99) {
+                return "Unknown or undetectable";
+            }
+            throw new Error("never");
+        }
+        GsmOrUtranCellSignalStrengthTier.getForRssi = getForRssi;
+    })(GsmOrUtranCellSignalStrengthTier = AtMessage.GsmOrUtranCellSignalStrengthTier || (AtMessage.GsmOrUtranCellSignalStrengthTier = {}));
     /* END ENUM */
     var LIST = /** @class */ (function (_super) {
         __extends(LIST, _super);
@@ -262,28 +284,10 @@ exports.AtMessage = AtMessage;
         function CX_RSSI_URC(raw, rssi) {
             var _this = _super.call(this, raw) || this;
             _this.rssi = rssi;
-            _this.gsmOrUtranCellSignalStrength =
-                CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
+            _this.gsmOrUtranCellSignalStrengthTier =
+                GsmOrUtranCellSignalStrengthTier.getForRssi(rssi);
             return _this;
         }
-        CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi = function (rssi) {
-            if (rssi === 0) {
-                return "<=-113 dBm";
-            }
-            else if (rssi === 1) {
-                return "-111 dBm";
-            }
-            else if (2 <= rssi && rssi <= 30) {
-                return "–109 dBm to –53 dBm";
-            }
-            else if (rssi === 31) {
-                return "≥ –51 dBm";
-            }
-            else if (rssi === 99) {
-                return "Unknown or undetectable";
-            }
-            throw new Error("never");
-        };
         return CX_RSSI_URC;
     }(AtMessage));
     AtMessage.CX_RSSI_URC = CX_RSSI_URC;
@@ -292,8 +296,8 @@ exports.AtMessage = AtMessage;
         function P_CSQ_EXEC(raw, rssi) {
             var _this = _super.call(this, raw) || this;
             _this.rssi = rssi;
-            _this.gsmOrUtranCellSignalStrength =
-                CX_RSSI_URC.getGsmOrUtranCellSignalStrengthFromRssi(rssi);
+            _this.gsmOrUtranCellSignalStrengthTier =
+                GsmOrUtranCellSignalStrengthTier.getForRssi(rssi);
             return _this;
         }
         return P_CSQ_EXEC;

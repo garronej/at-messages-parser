@@ -22,7 +22,7 @@ expect = String.raw
     "raw": "\r\n+CSQ: 19,99\r\n",
     "id": "P_CSQ_EXEC",
     "rssi": 19,
-    "gsmOrUtranCellSignalStrength": "–109 dBm to –53 dBm"
+    "gsmOrUtranCellSignalStrengthTier": "–109 dBm to –53 dBm"
   },
   {
     "raw": "\r\nOK\r\n",

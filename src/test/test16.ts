@@ -291,14 +291,14 @@ expect = String.raw
     "id": "CX_RSSI_URC",
     "isUnsolicited": true,
     "rssi": 19,
-    "gsmOrUtranCellSignalStrength": "–109 dBm to –53 dBm"
+    "gsmOrUtranCellSignalStrengthTier": "–109 dBm to –53 dBm"
   },
   {
     "raw": "\r\n^RSSI:19\r\n",
     "id": "CX_RSSI_URC",
     "isUnsolicited": true,
     "rssi": 19,
-    "gsmOrUtranCellSignalStrength": "–109 dBm to –53 dBm"
+    "gsmOrUtranCellSignalStrengthTier": "–109 dBm to –53 dBm"
   },
   {
     "raw": "\r\nOK\r\n",

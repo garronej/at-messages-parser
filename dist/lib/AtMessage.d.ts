@@ -214,6 +214,10 @@ export declare namespace AtMessage {
         RESERVED_FOR_CTS = 11,
         RESERVED_FOR_EXTENSION = 15
     }
+    type GsmOrUtranCellSignalStrengthTier = "<=-113 dBm" | "-111 dBm" | "–109 dBm to –53 dBm" | "≥ –51 dBm" | "Unknown or undetectable";
+    namespace GsmOrUtranCellSignalStrengthTier {
+        function getForRssi(rssi: number): GsmOrUtranCellSignalStrengthTier;
+    }
     class LIST extends AtMessage {
         readonly atMessages: AtMessage[];
         constructor(raw: string, atMessages: AtMessage[]);
@@ -246,13 +250,12 @@ export declare namespace AtMessage {
     }
     class CX_RSSI_URC extends AtMessage {
         readonly rssi: number;
-        readonly gsmOrUtranCellSignalStrength: "<=-113 dBm" | "-111 dBm" | "–109 dBm to –53 dBm" | "≥ –51 dBm" | "Unknown or undetectable";
-        static getGsmOrUtranCellSignalStrengthFromRssi(rssi: number): typeof CX_RSSI_URC.prototype.gsmOrUtranCellSignalStrength;
+        readonly gsmOrUtranCellSignalStrengthTier: GsmOrUtranCellSignalStrengthTier;
         constructor(raw: string, rssi: number);
     }
     class P_CSQ_EXEC extends AtMessage {
         readonly rssi: number;
-        readonly gsmOrUtranCellSignalStrength: typeof CX_RSSI_URC.prototype.gsmOrUtranCellSignalStrength;
+        readonly gsmOrUtranCellSignalStrengthTier: GsmOrUtranCellSignalStrengthTier;
         constructor(raw: string, rssi: number);
     }
     class P_CME_ERROR extends AtMessage {
