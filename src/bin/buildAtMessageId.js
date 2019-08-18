@@ -13,7 +13,7 @@ let unsoTokens = [
         "^FOTASTATE" , "^FWLSTATE" , "^NDISEND" , "^NDISSTAT", "+CREG",
         "^STIN", "+CGREG", "^LOCCHD", "^SIMFILEREFRES", "^DATAVALIDIT",
         "^WPDCP","^WPDDL", "^WPDOP", "^CTZV", "^RFSWITCH", "+CBM",
-        "^OTACMSG", "^DSDORMANT", "^ECLSTAT",
+        "^OTACMSG", "^DSDORMANT", "^ECLSTAT", "+CSSU",
         "RING"
 ];
 

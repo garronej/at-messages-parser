@@ -59,6 +59,7 @@ exports.unsoTokens = [
     "^OTACMSG",
     "^DSDORMANT",
     "^ECLSTAT",
+    "+CSSU",
     "RING"
 ];
 exports.unsoTokensPdu = [
@@ -141,6 +142,7 @@ exports.atIdDict = {
     "CX_OTACMSG_URC": "CX_OTACMSG_URC",
     "CX_DSDORMANT_URC": "CX_DSDORMANT_URC",
     "CX_ECLSTAT_URC": "CX_ECLSTAT_URC",
+    "P_CSSU_URC": "P_CSSU_URC",
     "RING_URC": "RING_URC",
     "P_CMT_URC": "P_CMT_URC",
     "P_CDS_URC": "P_CDS_URC",

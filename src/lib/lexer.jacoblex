@@ -12,9 +12,20 @@
         return "UNPARSED";
 }
 
+
 <UNSO> \r\nRING\r\n {
 
         this.jjval= ["\r\nRING\r\n", "\r\nRING\r\n", "RING", "", "", ""];
+
+        return "MESSAGE";
+
+}
+
+<UNSO> \r\n\r\n\+CSSU:[^\r]*\r\n {
+
+        var match= this.jjtext.match(/^\r\n\r\n\+CSSU([^\r]*)\r\n$/);
+
+        this.jjval= [this.jjtext, this.jjtext, "+CSSU", match[1] , "", ""];
 
         return "MESSAGE";
 

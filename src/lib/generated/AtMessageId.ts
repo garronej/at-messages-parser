@@ -57,6 +57,7 @@ export let unsoTokens = [
     "^OTACMSG",
     "^DSDORMANT",
     "^ECLSTAT",
+    "+CSSU",
     "RING"
 ];
 export let unsoTokensPdu = [
@@ -139,6 +140,7 @@ export type AtId =
     "CX_OTACMSG_URC" |
     "CX_DSDORMANT_URC" |
     "CX_ECLSTAT_URC" |
+    "P_CSSU_URC" |
     "RING_URC" |
     "P_CMT_URC" |
     "P_CDS_URC" |
@@ -239,6 +241,7 @@ export let atIdDict = {
     "CX_OTACMSG_URC": "CX_OTACMSG_URC" as AtId,
     "CX_DSDORMANT_URC": "CX_DSDORMANT_URC" as AtId,
     "CX_ECLSTAT_URC": "CX_ECLSTAT_URC" as AtId,
+    "P_CSSU_URC": "P_CSSU_URC" as AtId,
     "RING_URC": "RING_URC" as AtId,
     "P_CMT_URC": "P_CMT_URC" as AtId,
     "P_CDS_URC": "P_CDS_URC" as AtId,

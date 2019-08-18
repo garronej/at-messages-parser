@@ -67,8 +67,8 @@ break;
 
 function CDFA_UNSO(){
 	this.ss=1;
-	this.as=[2,3,4,9,14];
-	this.tt=[null,null,1,1,1,null,null,null,null,3,null,null,null,null,2];
+	this.as=[2,3,4,11,20,25];
+	this.tt=[null,null,1,1,1,null,null,null,null,null,null,4,null,null,null,null,null,null,null,null,2,null,null,null,null,3];
 this.stt={};
 }
 CDFA_UNSO.prototype= new CDFA_base();
@@ -90,47 +90,96 @@ next = 5;
 }
 break;
 case 5:
-if(("+" === c )){
+if(("\r" === c )){
 next = 6;
-} else if(("R" === c )){
+} else if(("+" === c )){
 next = 7;
+} else if(("R" === c )){
+next = 8;
 } else if(("^" === c )){
-next = 6;
+next = 7;
 }
 break;
 case 6:
-if(("A" <= c && c <= "Z") ){
-next = 9;
-}
-break;
-case 7:
-if(("I" === c )){
+if(("\n" === c )){
 next = 10;
 }
 break;
-case 9:
+case 7:
 if(("A" <= c && c <= "Z") ){
-next = 9;
-}
-break;
-case 10:
-if(("N" === c )){
 next = 11;
 }
 break;
-case 11:
-if(("G" === c )){
+case 8:
+if(("I" === c )){
 next = 12;
 }
 break;
-case 12:
-if(("\r" === c )){
+case 10:
+if(("+" === c )){
 next = 13;
 }
 break;
-case 13:
-if(("\n" === c )){
+case 11:
+if(("A" <= c && c <= "Z") ){
+next = 11;
+}
+break;
+case 12:
+if(("N" === c )){
 next = 14;
+}
+break;
+case 13:
+if(("C" === c )){
+next = 15;
+}
+break;
+case 14:
+if(("G" === c )){
+next = 16;
+}
+break;
+case 15:
+if(("S" === c )){
+next = 17;
+}
+break;
+case 16:
+if(("\r" === c )){
+next = 18;
+}
+break;
+case 17:
+if(("S" === c )){
+next = 19;
+}
+break;
+case 18:
+if(("\n" === c )){
+next = 20;
+}
+break;
+case 19:
+if(("U" === c )){
+next = 21;
+}
+break;
+case 21:
+if((":" === c )){
+next = 22;
+}
+break;
+case 22:
+if((c < "\r" || "\r" < c) ){
+next = 22;
+} else if(("\r" === c )){
+next = 24;
+}
+break;
+case 24:
+if(("\n" === c )){
+next = 25;
 }
 break;
 	}
@@ -140,7 +189,7 @@ break;
 function CDFA_UNSO_END_PDU(){
 	this.ss=1;
 	this.as=[7];
-	this.tt=[null,null,null,null,null,null,null,4];
+	this.tt=[null,null,null,null,null,null,null,5];
 this.stt={};
 }
 CDFA_UNSO_END_PDU.prototype= new CDFA_base();
@@ -183,7 +232,7 @@ break;
 function CDFA_UNSO_END(){
 	this.ss=1;
 	this.as=[4];
-	this.tt=[null,null,null,null,5];
+	this.tt=[null,null,null,null,6];
 this.stt={};
 }
 CDFA_UNSO_END.prototype= new CDFA_base();
@@ -209,7 +258,7 @@ break;
 function CDFA_RESP(){
 	this.ss=1;
 	this.as=[2,3,4,21];
-	this.tt=[null,null,6,6,6,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7];
+	this.tt=[null,null,7,7,7,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,8];
 this.stt={};
 }
 CDFA_RESP.prototype= new CDFA_base();
@@ -312,7 +361,7 @@ break;
 function CDFA_LIST_CMGL(){
 	this.ss=1;
 	this.as=[2,3,4,10];
-	this.tt=[null,null,8,8,8,null,null,null,null,null,9];
+	this.tt=[null,null,9,9,9,null,null,null,null,null,10];
 this.stt={};
 }
 CDFA_LIST_CMGL.prototype= new CDFA_base();
@@ -365,7 +414,7 @@ break;
 function CDFA_LIST_CMGL_EXPECT(){
 	this.ss=1;
 	this.as=[14,21];
-	this.tt=[null,null,null,null,null,null,null,null,null,null,null,null,null,null,11,null,null,null,null,null,null,10];
+	this.tt=[null,null,null,null,null,null,null,null,null,null,null,null,null,null,12,null,null,null,null,null,null,11];
 this.stt={};
 }
 CDFA_LIST_CMGL_EXPECT.prototype= new CDFA_base();
@@ -482,7 +531,7 @@ break;
 function CDFA_LIST_CNUM(){
 	this.ss=1;
 	this.as=[2,3,4,17,28,37];
-	this.tt=[null,null,12,12,12,null,null,null,null,null,null,null,null,null,null,null,null,17,null,null,null,null,null,null,null,null,null,null,16,null,null,null,null,null,null,null,null,13];
+	this.tt=[null,null,13,13,13,null,null,null,null,null,null,null,null,null,null,null,null,18,null,null,null,null,null,null,null,null,null,null,17,null,null,null,null,null,null,null,null,14];
 this.stt={};
 }
 CDFA_LIST_CNUM.prototype= new CDFA_base();
@@ -685,14 +734,14 @@ break;
 	return next;
 };
 
-function CDFA__LA_13(){
+function CDFA__LA_14(){
 	this.ss=1;
 	this.as=[2,3,4,5,23];
-	this.tt=[null,null,15,15,15,15,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,14];
+	this.tt=[null,null,16,16,16,16,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,15];
 this.stt={};
 }
-CDFA__LA_13.prototype= new CDFA_base();
-CDFA__LA_13.prototype.nextState = function(state, c){
+CDFA__LA_14.prototype= new CDFA_base();
+CDFA__LA_14.prototype.nextState = function(state, c){
     var next = 0;
     switch(state){
 case 1:
@@ -827,7 +876,7 @@ break;
 function CDFA_LIST_CNUM_EXPECT(){
 	this.ss=1;
 	this.as=[6,12];
-	this.tt=[null,null,null,null,null,null,18,null,null,null,null,null,19];
+	this.tt=[null,null,null,null,null,null,19,null,null,null,null,null,20];
 this.stt={};
 }
 CDFA_LIST_CNUM_EXPECT.prototype= new CDFA_base();
@@ -895,7 +944,7 @@ break;
 function CDFA_FINAL(){
 	this.ss=1;
 	this.as=[2,3,4,8];
-	this.tt=[null,null,20,20,20,null,null,null,21];
+	this.tt=[null,null,21,21,21,null,null,null,22];
 this.stt={};
 }
 CDFA_FINAL.prototype= new CDFA_base();
@@ -958,6 +1007,16 @@ this.actions = [,function anonymous() {
 
 
         this.jjval= ["\r\nRING\r\n", "\r\nRING\r\n", "RING", "", "", ""];
+
+        return "MESSAGE";
+
+
+},function anonymous() {
+
+
+        var match= this.jjtext.match(/^\r\n\r\n\+CSSU([^\r]*)\r\n$/);
+
+        this.jjval= [this.jjtext, this.jjtext, "+CSSU", match[1] , "", ""];
 
         return "MESSAGE";
 
@@ -1091,7 +1150,7 @@ return (function anonymous() {
         return "UNPARSED";
 
 },function anonymous() {
-this.pushState('_LA_13');
+this.pushState('_LA_14');
 this.lawhole=this.jjtext;
 },function anonymous() {
 this.restoreLookAhead();
@@ -1200,8 +1259,8 @@ this.states["LIST_CMGL_EXPECT"] = {};
 this.states["LIST_CMGL_EXPECT"].dfa = new CDFA_LIST_CMGL_EXPECT();
 this.states["LIST_CNUM"] = {};
 this.states["LIST_CNUM"].dfa = new CDFA_LIST_CNUM();
-this.states["_LA_13"] = {};
-this.states["_LA_13"].dfa = new CDFA__LA_13();
+this.states["_LA_14"] = {};
+this.states["_LA_14"].dfa = new CDFA__LA_14();
 this.states["LIST_CNUM_EXPECT"] = {};
 this.states["LIST_CNUM_EXPECT"].dfa = new CDFA_LIST_CNUM_EXPECT();
 this.states["FINAL"] = {};

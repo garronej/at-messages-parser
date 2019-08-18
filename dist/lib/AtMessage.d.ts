@@ -77,6 +77,7 @@ export declare namespace AtMessage {
         "CX_OTACMSG_URC": AtId;
         "CX_DSDORMANT_URC": AtId;
         "CX_ECLSTAT_URC": AtId;
+        "P_CSSU_URC": AtId;
         "RING_URC": AtId;
         "P_CMT_URC": AtId;
         "P_CDS_URC": AtId;
