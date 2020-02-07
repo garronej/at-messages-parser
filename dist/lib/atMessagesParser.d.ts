@@ -1,9 +1,9 @@
 /// <reference types="node" />
 import { AtMessage } from "./AtMessage";
-import { SyncEvent } from "ts-events-extended";
+import { Evt } from "ts-evt";
 export declare function getSerialPortParser(delayBeforeFlush?: number): ((emitter: NodeJS.EventEmitter, buffer: Buffer) => void) & {
     flush: () => string;
-    evtRawData: SyncEvent<string>;
+    evtRawData: Evt<string>;
 };
 export declare class AtMessagesParserError extends Error {
     readonly rawAtMessages: string;

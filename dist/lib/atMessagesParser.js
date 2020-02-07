@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var AtMessage_1 = require("./AtMessage");
-var ts_events_extended_1 = require("ts-events-extended");
+var ts_evt_1 = require("ts-evt");
 var StringExtractor_1 = require("./StringExtractor");
 var trackable_map_1 = require("trackable-map");
 var Lexer = require("./Lexer");
@@ -20,7 +20,7 @@ function getSerialPortParser(delayBeforeFlush) {
     var delay = (typeof delayBeforeFlush === "number") ? delayBeforeFlush : 10000;
     var rawAtMessagesBuffer = "";
     var timer = null;
-    var evtRawData = new ts_events_extended_1.SyncEvent();
+    var evtRawData = new ts_evt_1.Evt();
     var out = function (emitter, buffer) {
         var bufferString = buffer.toString("utf8");
         evtRawData.post(bufferString);

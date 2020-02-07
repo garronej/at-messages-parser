@@ -1,5 +1,5 @@
 import { AtMessage } from "./AtMessage";
-import { SyncEvent } from "ts-events-extended";
+import { Evt } from "ts-evt";
 import { StringExtractor } from "./StringExtractor";
 import { TrackableMap } from "trackable-map";
 
@@ -12,7 +12,7 @@ export function getSerialPortParser(delayBeforeFlush?: number){
 
         let rawAtMessagesBuffer = "";
         let timer: NodeJS.Timer | null= null;
-        let evtRawData= new SyncEvent<string>();
+        let evtRawData= new Evt<string>();
 
         type Main= (emitter: NodeJS.EventEmitter, buffer: Buffer)=> void;
         type Flush= ()=> string;

@@ -996,14 +996,16 @@ this.pos={line:0,col:0};
 this.states={};
 this.state = ['DEFAULT'];
 this.lastChar = '\n';
-this.actions = [,function anonymous() {
+this.actions = [,function anonymous(
+) {
 
 
         this.jjval= this.jjtext;
 
         return "UNPARSED";
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         this.jjval= ["\r\nRING\r\n", "\r\nRING\r\n", "RING", "", "", ""];
@@ -1011,7 +1013,8 @@ this.actions = [,function anonymous() {
         return "MESSAGE";
 
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         var match= this.jjtext.match(/^\r\n\r\n\+CSSU([^\r]*)\r\n$/);
@@ -1021,7 +1024,8 @@ this.actions = [,function anonymous() {
         return "MESSAGE";
 
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         //console.log("MESSAGE UNSO", JSON.stringify(this.jjtext));
@@ -1049,7 +1053,8 @@ this.actions = [,function anonymous() {
 
 
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         this.popState();
@@ -1068,7 +1073,8 @@ this.actions = [,function anonymous() {
         return "MESSAGE";
 
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         this.popState();
@@ -1087,7 +1093,8 @@ this.actions = [,function anonymous() {
         return "MESSAGE";
 
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         //console.log("UNPARSED FUCK", JSON.stringify(this.jjtext));
@@ -1097,7 +1104,8 @@ this.actions = [,function anonymous() {
         
         return "UNPARSED";
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         //console.log("MESSAGE", JSON.stringify(this.jjtext));
@@ -1108,23 +1116,27 @@ this.actions = [,function anonymous() {
         return "MESSAGE";
 
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         this.jjval= this.jjtext;
         
         return "UNPARSED";
 
-},function anonymous() {
+},function anonymous(
+) {
 this.evictTail(7);
-return (function anonymous() {
+return (function anonymous(
+) {
 
 
         this.pushState("LIST_CMGL_EXPECT");
 
 
 }).apply(this);
-},function anonymous() {
+},function anonymous(
+) {
 
 
         this.jjval= this.jjtext;
@@ -1132,7 +1144,8 @@ return (function anonymous() {
         return "CMGL";
 
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         this.popState();
@@ -1142,19 +1155,23 @@ return (function anonymous() {
         return "END_LIST_CMGL";
 
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         this.jjval= this.jjtext;
         
         return "UNPARSED";
 
-},function anonymous() {
+},function anonymous(
+) {
 this.pushState('_LA_14');
 this.lawhole=this.jjtext;
-},function anonymous() {
+},function anonymous(
+) {
 this.restoreLookAhead();
-return (function anonymous() {
+return (function anonymous(
+) {
 
 
         this.pushState("LIST_CNUM_EXPECT");
@@ -1163,12 +1180,15 @@ return (function anonymous() {
 
 
 }).apply(this);
-},function anonymous() {
+},function anonymous(
+) {
 this.less(2);
 
-},function anonymous() {
+},function anonymous(
+) {
 this.evictTail(10);
-return (function anonymous() {
+return (function anonymous(
+) {
 
 
         this.pushState("LIST_CNUM_EXPECT");
@@ -1177,9 +1197,11 @@ return (function anonymous() {
 
 
 }).apply(this);
-},function anonymous() {
+},function anonymous(
+) {
 this.evictTail(5);
-return (function anonymous() {
+return (function anonymous(
+) {
 
 
         this.pushState("LIST_CNUM_EXPECT");
@@ -1188,7 +1210,8 @@ return (function anonymous() {
 
 
 }).apply(this);
-},function anonymous() {
+},function anonymous(
+) {
 
 
         this.jjval= this.jjtext;
@@ -1196,21 +1219,24 @@ return (function anonymous() {
         return "CNUM";
 
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         this.popState();
 
         return "END_LIST_CNUM";
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         this.jjval= this.jjtext;
         
         return "UNPARSED";
 
-},function anonymous() {
+},function anonymous(
+) {
 
 
         if( this.jjtext.match(/^\r\n\+CM[ES]\ ERROR/) ){
@@ -1266,7 +1292,7 @@ this.states["LIST_CNUM_EXPECT"].dfa = new CDFA_LIST_CNUM_EXPECT();
 this.states["FINAL"] = {};
 this.states["FINAL"].dfa = new CDFA_FINAL();
 }
-Lexer.prototype.setInput=function (input){
+Lexer.prototype.setInput=function(input){
         this.pos={row:0, col:0};
         if(typeof input === 'string')
         {input = new StringReader(input);}
@@ -1298,7 +1324,7 @@ Lexer.prototype.nextToken=function () {
         }
         return this.current;
     };
-Lexer.prototype.resetToken=function (){
+Lexer.prototype.resetToken=function(){
         this.getDFA().reset();
         this.getDFA().bol = (this.lastChar === '\n');
         this.lastValid = undefined;
@@ -1338,7 +1364,7 @@ Lexer.prototype.halt=function () {
             throw new Error('Unexpected char \''+this.input.peek()+'\' at '+this.jjline +':'+this.jjcol);
         }
     };
-Lexer.prototype.more=function (){
+Lexer.prototype.more=function(){
         var ret;
         while (this.input.more()) {
             var c = this.input.peek();
@@ -1363,29 +1389,29 @@ Lexer.prototype.more=function (){
         ret = this.halt();
         return ret;
     };
-Lexer.prototype.less=function (length){
+Lexer.prototype.less=function(length){
         this.input.rollback(length);
     };
-Lexer.prototype.getDFA=function (){
+Lexer.prototype.getDFA=function(){
         return this.states[this.getState()].dfa;
     };
-Lexer.prototype.getAction=function (i){
+Lexer.prototype.getAction=function(i){
         return this.actions[i];
     };
-Lexer.prototype.pushState=function (state){
+Lexer.prototype.pushState=function(state){
         this.state.push(state);
         this.getDFA().reset();
     };
-Lexer.prototype.popState=function (){
+Lexer.prototype.popState=function(){
         if(this.state.length>1) {
             this.state.pop();
             this.getDFA().reset();
         }
     };
-Lexer.prototype.getState=function (){
+Lexer.prototype.getState=function(){
         return this.state[this.state.length-1];
     };
-Lexer.prototype.restoreLookAhead=function (){
+Lexer.prototype.restoreLookAhead=function(){
         this.tailLength = this.jjtext.length;
         this.popState();
         this.less(this.tailLength);
@@ -1393,11 +1419,11 @@ Lexer.prototype.restoreLookAhead=function (){
 
 
     };
-Lexer.prototype.evictTail=function (length){
+Lexer.prototype.evictTail=function(length){
         this.less(length);
         this.jjtext = this.jjtext.substring(0,this.jjtext.length-length);
     };
-Lexer.prototype.isEOF=function (o){
+Lexer.prototype.isEOF=function(o){
         return o===EOF;
     }
 ;
@@ -1408,15 +1434,15 @@ function StringReader(str){
         this.line = 0;
         this.col = 0;
 	}
-StringReader.prototype.getPos=function (){
+StringReader.prototype.getPos=function(){
         return this.pos;
     };
-StringReader.prototype.peek=function ()
+StringReader.prototype.peek=function()
 	{
 		//TODO: handle EOF
 		return this.str.charAt(this.pos);
 	};
-StringReader.prototype.eat=function (str)
+StringReader.prototype.eat=function(str)
 	{
 		var istr = this.str.substring(this.pos,this.pos+str.length);
 		if(istr===str){
@@ -1426,7 +1452,7 @@ StringReader.prototype.eat=function (str)
 			throw new Error('Expected "'+str+'", got "'+istr+'"!');
 		}
 	};
-StringReader.prototype.updatePos=function (str,delta){
+StringReader.prototype.updatePos=function(str,delta){
         for(var i=0;i<str.length;i++){
             if(str[i]=='\n'){
                 this.col=0;
@@ -1436,7 +1462,7 @@ StringReader.prototype.updatePos=function (str,delta){
             }
         }
     };
-StringReader.prototype.rollback=function (str)
+StringReader.prototype.rollback=function(str)
     {
         if(typeof str === 'string')
         {
@@ -1453,18 +1479,18 @@ StringReader.prototype.rollback=function (str)
         }
 
     };
-StringReader.prototype.next=function ()
+StringReader.prototype.next=function()
 	{
 		var s = this.str.charAt(this.pos);
 		this.pos=this.pos+1;
 		this.updatePos(s,1);
 		return s;
 	};
-StringReader.prototype.more=function ()
+StringReader.prototype.more=function()
 	{
 		return this.pos<this.str.length;
 	};
-StringReader.prototype.reset=function (){
+StringReader.prototype.reset=function(){
         this.pos=0;
     };
 if (typeof(module) !== 'undefined') { module.exports = Lexer; }
