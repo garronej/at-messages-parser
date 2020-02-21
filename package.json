@@ -21,7 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "trackable-map": "garronej/trackable-map",
-    "ts-evt": "^5.0.2"
+    "ts-evt": "^6.0.0"
   },
   "devDependencies": {
     "typescript": "2.9.1",
