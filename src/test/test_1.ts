@@ -53,7 +53,7 @@ emitter.on("data", (atMessage: AtMessage | null, unparsed: string) => {
 
     await new Promise(resolve => setTimeout(() => resolve(), 100));
 
-    parser(emitter, new Buffer(` *${i}* `, "utf8"));
+    parser(emitter, Buffer.from(` *${i}* `, "utf8"));
 
   }
 

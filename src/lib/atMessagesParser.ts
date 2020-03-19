@@ -1,5 +1,5 @@
 import { AtMessage } from "./AtMessage";
-import { Evt } from "ts-evt";
+import { Evt } from "evt";
 import { StringExtractor } from "./StringExtractor";
 import { TrackableMap } from "trackable-map";
 

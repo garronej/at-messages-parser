@@ -52,7 +52,7 @@ emitter.once("data", (atMessage: AtMessage | null, unparsed: string) => {
 
 let parser = getSerialPortParser();
 
-parser(emitter, new Buffer(p1, "utf8"));
+parser(emitter, Buffer.from(p1, "utf8"));
 
 setTimeout(()=>{
 

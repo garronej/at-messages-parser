@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { AtMessage } from "./AtMessage";
-import { Evt } from "ts-evt";
+import { Evt } from "evt";
 export declare function getSerialPortParser(delayBeforeFlush?: number): ((emitter: NodeJS.EventEmitter, buffer: Buffer) => void) & {
     flush: () => string;
     evtRawData: Evt<string>;

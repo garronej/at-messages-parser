@@ -79,8 +79,8 @@ parser.evtRawData.attachOnce(data=> {
 
 });
 
-process.nextTick(() => parser(emitter, new Buffer(p1, "utf8")));
-setTimeout(() => parser(emitter, new Buffer(p2, "utf8")), 200);
+process.nextTick(() => parser(emitter, Buffer.from(p1, "utf8")));
+setTimeout(() => parser(emitter, Buffer.from(p2, "utf8")), 200);
 
 setTimeout(() => {
 
