@@ -20,7 +20,7 @@
   "author": "Joseph Garrone",
   "license": "MIT",
   "dependencies": {
-    "evt": "^1.6.5",
+    "evt": "^1.6.6",
     "trackable-map": "garronej/trackable-map"
   },
   "devDependencies": {
