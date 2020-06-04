@@ -13,12 +13,14 @@ Note: AT+CPBR will be parsed correctly only if you read one entry at the time.
 Note: This parser will only work for for GSM modem in PDU mode (not text mode)
 
 
-#Technical specifications
+# Technical specifications
 
 This module have been build according to this specification document:
 
 https://www.paoli.cz/out/media/HUAWEI_MU609_HSPA_LGA_Modul_AT_Command_Interface_Specification_V100R002_04.pdf
 
-#Install 
+# Install 
 
+```bash
 npm install garronej/at-messages-parser
+
