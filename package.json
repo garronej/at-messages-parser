@@ -1,13 +1,13 @@
 {
   "name": "at-messages-parser",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "A node sertialport parser for AT message",
   "repository": {
     "type": "git",
     "url": "git://github.com/garronej/at-messages-parser.git"
   },
-  "main": "./dist/lib/index.js",
-  "types": "./dist/lib/index.d.ts",
+  "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
   "scripts": {
     "build": "npm run build-ids && npm run tsc && npm run jacob",
     "build-ids": "node ./src/bin/buildAtMessageId",
@@ -20,7 +20,7 @@
   "author": "Joseph Garrone",
   "license": "MIT",
   "dependencies": {
-    "evt": "^1.6.6",
+    "evt": "^1.8.8",
     "trackable-map": "garronej/trackable-map"
   },
   "devDependencies": {
